@@ -9,91 +9,123 @@
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
+<div class="container">
 
-<header class="masthead">
-  <div class="masthead-left">
-    <div class="brand">ManifoldFX</div>
-    <div class="brand-sub" id="meta-line">&mdash;</div>
-  </div>
-  <div class="masthead-right">
-    <span class="phase" id="phase-badge">&mdash;</span>
-    <span class="dryrun" id="dryrun-tag" hidden>DRY RUN</span>
-    <div class="updated" id="updated-at">&mdash;</div>
-  </div>
-</header>
+  <header class="masthead">
+    <div>
+      <h1 class="brand">ManifoldFX</h1>
+      <p class="brand-sub" id="meta-line">&mdash;</p>
+    </div>
+    <div class="masthead-meta">
+      <div class="tags">
+        <span class="tag" id="phase-badge">&mdash;</span>
+        <span class="tag tag-dryrun" id="dryrun-tag" hidden>Dry run</span>
+      </div>
+      <p class="updated" id="updated-at">&mdash;</p>
+    </div>
+  </header>
 
-<section class="summary">
-  <div class="stat"><span class="stat-label">Equity</span><span class="stat-value" id="m-equity">&mdash;</span></div>
-  <div class="stat"><span class="stat-label">Today</span><span class="stat-value" id="m-today">&mdash;</span></div>
-  <div class="stat"><span class="stat-label">Total P&amp;L</span><span class="stat-value" id="m-total">&mdash;</span></div>
-  <div class="stat"><span class="stat-label">Drawdown</span><span class="stat-value" id="m-dd">&mdash;</span></div>
-  <div class="stat"><span class="stat-label">Win rate</span><span class="stat-value" id="m-wr">&mdash;</span></div>
-  <div class="stat"><span class="stat-label">Trades</span><span class="stat-value" id="m-trades">&mdash;</span></div>
-  <div class="stat"><span class="stat-label">Profit factor</span><span class="stat-value" id="m-pf">&mdash;</span></div>
-  <div class="stat"><span class="stat-label">Sharpe</span><span class="stat-value" id="m-sharpe">&mdash;</span></div>
-</section>
-
-<section class="block">
-  <h2>Open positions</h2>
-  <table class="data-table" id="positions-table">
-    <thead>
-      <tr>
-        <th>Asset</th>
-        <th>Side</th>
-        <th class="num">Lots</th>
-        <th>Since</th>
-        <th class="num">Entry</th>
-        <th class="num">Current</th>
-        <th class="num">Floating P&amp;L</th>
-      </tr>
-    </thead>
-    <tbody><tr><td colspan="7" class="empty">No open positions.</td></tr></tbody>
-  </table>
-</section>
-
-<section class="block">
-  <h2>Equity curve</h2>
-  <div id="equity-chart" class="chart"></div>
-</section>
-
-<div class="two-col">
-  <section class="block">
-    <h2>Trades</h2>
-    <table class="data-table" id="trades-table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Asset</th>
-          <th>Side</th>
-          <th class="num">Lots</th>
-          <th class="num">P&amp;L</th>
-          <th class="num">Days</th>
-        </tr>
-      </thead>
-      <tbody><tr><td colspan="6" class="empty">&mdash;</td></tr></tbody>
-    </table>
+  <section class="hero">
+    <div class="hero-stat">
+      <div class="hero-label">Equity</div>
+      <div class="hero-value" id="m-equity">&mdash;</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-label">Total P&amp;L</div>
+      <div class="hero-value" id="m-total">&mdash;</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-label">Today</div>
+      <div class="hero-value" id="m-today">&mdash;</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-label">Drawdown</div>
+      <div class="hero-value" id="m-dd">&mdash;</div>
+    </div>
   </section>
 
-  <section class="block">
-    <h2>Signals</h2>
-    <table class="data-table" id="signals-table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Asset</th>
-          <th class="num">Conviction</th>
-          <th>Decision</th>
-        </tr>
-      </thead>
-      <tbody><tr><td colspan="4" class="empty">&mdash;</td></tr></tbody>
-    </table>
+  <section class="submetrics">
+    <div class="sub-stat"><div class="sub-label">Win rate</div><div class="sub-value" id="m-wr">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Trades</div><div class="sub-value" id="m-trades">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Sharpe (ann.)</div><div class="sub-value" id="m-sharpe">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Profit factor</div><div class="sub-value" id="m-pf">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Avg win</div><div class="sub-value" id="m-avgwin">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Avg loss</div><div class="sub-value" id="m-avgloss">&mdash;</div></div>
   </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Open positions</h2>
+    </div>
+    <div class="panel-body">
+      <table class="data-table" id="positions-table">
+        <thead>
+          <tr>
+            <th>Asset</th>
+            <th>Side</th>
+            <th class="num">Lots</th>
+            <th>Since</th>
+            <th class="num">Entry</th>
+            <th class="num">Current</th>
+            <th class="num">Floating P&amp;L</th>
+          </tr>
+        </thead>
+        <tbody><tr><td colspan="7" class="empty">No open positions.</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Equity curve</h2>
+      <div class="panel-meta" id="equity-range">&mdash;</div>
+    </div>
+    <div class="panel-body panel-body--flush">
+      <div id="equity-chart" class="chart"></div>
+    </div>
+  </section>
+
+  <div class="cols">
+    <section class="panel">
+      <div class="panel-head"><h2>Recent trades</h2></div>
+      <div class="panel-body">
+        <table class="data-table" id="trades-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Asset</th>
+              <th>Side</th>
+              <th class="num">Lots</th>
+              <th class="num">P&amp;L</th>
+              <th class="num">Days</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="6" class="empty">No closed trades yet.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Recent signals</h2></div>
+      <div class="panel-body">
+        <table class="data-table" id="signals-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Asset</th>
+              <th class="num">Conviction</th>
+              <th>Decision</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="4" class="empty">No signals recorded.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <footer class="page-foot" id="foot-meta">&mdash;</footer>
+
 </div>
-
-<footer class="page-foot">
-  <span id="foot-meta">&mdash;</span>
-</footer>
-
 <script src="app.js"></script>
 </body>
 </html>

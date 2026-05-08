@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ManifoldFX — Live Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-[#0a0e14] text-gray-200 min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+
+    <!-- Header -->
+    <header class="flex flex-wrap items-baseline justify-between mb-6 border-b border-gray-800 pb-4 gap-4">
+      <div>
+        <div class="flex items-center gap-3">
+          <span class="status-dot" id="status-dot"></span>
+          <h1 class="text-2xl font-bold text-white tracking-tight">ManifoldFX</h1>
+        </div>
+        <p class="text-xs text-gray-500 mt-1" id="meta-line">Loading…</p>
+      </div>
+      <div class="text-right">
+        <span id="phase-badge" class="inline-block px-2 py-1 text-xs rounded bg-gray-800 text-gray-300 font-medium tracking-wider">—</span>
+        <p class="text-xs text-gray-500 mt-1" id="updated-at">—</p>
+      </div>
+    </header>
+
+    <!-- Dry-run banner -->
+    <div id="dryrun-banner" class="hidden mb-4 px-4 py-2 bg-amber-900/30 border border-amber-800/50 text-amber-300 text-sm rounded">
+      <span class="font-semibold">DRY RUN</span> — paper trading, no real orders being placed.
+    </div>
+
+    <!-- Hero metrics -->
+    <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+      <div class="metric-card">
+        <p class="metric-label">Equity</p>
+        <p class="metric-value" id="m-equity">—</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-label">Today</p>
+        <p class="metric-value" id="m-today">—</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-label">Total P&amp;L</p>
+        <p class="metric-value" id="m-total">—</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-label">Drawdown</p>
+        <p class="metric-value" id="m-dd">—</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-label">Win Rate</p>
+        <p class="metric-value" id="m-wr">—</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-label">Trades</p>
+        <p class="metric-value" id="m-trades">—</p>
+      </div>
+    </section>
+
+    <!-- Open positions -->
+    <section class="mb-6">
+      <h2 class="section-title">Open Positions</h2>
+      <div id="positions" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <p class="text-gray-600 text-sm col-span-full">Loading…</p>
+      </div>
+    </section>
+
+    <!-- Equity curve -->
+    <section class="mb-6">
+      <h2 class="section-title">Equity Curve</h2>
+      <div id="equity-chart" class="bg-[#0f1419] rounded border border-gray-800" style="height: 340px;"></div>
+    </section>
+
+    <!-- Side-by-side tables -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <section>
+        <h2 class="section-title">Recent Trades</h2>
+        <div class="table-wrap">
+          <table class="data-table" id="trades-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Asset</th>
+                <th>Side</th>
+                <th class="num">Lots</th>
+                <th class="num">P&amp;L</th>
+                <th class="num">Days</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Recent Signals</h2>
+        <div class="table-wrap">
+          <table class="data-table" id="signals-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Asset</th>
+                <th class="num">Conviction</th>
+                <th class="cen">Decision</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Performance stats -->
+    <section class="mb-6">
+      <h2 class="section-title">Performance</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="perf-grid">
+        <div class="metric-card"><p class="metric-label">Profit Factor</p><p class="metric-value" id="m-pf">—</p></div>
+        <div class="metric-card"><p class="metric-label">Sharpe (ann.)</p><p class="metric-value" id="m-sharpe">—</p></div>
+        <div class="metric-card"><p class="metric-label">Avg Win</p><p class="metric-value" id="m-avgwin">—</p></div>
+        <div class="metric-card"><p class="metric-label">Avg Loss</p><p class="metric-value" id="m-avgloss">—</p></div>
+      </div>
+    </section>
+
+    <footer class="mt-10 pt-4 border-t border-gray-900 text-center text-xs text-gray-700">
+      Auto-refresh every 60s · Strategy code is private
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

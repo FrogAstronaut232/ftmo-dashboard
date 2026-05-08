@@ -1,0 +1,9 @@
+{
+  "strategy_name": "ManifoldFX",
+  "assets": ["EURUSD", "GBPJPY"],
+  "account_initial_usd": 50000,
+  "max_daily_loss_pct": 0.04,
+  "max_total_loss_pct": 0.08,
+  "phases": {"p1": 0.24, "p2": 0.22, "funded": 0.32, "demo": 0.10},
+  "last_updated_utc": "2026-05-08T00:00:00"
+}

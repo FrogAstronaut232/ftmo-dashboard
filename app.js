@@ -1,19 +1,20 @@
-// ManifoldFX dashboard — pulls /data/{state.json,meta.json,equity.csv,trades.csv,signals.csv}
-// from the same origin and renders a static dashboard. Polls every 60s.
+// ManifoldFX dashboard. Reads:
+//   data/state.json        — current LIVE state + reference summary
+//   data/meta.json         — strategy metadata
+//   data/live/*.csv        — live forward-test stream
+//   data/reference/*.csv   — frozen historical OOS reference
+// Static, no backend. Polls every 60s.
 
 const DATA_BASE  = 'data';
 const REFRESH_MS = 60_000;
 
-// ── helpers ──────────────────────────────────────────────────────────
 const $ = id => document.getElementById(id);
 
-function fmtUsd(v, signed = true, decimals = 0) {
+// ── formatters ───────────────────────────────────────────────────────
+function fmtUsd(v, signed = true) {
   if (v == null || isNaN(v)) return '—';
   const sign = signed && v > 0 ? '+' : v < 0 ? '−' : '';
-  const abs = Math.abs(v).toLocaleString('en-US', {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  });
+  const abs = Math.abs(v).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
   return `${sign}$${abs}`;
 }
 function fmtPct(v, decimals = 2) {
@@ -29,6 +30,14 @@ function pnlClass(v) {
   return v > 0 ? 'pos' : 'neg';
 }
 function bust(url) { return `${url}?v=${Date.now()}`; }
+function fmtUtc(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '—';
+  const pad = n => String(n).padStart(2, '0');
+  return `${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}-${pad(d.getUTCDate())} `
+       + `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())} UTC`;
+}
 
 async function fetchJson(name) {
   const r = await fetch(bust(`${DATA_BASE}/${name}`));
@@ -54,18 +63,47 @@ function setValue(id, baseClass, text, mod = '') {
   el.className = mod ? `${baseClass} ${mod}` : baseClass;
 }
 
-function fmtUtc(iso) {
-  if (!iso) return '—';
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return '—';
-  const pad = n => String(n).padStart(2, '0');
-  return `${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}-${pad(d.getUTCDate())} `
-       + `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())} UTC`;
+// ── Header / live summary ────────────────────────────────────────────
+function renderMasthead(state, meta) {
+  $('phase-badge').textContent = (state.phase || 'demo').toUpperCase();
+  $('dryrun-tag').hidden = !state.dry_run;
+
+  if (state.as_of_utc) {
+    const d = new Date(state.as_of_utc);
+    const hb = state.last_heartbeat_utc ? new Date(state.last_heartbeat_utc) : null;
+    const fmt = dt => fmtUtc(dt.toISOString());
+    $('updated-at').textContent = hb
+      ? `${fmt(d)}  ·  hb ${fmt(hb).slice(11)}`
+      : fmt(d);
+
+    // Data freshness indicator — based on the most recent of report/heartbeat
+    const newest = hb && hb > d ? hb : d;
+    const ageMs  = Date.now() - newest.getTime();
+    const ageMin = Math.round(ageMs / 60000);
+    const ageEl  = $('data-age');
+    let cls, label;
+    if (ageMin < 30)         { cls = 'fresh';  label = `Live data ${ageMin}m old`; }
+    else if (ageMin < 180)   { cls = 'recent'; label = `Live data ${ageMin}m old`; }
+    else if (ageMin < 1440)  { cls = 'stale';  label = `Stale: ${Math.round(ageMin/60)}h old (desktop may be asleep)`; }
+    else                     { cls = 'frozen'; label = `Stale: ${Math.round(ageMin/1440)}d old (desktop offline?)`; }
+    ageEl.textContent = label;
+    ageEl.className   = `data-age ${cls}`;
+  }
+
+  const nm     = meta.strategy_name || 'ManifoldFX';
+  const assets = (meta.assets || []).join('  ·  ');
+  const initial = state.account_initial_usd || meta.account_initial_usd || 50000;
+  const acct   = `${initial.toLocaleString()} USD account`;
+  $('meta-line').textContent = [nm + '  ·  FTMO 2-step swing', assets, acct]
+                                .filter(Boolean).join('   ·   ');
+
+  $('foot-meta').textContent =
+    'Daily-close swing strategy. Strategy logic, model parameters, and per-trade '
+  + 'reasoning are private and not exposed in this view.';
 }
 
-// ── render: header + hero + sub-metrics ──────────────────────────────
-function renderSummary(state, meta) {
-  const initial = state.account_initial_usd || meta.account_initial_usd || 50000;
+function renderLiveSummary(state, meta) {
+  const initial  = state.account_initial_usd || meta.account_initial_usd || 50000;
   const equity   = state.equity ?? initial;
   const today    = state.today_pnl ?? 0;
   const totalPnl = equity - initial;
@@ -84,26 +122,31 @@ function renderSummary(state, meta) {
   setValue('m-avgwin',  'sub-value', m.avg_win_usd  ? fmtUsd(m.avg_win_usd)  : '—', m.avg_win_usd  > 0 ? 'pos' : '');
   setValue('m-avgloss', 'sub-value', m.avg_loss_usd ? fmtUsd(m.avg_loss_usd) : '—', m.avg_loss_usd < 0 ? 'neg' : '');
 
-  $('phase-badge').textContent = (state.phase || 'demo').toUpperCase();
-  $('dryrun-tag').hidden = !state.dry_run;
-
-  const upd = state.as_of_utc ? fmtUtc(state.as_of_utc) : '—';
-  const hb  = state.last_heartbeat_utc ? fmtUtc(state.last_heartbeat_utc) : null;
-  $('updated-at').textContent = hb ? `Updated ${upd}  ·  Heartbeat ${hb.slice(11)}`
-                                   : `Updated ${upd}`;
-
-  const nm     = meta.strategy_name || 'ManifoldFX';
-  const assets = (meta.assets || []).join('  ·  ');
-  const acct   = `${initial.toLocaleString()} USD account`;
-  $('meta-line').textContent = [nm + '  ·  FTMO 2-step swing', assets, acct]
-                                .filter(Boolean).join('   ·   ');
-
-  $('foot-meta').textContent =
-    'Daily-close swing strategy. The strategy logic, model parameters, '
-  + 'and per-trade reasoning are not exposed in this view.';
+  // Live-stream status pill + sub
+  const liveFirst = state.live_first_date;
+  const liveLast  = state.live_last_date;
+  const pill   = $('live-status');
+  const subEl  = $('live-sub');
+  if (liveFirst && liveLast) {
+    const days = daysBetween(liveFirst, liveLast) + 1;
+    const n = m.total_trades || 0;
+    pill.textContent = `Live · ${days} day${days === 1 ? '' : 's'}`;
+    pill.className = 'status-pill';
+    subEl.textContent = `Running since ${liveFirst}.  ${days} trading day${days === 1 ? '' : 's'} · ${n} closed trade${n === 1 ? '' : 's'}.`;
+  } else {
+    pill.textContent = 'Awaiting first run';
+    pill.className = 'status-pill status-pill--mute';
+    subEl.textContent = 'Will populate on the first scheduled daily run.';
+  }
 }
 
-// ── render: open positions ───────────────────────────────────────────
+function daysBetween(a, b) {
+  const da = new Date(a + 'T00:00:00Z');
+  const db = new Date(b + 'T00:00:00Z');
+  return Math.round((db - da) / 86_400_000);
+}
+
+// ── Open positions ───────────────────────────────────────────────────
 function renderPositions(state) {
   const tbody = document.querySelector('#positions-table tbody');
   const positions = state.open_positions || [];
@@ -130,12 +173,11 @@ function renderPositions(state) {
   }).join('');
 }
 
-// ── render: equity curve ─────────────────────────────────────────────
-function renderEquity(equity, initial) {
-  const div = $('equity-chart');
-  let x, y, rangeText;
+// ── Equity curve renderer (reused for both live + reference) ─────────
+function renderEquity(divId, equity, initial, lineColor, emptyMsg) {
+  const div = $(divId);
+  let x, y;
   if (!equity || !equity.length) {
-    // Synthetic flat baseline so the chart doesn't render an empty void.
     const today = new Date();
     const days = 30;
     x = []; y = [];
@@ -145,17 +187,13 @@ function renderEquity(equity, initial) {
       x.push(d.toISOString().slice(0, 10));
       y.push(initial);
     }
-    rangeText = '— (no data)';
   } else {
     x = equity.map(r => r.date);
     y = equity.map(r => Number(r.balance) || initial);
-    rangeText = `${x[0]} → ${x[x.length-1]}`;
   }
-  $('equity-range').textContent = rangeText;
-
   const main = {
     x, y, type: 'scatter', mode: 'lines',
-    line: { color: '#cdd2d8', width: 1.4, shape: 'linear' },
+    line: { color: lineColor, width: 1.4, shape: 'linear' },
     hovertemplate: '%{x}<br>$%{y:,.0f}<extra></extra>',
     showlegend: false,
   };
@@ -165,7 +203,6 @@ function renderEquity(equity, initial) {
     line: { color: '#2c3340', width: 1, dash: 'dot' },
     hoverinfo: 'skip', showlegend: false,
   };
-
   const layout = {
     paper_bgcolor: '#161b24',
     plot_bgcolor:  '#161b24',
@@ -186,8 +223,7 @@ function renderEquity(equity, initial) {
     },
     hovermode: 'x unified',
     hoverlabel: {
-      bgcolor: '#11151b',
-      bordercolor: '#262d39',
+      bgcolor: '#11151b', bordercolor: '#262d39',
       font: { color: '#e3e6ea',
               family: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace',
               size: 12 },
@@ -197,11 +233,11 @@ function renderEquity(equity, initial) {
   Plotly.newPlot(div, [ref, main], layout, { displayModeBar: false, responsive: true });
 }
 
-// ── render: trades + signals ─────────────────────────────────────────
-function renderTrades(trades) {
-  const tbody = document.querySelector('#trades-table tbody');
+// ── Tables (reused for both live + reference) ────────────────────────
+function renderTradesTable(tableId, trades, emptyMsg) {
+  const tbody = document.querySelector(`#${tableId} tbody`);
   if (!trades.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="empty">No closed trades yet.</td></tr>';
+    tbody.innerHTML = `<tr><td colspan="6" class="empty">${emptyMsg}</td></tr>`;
     return;
   }
   const recent = trades.slice(-25).reverse();
@@ -220,10 +256,10 @@ function renderTrades(trades) {
   }).join('');
 }
 
-function renderSignals(signals) {
-  const tbody = document.querySelector('#signals-table tbody');
+function renderSignalsTable(tableId, signals, emptyMsg) {
+  const tbody = document.querySelector(`#${tableId} tbody`);
   if (!signals.length) {
-    tbody.innerHTML = '<tr><td colspan="4" class="empty">No signals recorded.</td></tr>';
+    tbody.innerHTML = `<tr><td colspan="4" class="empty">${emptyMsg}</td></tr>`;
     return;
   }
   const recent = signals.slice(-25).reverse();
@@ -241,26 +277,92 @@ function renderSignals(signals) {
   }).join('');
 }
 
-// ── orchestrate ──────────────────────────────────────────────────────
+// ── Reference section ────────────────────────────────────────────────
+function renderRefSummary(state) {
+  const m = state.reference_metrics || {};
+  setValue('r-trades', 'sub-value', String(m.total_trades ?? 0));
+  setValue('r-wr',     'sub-value', m.total_trades ? fmtPct(m.win_rate, 1) : '—');
+  setValue('r-total',  'sub-value', fmtUsd(m.total_pnl_usd), pnlClass(m.total_pnl_usd));
+  setValue('r-dd',     'sub-value', fmtPct(m.max_drawdown_pct));
+  setValue('r-pf',     'sub-value', m.total_trades ? fmtNum(m.profit_factor) : '—');
+  setValue('r-sharpe', 'sub-value', m.total_trades ? fmtNum(m.annualised_sharpe) : '—');
+
+  const first = state.reference_first_date;
+  const last  = state.reference_last_date;
+  const pill  = $('ref-status');
+  const sub   = $('ref-sub');
+  if (first && last) {
+    pill.textContent = `${first} → ${last}`;
+    sub.textContent = `Frozen-model out-of-sample inference, ${first} → ${last}.  Static baseline; not live.`;
+  } else {
+    pill.textContent = '—';
+    sub.textContent = 'No reference data loaded.';
+  }
+}
+
+// ── Main loop ─────────────────────────────────────────────────────────
 async function loadAll() {
   try {
-    const [state, meta, equity, trades, signals] = await Promise.all([
+    const [state, meta, liveEq, liveTr, liveSig, refEq, refTr, refSig] = await Promise.all([
       fetchJson('state.json').catch(() => ({})),
       fetchJson('meta.json').catch(() => ({})),
-      fetchCsv('equity.csv'),
-      fetchCsv('trades.csv'),
-      fetchCsv('signals.csv'),
+      fetchCsv('live/equity.csv'),
+      fetchCsv('live/trades.csv'),
+      fetchCsv('live/signals.csv'),
+      fetchCsv('reference/equity.csv'),
+      fetchCsv('reference/trades.csv'),
+      fetchCsv('reference/signals.csv'),
     ]);
     const initial = state.account_initial_usd || meta.account_initial_usd || 50000;
-    renderSummary(state, meta);
+
+    renderMasthead(state, meta);
+    renderLiveSummary(state, meta);
     renderPositions(state);
-    renderEquity(equity, initial);
-    renderTrades(trades);
-    renderSignals(signals);
+    renderEquity('live-equity-chart', liveEq, initial, '#cdd2d8', 'Awaiting first run.');
+    renderTradesTable('live-trades-table',   liveTr,  'Awaiting first closed trade.');
+    renderSignalsTable('live-signals-table', liveSig, 'Awaiting first scheduled run.');
+
+    // Live equity range label
+    if (liveEq.length) {
+      $('live-equity-range').textContent = `${liveEq[0].date} → ${liveEq[liveEq.length-1].date}`;
+    } else {
+      $('live-equity-range').textContent = '— (no data yet)';
+    }
+
+    renderRefSummary(state);
+    renderEquity('ref-equity-chart', refEq, initial, '#7c8794', 'No reference data.');
+    renderTradesTable('ref-trades-table',   refTr,  '—');
+    renderSignalsTable('ref-signals-table', refSig, '—');
+
+    if (refEq.length) {
+      $('ref-equity-range').textContent = `${refEq[0].date} → ${refEq[refEq.length-1].date}`;
+    } else {
+      $('ref-equity-range').textContent = '—';
+    }
   } catch (e) {
     console.error('Dashboard load failed:', e);
   }
 }
+
+// Manual refresh button — re-fetches everything from GitHub. Doesn't reach into
+// the user's desktop; if their machine is asleep, this just shows the last data
+// the heartbeat was able to push. Useful when the desktop IS awake (data is
+// at most ~15 min old in that case).
+async function manualRefresh() {
+  const btn = $('refresh-btn');
+  if (!btn || btn.disabled) return;
+  btn.disabled = true;
+  btn.classList.add('is-spinning');
+  try {
+    await loadAll();
+  } finally {
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.classList.remove('is-spinning');
+    }, 350);
+  }
+}
+$('refresh-btn').addEventListener('click', manualRefresh);
 
 loadAll();
 setInterval(loadAll, REFRESH_MS);

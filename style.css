@@ -70,7 +70,47 @@ body {
   display: inline-flex;
   gap: 6px;
   justify-content: flex-end;
+  align-items: center;
 }
+
+.refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 9px 4px 8px;
+  border-radius: 2px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.refresh-btn:hover { border-color: #3a4452; color: var(--text); background: rgba(255,255,255,0.02); }
+.refresh-btn:active { background: rgba(255,255,255,0.04); }
+.refresh-btn:disabled { opacity: 0.5; cursor: wait; }
+.refresh-btn .refresh-icon { font-size: 13px; line-height: 1; }
+.refresh-btn.is-spinning .refresh-icon {
+  display: inline-block;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.data-age {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 3px;
+  font-family: var(--font-mono);
+  min-height: 1.2em;
+}
+.data-age.fresh   { color: var(--pos); }
+.data-age.recent  { color: var(--text-3); }
+.data-age.stale   { color: var(--warn); }
+.data-age.frozen  { color: var(--neg); }
 .tag {
   display: inline-block;
   font-size: 10.5px;
@@ -94,6 +134,49 @@ body {
   margin-top: 8px;
   font-family: var(--font-mono);
   letter-spacing: 0;
+}
+
+/* ─── Stream headers (Live / Reference dividers) ───────── */
+.stream-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--rule);
+  gap: 24px;
+}
+.stream-header--secondary {
+  margin-top: 56px;
+}
+.stream-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.005em;
+  margin-bottom: 4px;
+}
+.stream-sub {
+  font-size: 12px;
+  color: var(--text-3);
+}
+.status-pill {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 2px;
+  border: 1px solid #2a4d33;
+  background: rgba(92, 184, 122, 0.06);
+  color: var(--pos);
+  white-space: nowrap;
+}
+.status-pill--mute {
+  border-color: var(--rule);
+  background: transparent;
+  color: var(--text-3);
 }
 
 /* ─── Hero metrics ──────────────────────────────────────── */
@@ -206,6 +289,20 @@ body {
   margin-bottom: 24px;
 }
 .cols .panel { margin-bottom: 0; }
+
+/* Reference panels: subtly desaturated to read as historical/secondary */
+.panel--ref {
+  background: #131820;
+}
+.panel--ref .panel-head h2 {
+  color: var(--text-2);
+}
+.submetrics--ref {
+  background: #131820;
+}
+.submetrics--ref .sub-value {
+  color: var(--text-2);
+}
 
 /* ─── Tables ────────────────────────────────────────────── */
 .data-table {

@@ -18,12 +18,28 @@
     </div>
     <div class="masthead-meta">
       <div class="tags">
+        <button class="refresh-btn" id="refresh-btn" type="button" title="Re-fetch latest data from server">
+          <span class="refresh-icon">&#x21bb;</span>
+          <span class="refresh-label">Refresh</span>
+        </button>
         <span class="tag" id="phase-badge">&mdash;</span>
         <span class="tag tag-dryrun" id="dryrun-tag" hidden>Dry run</span>
       </div>
       <p class="updated" id="updated-at">&mdash;</p>
+      <p class="data-age" id="data-age">&nbsp;</p>
     </div>
   </header>
+
+  <!-- ═══ LIVE ═══════════════════════════════════════════════════ -->
+  <div class="stream-header">
+    <div>
+      <h2 class="stream-title">Live forward test</h2>
+      <p class="stream-sub" id="live-sub">Running autonomously since first scheduled run.</p>
+    </div>
+    <div class="stream-status">
+      <span class="status-pill" id="live-status">Awaiting first run</span>
+    </div>
+  </div>
 
   <section class="hero">
     <div class="hero-stat">
@@ -78,10 +94,10 @@
   <section class="panel">
     <div class="panel-head">
       <h2>Equity curve</h2>
-      <div class="panel-meta" id="equity-range">&mdash;</div>
+      <div class="panel-meta" id="live-equity-range">&mdash;</div>
     </div>
     <div class="panel-body panel-body--flush">
-      <div id="equity-chart" class="chart"></div>
+      <div id="live-equity-chart" class="chart"></div>
     </div>
   </section>
 
@@ -89,7 +105,7 @@
     <section class="panel">
       <div class="panel-head"><h2>Recent trades</h2></div>
       <div class="panel-body">
-        <table class="data-table" id="trades-table">
+        <table class="data-table" id="live-trades-table">
           <thead>
             <tr>
               <th>Date</th>
@@ -100,7 +116,7 @@
               <th class="num">Days</th>
             </tr>
           </thead>
-          <tbody><tr><td colspan="6" class="empty">No closed trades yet.</td></tr></tbody>
+          <tbody><tr><td colspan="6" class="empty">Awaiting first closed trade.</td></tr></tbody>
         </table>
       </div>
     </section>
@@ -108,7 +124,7 @@
     <section class="panel">
       <div class="panel-head"><h2>Recent signals</h2></div>
       <div class="panel-body">
-        <table class="data-table" id="signals-table">
+        <table class="data-table" id="live-signals-table">
           <thead>
             <tr>
               <th>Date</th>
@@ -117,7 +133,75 @@
               <th>Decision</th>
             </tr>
           </thead>
-          <tbody><tr><td colspan="4" class="empty">No signals recorded.</td></tr></tbody>
+          <tbody><tr><td colspan="4" class="empty">Awaiting first scheduled run.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══ REFERENCE ══════════════════════════════════════════════ -->
+  <div class="stream-header stream-header--secondary">
+    <div>
+      <h2 class="stream-title">Reference &mdash; recent OOS history</h2>
+      <p class="stream-sub" id="ref-sub">Frozen-model out-of-sample inference. Static baseline; not live.</p>
+    </div>
+    <div class="stream-status">
+      <span class="status-pill status-pill--mute" id="ref-status">&mdash;</span>
+    </div>
+  </div>
+
+  <section class="submetrics submetrics--ref">
+    <div class="sub-stat"><div class="sub-label">Trades</div><div class="sub-value" id="r-trades">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Win rate</div><div class="sub-value" id="r-wr">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Total P&amp;L</div><div class="sub-value" id="r-total">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Max DD</div><div class="sub-value" id="r-dd">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Profit factor</div><div class="sub-value" id="r-pf">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Sharpe (ann.)</div><div class="sub-value" id="r-sharpe">&mdash;</div></div>
+  </section>
+
+  <section class="panel panel--ref">
+    <div class="panel-head">
+      <h2>Equity curve</h2>
+      <div class="panel-meta" id="ref-equity-range">&mdash;</div>
+    </div>
+    <div class="panel-body panel-body--flush">
+      <div id="ref-equity-chart" class="chart"></div>
+    </div>
+  </section>
+
+  <div class="cols">
+    <section class="panel panel--ref">
+      <div class="panel-head"><h2>Trades</h2></div>
+      <div class="panel-body">
+        <table class="data-table" id="ref-trades-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Asset</th>
+              <th>Side</th>
+              <th class="num">Lots</th>
+              <th class="num">P&amp;L</th>
+              <th class="num">Days</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="6" class="empty">&mdash;</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel panel--ref">
+      <div class="panel-head"><h2>Signals</h2></div>
+      <div class="panel-body">
+        <table class="data-table" id="ref-signals-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Asset</th>
+              <th class="num">Conviction</th>
+              <th>Decision</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="4" class="empty">&mdash;</td></tr></tbody>
         </table>
       </div>
     </section>

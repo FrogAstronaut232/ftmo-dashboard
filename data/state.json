@@ -1,24 +1,44 @@
 {
-  "as_of_utc": "2026-05-08T22:30:00+00:00",
-  "balance": 50000,
-  "equity": 50000,
-  "drawdown_pct": 0,
-  "today_pnl": 0,
-  "open_positions": [],
-  "last_signals": {},
+  "as_of_utc": "2026-05-08T14:17:00.107830+00:00",
+  "balance": 73152.09558236554,
+  "equity": 73152.09558236554,
+  "drawdown_pct": 0.6922496419635555,
+  "today_pnl": 0.0,
+  "open_positions": [
+    {
+      "asset": "EURUSD",
+      "side": "LONG",
+      "lots": 0.72,
+      "entry_date": "2026-05-06",
+      "entry_price": 1.1715774536132812,
+      "current_price": 1.1775789260864258
+    }
+  ],
+  "last_signals": {
+    "EURUSD": {
+      "date": "2026-05-08",
+      "ensemble_avg": 0.568,
+      "signal": 1
+    },
+    "GBPJPY": {
+      "date": "2026-05-08",
+      "ensemble_avg": 0.311,
+      "signal": 0
+    }
+  },
   "phase": "demo",
   "dry_run": true,
-  "account_initial_usd": 50000,
+  "account_initial_usd": 50000.0,
   "max_daily_loss_pct": 0.04,
   "max_total_loss_pct": 0.08,
   "metrics": {
-    "total_trades": 0,
-    "win_rate": 0,
-    "profit_factor": 0,
-    "avg_win_usd": 0,
-    "avg_loss_usd": 0,
-    "max_drawdown_pct": 0,
-    "total_pnl_usd": 0,
-    "annualised_sharpe": 0
+    "total_trades": 139,
+    "win_rate": 61.87050359712231,
+    "profit_factor": 2.8684854468755696,
+    "avg_win_usd": 413.2898949125007,
+    "avg_loss_usd": -233.78934679451913,
+    "max_drawdown_pct": 3.5344301454142357,
+    "total_pnl_usd": 23152.09558236555,
+    "annualised_sharpe": 3.8048576465300235
   }
 }

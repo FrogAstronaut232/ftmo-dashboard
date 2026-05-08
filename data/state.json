@@ -40,5 +40,8 @@
   "live_first_date": "2026-05-08",
   "live_last_date": "2026-05-08",
   "reference_first_date": "2025-01-02",
-  "reference_last_date": "2026-05-08"
+  "reference_last_date": "2026-05-08",
+  "last_heartbeat_utc": "2026-05-08T15:16:31.124596+00:00",
+  "free_margin": 50000.0,
+  "peak_equity": 50000.0
 }

@@ -1,24 +1,13 @@
 {
-  "as_of_utc": "2026-05-08T15:00:47.263102+00:00",
+  "as_of_utc": "2026-05-08T15:07:03.887585+00:00",
   "balance": 50000.0,
   "equity": 50000.0,
   "drawdown_pct": 0.0,
   "today_pnl": 0.0,
   "open_positions": [],
-  "last_signals": {
-    "EURUSD": {
-      "date": "2026-05-08",
-      "ensemble_avg": 0.602,
-      "signal": 1
-    },
-    "GBPJPY": {
-      "date": "2026-05-08",
-      "ensemble_avg": 0.089,
-      "signal": 0
-    }
-  },
+  "last_signals": {},
   "phase": "demo",
-  "dry_run": false,
+  "dry_run": true,
   "account_initial_usd": 50000.0,
   "max_daily_loss_pct": 0.04,
   "max_total_loss_pct": 0.08,
@@ -42,11 +31,8 @@
     "total_pnl_usd": 23152.09558236555,
     "annualised_sharpe": 3.8048576465300235
   },
-  "live_first_date": "2026-05-08",
-  "live_last_date": "2026-05-08",
+  "live_first_date": null,
+  "live_last_date": null,
   "reference_first_date": "2025-01-02",
-  "reference_last_date": "2026-05-08",
-  "last_heartbeat_utc": "2026-05-08T15:01:30.280161+00:00",
-  "free_margin": 50000.0,
-  "peak_equity": 50000.0
+  "reference_last_date": "2026-05-08"
 }

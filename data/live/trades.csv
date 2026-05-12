@@ -1,1 +1,2 @@
 trade_id,asset,side,entry_date,entry_price,exit_date,exit_price,lots,pnl_usd,pnl_pct,hold_days,exit_reason,is_dry_run
+1,EURUSD,LONG,2026-05-08,1.17824,2026-05-12,1.17538,0.8300000000000001,-237.3799999999886,-0.4747599999999772,2,signal_flat,False

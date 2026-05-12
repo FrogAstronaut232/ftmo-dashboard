@@ -174,7 +174,10 @@ function renderPositions(state) {
 }
 
 // ── Equity curve renderer (reused for both live + reference) ─────────
-function renderEquity(divId, equity, initial, lineColor, emptyMsg) {
+// `currentEquity` (optional): live MT5 equity from state.json. If set and
+// it differs from the last historical row, append it as a "today" point so
+// the chart's latest value matches the hero number (closed P&L + floating).
+function renderEquity(divId, equity, initial, lineColor, currentEquity) {
   const div = $(divId);
   let x, y;
   if (!equity || !equity.length) {
@@ -187,9 +190,23 @@ function renderEquity(divId, equity, initial, lineColor, emptyMsg) {
       x.push(d.toISOString().slice(0, 10));
       y.push(initial);
     }
+    if (currentEquity != null && !isNaN(currentEquity)) {
+      y[y.length - 1] = currentEquity;
+    }
   } else {
     x = equity.map(r => r.date);
     y = equity.map(r => Number(r.balance) || initial);
+    if (currentEquity != null && !isNaN(currentEquity)) {
+      const today = new Date().toISOString().slice(0, 10);
+      const lastDate = x[x.length - 1];
+      const lastBal  = y[y.length - 1];
+      if (today !== lastDate) {
+        x.push(today);
+        y.push(currentEquity);
+      } else if (Math.abs(currentEquity - lastBal) > 0.005) {
+        y[y.length - 1] = currentEquity;
+      }
+    }
   }
   const main = {
     x, y, type: 'scatter', mode: 'lines',
@@ -336,7 +353,7 @@ async function loadAll() {
     renderMasthead(state, meta);
     renderLiveSummary(state, meta);
     renderPositions(state);
-    renderEquity('live-equity-chart', liveEq, initial, '#cdd2d8', 'Awaiting first run.');
+    renderEquity('live-equity-chart', liveEq, initial, '#cdd2d8', state.equity);
     renderTradesTable('live-trades-table',   liveTr,  'Awaiting first closed trade.');
     renderSignalsTable('live-signals-eurusd-table', byAsset(liveSig, 'EURUSD'), 'Awaiting first scheduled run.');
     renderSignalsTable('live-signals-gbpjpy-table', byAsset(liveSig, 'GBPJPY'), 'Awaiting first scheduled run.');
@@ -349,7 +366,7 @@ async function loadAll() {
     }
 
     renderRefSummary(state);
-    renderEquity('ref-equity-chart', refEq, initial, '#7c8794', 'No reference data.');
+    renderEquity('ref-equity-chart', refEq, initial, '#7c8794');
     renderTradesTable('ref-trades-table',   refTr,  '—');
     renderSignalsTable('ref-signals-eurusd-table', byAsset(refSig, 'EURUSD'), '—');
     renderSignalsTable('ref-signals-gbpjpy-table', byAsset(refSig, 'GBPJPY'), '—');

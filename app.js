@@ -256,6 +256,21 @@ function renderTradesTable(tableId, trades, emptyMsg) {
   }).join('');
 }
 
+function fmtAction(raw, sigFallback) {
+  // Prefer the reporter's `action` column. Fall back to signal sign if absent.
+  let a = raw ? String(raw).toUpperCase() : null;
+  if (!a) {
+    const sig = parseInt(sigFallback) || 0;
+    a = sig > 0 ? 'OPEN_LONG' : sig < 0 ? 'OPEN_SHORT' : 'NO_POSITION';
+  }
+  const text = a.replace(/_/g, ' ');
+  let cls = 'dim';
+  if (a === 'OPEN_LONG'  || a === 'HOLD_LONG'  || a === 'REVERSE_TO_LONG')  cls = 'pos';
+  else if (a === 'OPEN_SHORT' || a === 'HOLD_SHORT' || a === 'REVERSE_TO_SHORT') cls = 'neg';
+  else if (a === 'EXIT_LONG'  || a === 'EXIT_SHORT')                              cls = 'warn';
+  return { text, cls };
+}
+
 function renderSignalsTable(tableId, signals, emptyMsg) {
   const tbody = document.querySelector(`#${tableId} tbody`);
   if (!signals.length) {
@@ -264,15 +279,13 @@ function renderSignalsTable(tableId, signals, emptyMsg) {
   }
   const recent = signals.slice(-25).reverse();
   tbody.innerHTML = recent.map(s => {
-    const sig = parseInt(s.signal) || 0;
-    const sideText = sig > 0 ? 'LONG' : sig < 0 ? 'SHORT' : 'FLAT';
-    const sideCls  = sig > 0 ? 'pos' : sig < 0 ? 'neg' : 'dim';
+    const { text: actText, cls: actCls } = fmtAction(s.action, s.signal);
     const conv = (parseFloat(s.ensemble_avg) || 0).toFixed(2);
     return `<tr>
       <td class="dim">${s.as_of_date || '—'}</td>
       <td>${s.asset || ''}</td>
       <td class="num">${conv}</td>
-      <td class="${sideCls}">${sideText}</td>
+      <td class="${actCls}">${actText}</td>
     </tr>`;
   }).join('');
 }

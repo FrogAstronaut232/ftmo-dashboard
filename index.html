@@ -101,39 +101,54 @@
     </div>
   </section>
 
+  <section class="panel">
+    <div class="panel-head"><h2>Recent trades</h2></div>
+    <div class="panel-body">
+      <table class="data-table" id="live-trades-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Asset</th>
+            <th>Side</th>
+            <th class="num">Lots</th>
+            <th class="num">P&amp;L</th>
+            <th class="num">Days</th>
+          </tr>
+        </thead>
+        <tbody><tr><td colspan="6" class="empty">Awaiting first closed trade.</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
   <div class="cols">
     <section class="panel">
-      <div class="panel-head"><h2>Recent trades</h2></div>
+      <div class="panel-head"><h2>Signals &mdash; EURUSD</h2></div>
       <div class="panel-body">
-        <table class="data-table" id="live-trades-table">
+        <table class="data-table" id="live-signals-eurusd-table">
           <thead>
             <tr>
               <th>Date</th>
-              <th>Asset</th>
-              <th>Side</th>
-              <th class="num">Lots</th>
-              <th class="num">P&amp;L</th>
-              <th class="num">Days</th>
+              <th class="num">Conviction</th>
+              <th>Action</th>
             </tr>
           </thead>
-          <tbody><tr><td colspan="6" class="empty">Awaiting first closed trade.</td></tr></tbody>
+          <tbody><tr><td colspan="3" class="empty">Awaiting first scheduled run.</td></tr></tbody>
         </table>
       </div>
     </section>
 
     <section class="panel">
-      <div class="panel-head"><h2>Recent signals</h2></div>
+      <div class="panel-head"><h2>Signals &mdash; GBPJPY</h2></div>
       <div class="panel-body">
-        <table class="data-table" id="live-signals-table">
+        <table class="data-table" id="live-signals-gbpjpy-table">
           <thead>
             <tr>
               <th>Date</th>
-              <th>Asset</th>
               <th class="num">Conviction</th>
               <th>Action</th>
             </tr>
           </thead>
-          <tbody><tr><td colspan="4" class="empty">Awaiting first scheduled run.</td></tr></tbody>
+          <tbody><tr><td colspan="3" class="empty">Awaiting first scheduled run.</td></tr></tbody>
         </table>
       </div>
     </section>
@@ -169,39 +184,54 @@
     </div>
   </section>
 
+  <section class="panel panel--ref">
+    <div class="panel-head"><h2>Trades</h2></div>
+    <div class="panel-body">
+      <table class="data-table" id="ref-trades-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Asset</th>
+            <th>Side</th>
+            <th class="num">Lots</th>
+            <th class="num">P&amp;L</th>
+            <th class="num">Days</th>
+          </tr>
+        </thead>
+        <tbody><tr><td colspan="6" class="empty">&mdash;</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
   <div class="cols">
     <section class="panel panel--ref">
-      <div class="panel-head"><h2>Trades</h2></div>
+      <div class="panel-head"><h2>Signals &mdash; EURUSD</h2></div>
       <div class="panel-body">
-        <table class="data-table" id="ref-trades-table">
+        <table class="data-table" id="ref-signals-eurusd-table">
           <thead>
             <tr>
               <th>Date</th>
-              <th>Asset</th>
-              <th>Side</th>
-              <th class="num">Lots</th>
-              <th class="num">P&amp;L</th>
-              <th class="num">Days</th>
+              <th class="num">Conviction</th>
+              <th>Action</th>
             </tr>
           </thead>
-          <tbody><tr><td colspan="6" class="empty">&mdash;</td></tr></tbody>
+          <tbody><tr><td colspan="3" class="empty">&mdash;</td></tr></tbody>
         </table>
       </div>
     </section>
 
     <section class="panel panel--ref">
-      <div class="panel-head"><h2>Signals</h2></div>
+      <div class="panel-head"><h2>Signals &mdash; GBPJPY</h2></div>
       <div class="panel-body">
-        <table class="data-table" id="ref-signals-table">
+        <table class="data-table" id="ref-signals-gbpjpy-table">
           <thead>
             <tr>
               <th>Date</th>
-              <th>Asset</th>
               <th class="num">Conviction</th>
               <th>Action</th>
             </tr>
           </thead>
-          <tbody><tr><td colspan="4" class="empty">&mdash;</td></tr></tbody>
+          <tbody><tr><td colspan="3" class="empty">&mdash;</td></tr></tbody>
         </table>
       </div>
     </section>

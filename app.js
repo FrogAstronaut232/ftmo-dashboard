@@ -272,9 +272,11 @@ function fmtAction(raw, sigFallback) {
 }
 
 function renderSignalsTable(tableId, signals, emptyMsg) {
+  // Per-asset table — `signals` is already filtered to one asset, so the
+  // Asset column is dropped (header tells you which one).
   const tbody = document.querySelector(`#${tableId} tbody`);
   if (!signals.length) {
-    tbody.innerHTML = `<tr><td colspan="4" class="empty">${emptyMsg}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="3" class="empty">${emptyMsg}</td></tr>`;
     return;
   }
   const recent = signals.slice(-25).reverse();
@@ -283,11 +285,14 @@ function renderSignalsTable(tableId, signals, emptyMsg) {
     const conv = (parseFloat(s.ensemble_avg) || 0).toFixed(2);
     return `<tr>
       <td class="dim">${s.as_of_date || '—'}</td>
-      <td>${s.asset || ''}</td>
       <td class="num">${conv}</td>
       <td class="${actCls}">${actText}</td>
     </tr>`;
   }).join('');
+}
+
+function byAsset(signals, asset) {
+  return (signals || []).filter(s => String(s.asset || '').toUpperCase() === asset);
 }
 
 // ── Reference section ────────────────────────────────────────────────
@@ -333,7 +338,8 @@ async function loadAll() {
     renderPositions(state);
     renderEquity('live-equity-chart', liveEq, initial, '#cdd2d8', 'Awaiting first run.');
     renderTradesTable('live-trades-table',   liveTr,  'Awaiting first closed trade.');
-    renderSignalsTable('live-signals-table', liveSig, 'Awaiting first scheduled run.');
+    renderSignalsTable('live-signals-eurusd-table', byAsset(liveSig, 'EURUSD'), 'Awaiting first scheduled run.');
+    renderSignalsTable('live-signals-gbpjpy-table', byAsset(liveSig, 'GBPJPY'), 'Awaiting first scheduled run.');
 
     // Live equity range label
     if (liveEq.length) {
@@ -345,7 +351,8 @@ async function loadAll() {
     renderRefSummary(state);
     renderEquity('ref-equity-chart', refEq, initial, '#7c8794', 'No reference data.');
     renderTradesTable('ref-trades-table',   refTr,  '—');
-    renderSignalsTable('ref-signals-table', refSig, '—');
+    renderSignalsTable('ref-signals-eurusd-table', byAsset(refSig, 'EURUSD'), '—');
+    renderSignalsTable('ref-signals-gbpjpy-table', byAsset(refSig, 'GBPJPY'), '—');
 
     if (refEq.length) {
       $('ref-equity-range').textContent = `${refEq[0].date} → ${refEq[refEq.length-1].date}`;

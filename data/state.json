@@ -1,9 +1,9 @@
 {
   "as_of_utc": "2026-05-12T05:37:23.728868+00:00",
-  "balance": 49762.62000000001,
-  "equity": 49762.62000000001,
-  "drawdown_pct": 0.47475999999998025,
-  "today_pnl": -237.3799999999886,
+  "balance": 50131.21,
+  "equity": 50131.21,
+  "drawdown_pct": 0.0,
+  "today_pnl": 0.0,
   "open_positions": [],
   "last_signals": {
     "EURUSD": {
@@ -45,5 +45,8 @@
   "live_first_date": "2026-05-08",
   "live_last_date": "2026-05-12",
   "reference_first_date": "2025-01-02",
-  "reference_last_date": "2026-05-08"
+  "reference_last_date": "2026-05-08",
+  "last_heartbeat_utc": "2026-05-12T05:37:26.054128+00:00",
+  "free_margin": 50131.21,
+  "peak_equity": 50131.21
 }

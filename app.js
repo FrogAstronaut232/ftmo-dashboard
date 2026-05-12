@@ -390,13 +390,20 @@ async function manualRefresh() {
   if (!btn || btn.disabled) return;
   btn.disabled = true;
   btn.classList.add('is-spinning');
+  const label = btn.querySelector('.refresh-label');
+  const original = label ? label.textContent : 'Refresh';
   try {
     await loadAll();
+    if (label) label.textContent = 'Refreshed';
+  } catch (e) {
+    if (label) label.textContent = 'Failed';
+    console.error(e);
   } finally {
     setTimeout(() => {
       btn.disabled = false;
       btn.classList.remove('is-spinning');
-    }, 350);
+      if (label) label.textContent = original;
+    }, 1200);
   }
 }
 $('refresh-btn').addEventListener('click', manualRefresh);

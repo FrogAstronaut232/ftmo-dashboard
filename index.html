@@ -30,6 +30,23 @@
     </div>
   </header>
 
+  <!-- ═══ TAB NAVIGATION ═════════════════════════════════════════ -->
+  <nav class="tab-nav" role="tablist" aria-label="Strategy views">
+    <button class="tab-btn is-active" id="tab-btn-live" type="button" role="tab" aria-selected="true" aria-controls="tab-live" data-tab="live">
+      <span class="tab-label">Live</span>
+      <span class="tab-sep">·</span>
+      <span class="tab-strategy">ManifoldFX</span>
+    </button>
+    <button class="tab-btn" id="tab-btn-backtest" type="button" role="tab" aria-selected="false" aria-controls="tab-backtest" data-tab="backtest">
+      <span class="tab-label">Backtest</span>
+      <span class="tab-sep">·</span>
+      <span class="tab-strategy">Strict-OOS FX</span>
+    </button>
+  </nav>
+
+  <!-- ═══ TAB: LIVE (ManifoldFX) ═════════════════════════════════ -->
+  <section id="tab-live" class="tab-pane" role="tabpanel" aria-labelledby="tab-btn-live">
+
   <!-- ═══ LIVE ═══════════════════════════════════════════════════ -->
   <div class="stream-header">
     <div>
@@ -236,6 +253,148 @@
       </div>
     </section>
   </div>
+
+  </section><!-- /#tab-live -->
+
+  <!-- ═══ TAB: BACKTEST (Strict-OOS FX) ══════════════════════════ -->
+  <section id="tab-backtest" class="tab-pane" role="tabpanel" aria-labelledby="tab-btn-backtest" hidden>
+
+    <div class="stream-header">
+      <div>
+        <h2 class="stream-title">Strict-OOS Multi-Pair FX Portfolio</h2>
+        <p class="stream-sub" id="bt-sub">Train 2004&ndash;2015 &middot; Val 2016&ndash;2017 (HP search only) &middot; Test 2018+ untouched until report.</p>
+      </div>
+      <div class="stream-status">
+        <span class="status-pill" id="bt-status">Frozen backtest</span>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="hero-stat">
+        <div class="hero-label">Sharpe (ann.)</div>
+        <div class="hero-value pos" id="bt-sharpe">&mdash;</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-label">CAGR</div>
+        <div class="hero-value pos" id="bt-cagr">&mdash;</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-label">Max drawdown</div>
+        <div class="hero-value neg" id="bt-mdd">&mdash;</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-label">Calmar</div>
+        <div class="hero-value" id="bt-calmar">&mdash;</div>
+      </div>
+    </section>
+
+    <section class="submetrics">
+      <div class="sub-stat"><div class="sub-label">Period</div><div class="sub-value" id="bt-period">&mdash;</div></div>
+      <div class="sub-stat"><div class="sub-label">Trading days</div><div class="sub-value" id="bt-days">&mdash;</div></div>
+      <div class="sub-stat"><div class="sub-label">Win rate</div><div class="sub-value" id="bt-wr">&mdash;</div></div>
+      <div class="sub-stat"><div class="sub-label">Ann. vol</div><div class="sub-value" id="bt-vol">&mdash;</div></div>
+      <div class="sub-stat"><div class="sub-label">Profit factor</div><div class="sub-value" id="bt-pf">&mdash;</div></div>
+      <div class="sub-stat"><div class="sub-label">Sortino</div><div class="sub-value" id="bt-sortino">&mdash;</div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Equity curve (log scale)</h2>
+        <div class="panel-meta" id="bt-equity-range">&mdash;</div>
+      </div>
+      <div class="panel-body panel-body--flush">
+        <div id="bt-equity-chart" class="chart"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Per-year Sharpe</h2>
+        <div class="panel-meta">9 calendar years &middot; OOS</div>
+      </div>
+      <div class="panel-body panel-body--flush">
+        <div id="bt-yearbar-chart" class="chart"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Per-pair performance</h2>
+        <div class="panel-meta">Sorted by Sharpe &middot; OOS 2018&ndash;2026</div>
+      </div>
+      <div class="panel-body">
+        <table class="data-table" id="bt-pair-table">
+          <thead>
+            <tr>
+              <th>Pair</th>
+              <th class="num">Sharpe</th>
+              <th class="num">CAGR %</th>
+              <th class="num">Max DD %</th>
+              <th class="num">Ann. vol %</th>
+              <th class="num">Calmar</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="6" class="empty">Loading&hellip;</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="cols">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>VIX regime breakdown</h2>
+          <div class="panel-meta">Equal-day terciles</div>
+        </div>
+        <div class="panel-body">
+          <table class="data-table" id="bt-regime-table">
+            <thead>
+              <tr>
+                <th>Regime</th>
+                <th class="num">Sharpe</th>
+                <th class="num">CAGR %</th>
+                <th class="num">Days</th>
+              </tr>
+            </thead>
+            <tbody><tr><td colspan="4" class="empty">Loading&hellip;</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Sub-period stability</h2>
+          <div class="panel-meta">4 equal blocks</div>
+        </div>
+        <div class="panel-body">
+          <table class="data-table" id="bt-subperiod-table">
+            <thead>
+              <tr>
+                <th>Block</th>
+                <th class="num">Sharpe</th>
+                <th class="num">CAGR %</th>
+                <th class="num">MDD %</th>
+              </tr>
+            </thead>
+            <tbody><tr><td colspan="4" class="empty">Loading&hellip;</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <section class="panel panel--validation">
+      <div class="panel-head"><h2>Validation summary</h2><div class="panel-meta">Independently audited</div></div>
+      <div class="panel-body">
+        <p class="validation-text">
+          <strong>Independently audited &mdash;</strong> 33-agent forensic review confirms no code leak.
+          White-noise null mean Sharpe <strong>&minus;0.55</strong>; observed Sharpe of <strong>+4.49</strong>
+          sits <strong>+16&sigma;</strong> above the null. Drop-3 worst-case Sharpe <strong>+3.28</strong>.
+          <strong>100% of 1851</strong> rolling 252-day windows produced positive returns.
+          Full forensic report in <code>Ballsack/Robustness/FINDINGS.md</code>.
+        </p>
+      </div>
+    </section>
+
+  </section><!-- /#tab-backtest -->
 
   <footer class="page-foot" id="foot-meta">&mdash;</footer>
 

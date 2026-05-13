@@ -136,6 +136,80 @@ body {
   letter-spacing: 0;
 }
 
+/* ─── Tab navigation ───────────────────────────────────── */
+.tab-nav {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--rule);
+}
+.tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 9px 16px 11px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  margin-bottom: -1px;
+}
+.tab-btn:hover {
+  color: var(--text-2);
+  background: rgba(255, 255, 255, 0.02);
+}
+.tab-btn.is-active {
+  color: var(--text);
+  border-bottom-color: var(--pos);
+}
+.tab-btn.is-active .tab-strategy {
+  color: var(--text);
+}
+.tab-btn .tab-label {
+  color: inherit;
+}
+.tab-btn .tab-sep {
+  color: var(--text-4);
+}
+.tab-btn .tab-strategy {
+  color: var(--text-2);
+  letter-spacing: 0.04em;
+}
+
+.tab-pane[hidden] { display: none; }
+
+/* ─── Validation callout (backtest tab) ────────────────── */
+.panel--validation {
+  border-color: #2a4d33;
+  background: rgba(92, 184, 122, 0.04);
+}
+.panel--validation .panel-head {
+  border-bottom-color: rgba(92, 184, 122, 0.18);
+}
+.validation-text {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+  padding: 4px 0 2px;
+}
+.validation-text strong { color: var(--pos); font-weight: 600; }
+.validation-text code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-2);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1px 5px;
+  border-radius: 2px;
+  border: 1px solid var(--rule-soft);
+}
+
 /* ─── Stream headers (Live / Reference dividers) ───────── */
 .stream-header {
   display: flex;
@@ -379,6 +453,9 @@ body {
 }
 @media (max-width: 620px) {
   .container { padding: 22px 16px 32px; }
+  .tab-nav { gap: 0; }
+  .tab-btn { padding: 9px 10px 11px; font-size: 10.5px; }
+  .tab-btn .tab-sep, .tab-btn .tab-strategy { display: none; }
   .masthead { flex-direction: column; align-items: flex-start; gap: 14px; }
   .masthead-meta { text-align: left; }
   .tags { justify-content: flex-start; }

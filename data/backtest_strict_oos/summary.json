@@ -1,0 +1,30 @@
+{
+  "strategy_name": "Strict-OOS Multi-Pair FX Portfolio",
+  "period_start": "2018-01-02",
+  "period_end": "2026-05-12",
+  "n_days": 2102,
+  "sharpe": 4.487,
+  "sharpe_ci_low": 3.863,
+  "sharpe_ci_high": 5.140,
+  "cagr_pct": 15.87,
+  "ann_vol_pct": 3.30,
+  "mdd_pct": -1.61,
+  "calmar": 9.86,
+  "sortino": 8.44,
+  "profit_factor": 2.29,
+  "win_rate_pct": 59.0,
+  "sign_permutation_p_value": 0.0,
+  "n_pairs": 10,
+  "rebalances_per_year": 0,
+  "validation_notes": {
+    "train_period": "2004-2015",
+    "val_period": "2016-2017 (50 Optuna trials, never re-touched OOS)",
+    "test_period": "2018-2026 (untouched until report)",
+    "audit_agents": 33,
+    "white_noise_null_mean_sharpe": -0.55,
+    "white_noise_sigma_above_null": 16,
+    "drop_3_worst_case_sharpe": 3.28,
+    "rolling_252d_windows_positive_pct": 100,
+    "rolling_252d_windows_total": 1851
+  }
+}

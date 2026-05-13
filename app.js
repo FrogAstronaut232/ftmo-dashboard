@@ -408,5 +408,233 @@ async function manualRefresh() {
 }
 $('refresh-btn').addEventListener('click', manualRefresh);
 
+// ── Tab switching ────────────────────────────────────────────────────
+// Two tabs: Live (ManifoldFX, polled) and Backtest (Strict-OOS FX, static).
+// Backtest data is fetched lazily on first activation, then cached.
+let backtestLoaded = false;
+
+function activateTab(name) {
+  const tabs = ['live', 'backtest'];
+  tabs.forEach(t => {
+    const pane = $(`tab-${t}`);
+    const btn  = $(`tab-btn-${t}`);
+    if (!pane || !btn) return;
+    const active = (t === name);
+    pane.hidden = !active;
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-selected', active ? 'true' : 'false');
+  });
+  if (name === 'backtest' && !backtestLoaded) {
+    backtestLoaded = true;
+    loadBacktest().catch(e => {
+      console.error('Backtest load failed:', e);
+      backtestLoaded = false; // allow retry
+    });
+  }
+  // Plotly charts can mis-size when drawn while their container is hidden.
+  // Re-trigger a resize after the pane becomes visible.
+  setTimeout(() => {
+    if (name === 'live') {
+      const live = $('live-equity-chart'); if (live && live._fullLayout) Plotly.Plots.resize(live);
+      const ref  = $('ref-equity-chart');  if (ref  && ref._fullLayout)  Plotly.Plots.resize(ref);
+    } else if (name === 'backtest') {
+      const eq = $('bt-equity-chart');   if (eq  && eq._fullLayout)  Plotly.Plots.resize(eq);
+      const yr = $('bt-yearbar-chart');  if (yr  && yr._fullLayout)  Plotly.Plots.resize(yr);
+    }
+  }, 30);
+}
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+});
+
+// ── Backtest tab loader ──────────────────────────────────────────────
+async function loadBacktest() {
+  const BT_BASE = `${DATA_BASE}/backtest_strict_oos`;
+  const fetchBt = async (name) => {
+    const r = await fetch(bust(`${BT_BASE}/${name}`));
+    if (!r.ok) throw new Error(`${name} ${r.status}`);
+    if (name.endsWith('.json')) return r.json();
+    const text = await r.text();
+    return new Promise(resolve => {
+      Papa.parse(text, {
+        header: true, dynamicTyping: true, skipEmptyLines: true,
+        complete: results => resolve(results.data || []),
+      });
+    });
+  };
+
+  const [summary, portfolio, perPair, perYear, subPeriod, regime] = await Promise.all([
+    fetchBt('summary.json'),
+    fetchBt('portfolio.csv'),
+    fetchBt('per_pair.csv'),
+    fetchBt('per_year.csv'),
+    fetchBt('sub_period.csv'),
+    fetchBt('regime_conditional.csv'),
+  ]);
+
+  // ─ Hero + submetrics ─
+  const signed = v => (v > 0 ? `+${v.toFixed(2)}` : v.toFixed(2));
+  $('bt-sharpe').textContent  = signed(summary.sharpe);
+  $('bt-cagr').textContent    = `${summary.cagr_pct > 0 ? '+' : ''}${summary.cagr_pct.toFixed(2)}%`;
+  $('bt-mdd').textContent     = `${summary.mdd_pct.toFixed(2)}%`;
+  $('bt-calmar').textContent  = summary.calmar.toFixed(2);
+
+  $('bt-period').textContent  = `${summary.period_start} → ${summary.period_end}`;
+  $('bt-days').textContent    = String(summary.n_days);
+  $('bt-wr').textContent      = `${summary.win_rate_pct.toFixed(1)}%`;
+  $('bt-vol').textContent     = `${summary.ann_vol_pct.toFixed(2)}%`;
+  $('bt-pf').textContent      = summary.profit_factor.toFixed(2);
+  $('bt-sortino').textContent = summary.sortino.toFixed(2);
+
+  // ─ Equity curve (log scale) ─
+  const eqX = portfolio.map(r => r.date);
+  const eqY = portfolio.map(r => Number(r.equity));
+  if (eqX.length) {
+    $('bt-equity-range').textContent = `${eqX[0]} → ${eqX[eqX.length - 1]}`;
+  }
+  const eqTrace = {
+    x: eqX, y: eqY,
+    type: 'scatter', mode: 'lines',
+    line: { color: '#5cb87a', width: 1.4, shape: 'linear' },
+    hovertemplate: '%{x}<br>equity %{y:.3f}×<extra></extra>',
+    showlegend: false,
+  };
+  const eqRef = {
+    x: [eqX[0], eqX[eqX.length - 1]], y: [1, 1],
+    type: 'scatter', mode: 'lines',
+    line: { color: '#2c3340', width: 1, dash: 'dot' },
+    hoverinfo: 'skip', showlegend: false,
+  };
+  const eqLayout = {
+    paper_bgcolor: '#161b24', plot_bgcolor: '#161b24',
+    font: { color: '#6a727d', family: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace', size: 11 },
+    margin: { t: 18, r: 28, b: 38, l: 72 },
+    xaxis: {
+      gridcolor: '#1f2531', zeroline: false,
+      showline: true, linecolor: '#262d39', linewidth: 1,
+      ticks: 'outside', tickcolor: '#262d39', ticklen: 4,
+    },
+    yaxis: {
+      type: 'log',
+      gridcolor: '#1f2531', zeroline: false,
+      tickformat: '.2f',
+      showline: true, linecolor: '#262d39', linewidth: 1,
+      ticks: 'outside', tickcolor: '#262d39', ticklen: 4,
+      title: { text: 'Equity multiple (log)', font: { color: '#6a727d', size: 10 } },
+    },
+    hovermode: 'x unified',
+    hoverlabel: {
+      bgcolor: '#11151b', bordercolor: '#262d39',
+      font: { color: '#e3e6ea', family: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace', size: 12 },
+    },
+    showlegend: false,
+  };
+  Plotly.newPlot('bt-equity-chart', [eqRef, eqTrace], eqLayout, { displayModeBar: false, responsive: true });
+
+  // ─ Per-year Sharpe bar chart ─
+  const yrX = perYear.map(r => String(r.year));
+  const yrY = perYear.map(r => Number(r.sharpe));
+  const yrTrace = {
+    x: yrX, y: yrY, type: 'bar',
+    marker: {
+      color: yrY.map(v => v >= 0 ? '#5cb87a' : '#d04a52'),
+      line: { color: '#262d39', width: 1 },
+    },
+    text: yrY.map(v => v.toFixed(2)),
+    textposition: 'outside',
+    textfont: { color: '#9aa3ad', family: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace', size: 11 },
+    hovertemplate: '%{x}<br>Sharpe %{y:.2f}<extra></extra>',
+    showlegend: false,
+  };
+  const yrLayout = {
+    paper_bgcolor: '#161b24', plot_bgcolor: '#161b24',
+    font: { color: '#6a727d', family: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace', size: 11 },
+    margin: { t: 26, r: 28, b: 38, l: 60 },
+    xaxis: {
+      gridcolor: '#1f2531', zeroline: false,
+      showline: true, linecolor: '#262d39', linewidth: 1,
+      ticks: 'outside', tickcolor: '#262d39', ticklen: 4,
+    },
+    yaxis: {
+      gridcolor: '#1f2531', zeroline: true, zerolinecolor: '#3a4452',
+      showline: true, linecolor: '#262d39', linewidth: 1,
+      ticks: 'outside', tickcolor: '#262d39', ticklen: 4,
+      title: { text: 'Sharpe', font: { color: '#6a727d', size: 10 } },
+      rangemode: 'tozero',
+    },
+    bargap: 0.35,
+    hoverlabel: {
+      bgcolor: '#11151b', bordercolor: '#262d39',
+      font: { color: '#e3e6ea', family: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace', size: 12 },
+    },
+    showlegend: false,
+  };
+  Plotly.newPlot('bt-yearbar-chart', [yrTrace], yrLayout, { displayModeBar: false, responsive: true });
+
+  // ─ Per-pair table (sorted by Sharpe desc) ─
+  const pairs = perPair
+    .filter(r => r && r.pair)
+    .slice()
+    .sort((a, b) => Number(b.sharpe) - Number(a.sharpe));
+  const pairBody = document.querySelector('#bt-pair-table tbody');
+  if (pairs.length) {
+    pairBody.innerHTML = pairs.map(r => {
+      const sh = Number(r.sharpe);
+      const cagr = Number(r.cagr_pct);
+      const shCls = sh > 0 ? 'pos' : sh < 0 ? 'neg' : 'dim';
+      const cagrCls = cagr > 0 ? 'pos' : cagr < 0 ? 'neg' : 'dim';
+      return `<tr>
+        <td>${r.pair}</td>
+        <td class="num ${shCls}">${sh.toFixed(2)}</td>
+        <td class="num ${cagrCls}">${cagr.toFixed(2)}</td>
+        <td class="num neg">${Number(r.mdd_pct).toFixed(2)}</td>
+        <td class="num dim">${Number(r.ann_vol_pct).toFixed(2)}</td>
+        <td class="num">${Number(r.calmar).toFixed(2)}</td>
+      </tr>`;
+    }).join('');
+  } else {
+    pairBody.innerHTML = '<tr><td colspan="6" class="empty">No data.</td></tr>';
+  }
+
+  // ─ Regime table ─
+  const regimeLabels = { low_vol: 'Low VIX', mid_vol: 'Mid VIX', high_vol: 'High VIX' };
+  const regimeBody = document.querySelector('#bt-regime-table tbody');
+  if (regime.length) {
+    regimeBody.innerHTML = regime.map(r => {
+      const sh = Number(r.sharpe);
+      const cagr = Number(r.cagr_pct);
+      const label = regimeLabels[r.regime] || r.regime;
+      return `<tr>
+        <td>${label}</td>
+        <td class="num pos">${sh.toFixed(2)}</td>
+        <td class="num pos">${cagr.toFixed(2)}</td>
+        <td class="num dim">${r.n_days}</td>
+      </tr>`;
+    }).join('');
+  } else {
+    regimeBody.innerHTML = '<tr><td colspan="4" class="empty">No data.</td></tr>';
+  }
+
+  // ─ Sub-period table ─
+  const subBody = document.querySelector('#bt-subperiod-table tbody');
+  if (subPeriod.length) {
+    subBody.innerHTML = subPeriod.map(r => {
+      const sh = Number(r.sharpe);
+      const cagr = Number(r.cagr_pct);
+      const mdd = Number(r.mdd_pct);
+      const shCls = sh > 0 ? 'pos' : 'neg';
+      const cagrCls = cagr > 0 ? 'pos' : 'neg';
+      return `<tr>
+        <td class="dim">${r.block}</td>
+        <td class="num ${shCls}">${sh.toFixed(2)}</td>
+        <td class="num ${cagrCls}">${cagr.toFixed(2)}</td>
+        <td class="num neg">${mdd.toFixed(2)}</td>
+      </tr>`;
+    }).join('');
+  } else {
+    subBody.innerHTML = '<tr><td colspan="4" class="empty">No data.</td></tr>';
+  }
+}
+
 loadAll();
 setInterval(loadAll, REFRESH_MS);

@@ -1,0 +1,4 @@
+regime,n_days,sharpe,cagr_pct
+low_vol,701,4.02,13.16
+mid_vol,701,4.01,13.88
+high_vol,700,5.37,20.74

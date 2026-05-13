@@ -1,0 +1,29 @@
+{
+  "_meta": {
+    "n_sims": 10000,
+    "block_size": 5,
+    "input_n_days": 2102,
+    "input_sharpe_ann": 4.49,
+    "headline_scale": 1.0,
+    "conservative_scale_factor": 0.4457,
+    "source": "Ballsack/output/ftmo_montecarlo/results.json + results_supplemental.json",
+    "cppi_overlay": true
+  },
+  "scenarios": {
+    "current_1step_60d":        {"pass_rate": 0.0004, "median_days_to_pass": null, "mdl_pct": 0.0,   "ml_pct": 0.0, "timeout_pct": 0.9996},
+    "current_1step_252d":       {"pass_rate": 0.9521, "median_days_to_pass": 162,  "mdl_pct": 0.0,   "ml_pct": 0.0, "timeout_pct": 0.0479},
+    "current_2step_p1_60d":     {"pass_rate": 0.0088, "median_days_to_pass": 55,   "mdl_pct": 0.0,   "ml_pct": 0.0, "timeout_pct": 0.9912},
+
+    "scale5_1step_60d":         {"pass_rate": 0.7977, "median_days_to_pass": 29,   "mdl_pct": 0.0438, "ml_pct": 0.0, "timeout_pct": 0.1585},
+    "scale5_1step_90d":         {"pass_rate": 0.9082, "median_days_to_pass": 32,   "mdl_pct": 0.0487, "ml_pct": 0.0, "timeout_pct": 0.0431},
+    "scale5_2step_p1_60d":      {"pass_rate": 0.8900, "median_days_to_pass": 24,   "mdl_pct": 0.0,    "ml_pct": 0.0, "timeout_pct": 0.1100},
+    "scale5_2step_chained":     {"pass_rate": 0.8530, "median_days_to_pass": 43,   "phase1_pass_rate": 0.8908, "phase2_pass_rate_given_phase1": 0.9576, "fail_phase1_timeout_pct": 0.1092, "fail_phase2_timeout_pct": 0.0378},
+
+    "scale5_conservative_1step_60d":     {"pass_rate": 0.2990, "median_days_to_pass": 48, "mdl_pct": 0.0, "ml_pct": 0.0, "timeout_pct": 0.7010},
+    "scale5_conservative_1step_90d":     {"pass_rate": 0.6802, "median_days_to_pass": 62, "mdl_pct": 0.0, "ml_pct": 0.0, "timeout_pct": 0.3198},
+    "scale5_conservative_2step_p1_60d":  {"pass_rate": 0.5078, "median_days_to_pass": 44, "mdl_pct": 0.0, "ml_pct": 0.0, "timeout_pct": 0.4922},
+    "scale5_conservative_2step_chained": {"pass_rate": 0.4166, "median_days_to_pass": 74, "phase1_pass_rate": 0.5122, "phase2_pass_rate_given_phase1": 0.8134, "fail_phase1_timeout_pct": 0.4878, "fail_phase2_timeout_pct": 0.0956}
+  },
+  "optimal_scale_x": 5,
+  "rationale": "Strategy at 1x deployment vol is too slow to hit FTMO 10% in 60d. CPPI overlay applied. Conservative scenario re-runs the MC after scaling daily P&L down to a Sharpe-2.0 forward expectation."
+}

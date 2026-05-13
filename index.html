@@ -381,6 +381,43 @@
       </section>
     </div>
 
+    <section class="panel">
+      <div class="panel-head">
+        <h2>FTMO Monte Carlo (10,000 sims)</h2>
+        <div class="panel-meta" id="bt-mc-meta">Block-bootstrap &middot; CPPI overlay</div>
+      </div>
+      <div class="panel-body">
+        <p class="mc-intro" id="bt-mc-intro">
+          Empirical block-bootstrap of OOS daily P&amp;L, CPPI overlay applied.
+          Headline number at the suggested <strong>5&times;</strong> deployment notional.
+          At current (1&times;) sizing the strategy is dramatically under-leveraged for FTMO 60-day windows.
+        </p>
+
+        <div class="mc-tabs" role="tablist" aria-label="Sizing scenario">
+          <button class="mc-tab is-active" type="button" role="tab" aria-selected="true"  data-mctab="scale5">Suggested 5&times;</button>
+          <button class="mc-tab"           type="button" role="tab" aria-selected="false" data-mctab="conservative">Conservative 5&times;</button>
+          <button class="mc-tab"           type="button" role="tab" aria-selected="false" data-mctab="current">Current 1&times;</button>
+        </div>
+
+        <table class="data-table mc-table">
+          <thead>
+            <tr>
+              <th>Scenario</th>
+              <th class="num">Pass rate</th>
+              <th class="num">Median days</th>
+              <th class="num">MDL breach</th>
+            </tr>
+          </thead>
+          <tbody id="bt-mc-tbody"><tr><td colspan="4" class="empty">Loading&hellip;</td></tr></tbody>
+        </table>
+
+        <p class="mc-footnote" id="bt-mc-footnote">
+          Failure mode at 5&times;: MDL breach 4.4%, ML breach 0%, remainder timeouts.
+          Sweep peaks near 5&times; (~80% 1-Step 60-day); higher leverage trades pass rate for MDL risk.
+        </p>
+      </div>
+    </section>
+
     <section class="panel panel--validation">
       <div class="panel-head"><h2>Validation summary</h2><div class="panel-meta">Independently audited</div></div>
       <div class="panel-body">

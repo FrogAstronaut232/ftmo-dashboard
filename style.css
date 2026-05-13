@@ -424,6 +424,52 @@ body {
   font-size: 13px;
 }
 
+/* ─── Monte Carlo panel (backtest tab) ─────────────────── */
+.mc-intro {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+  padding: 4px 0 14px;
+}
+.mc-intro strong { color: var(--text); font-weight: 600; }
+.mc-tabs {
+  display: inline-flex;
+  gap: 0;
+  margin-bottom: 12px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.mc-tab {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  background: transparent;
+  color: var(--text-3);
+  border: 0;
+  border-right: 1px solid var(--rule);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+.mc-tab:last-child { border-right: 0; }
+.mc-tab:hover { color: var(--text-2); background: rgba(255, 255, 255, 0.02); }
+.mc-tab.is-active {
+  color: var(--text);
+  background: rgba(92, 184, 122, 0.08);
+}
+.mc-table { margin-bottom: 10px; }
+.mc-footnote {
+  font-size: 11.5px;
+  color: var(--text-3);
+  line-height: 1.55;
+  padding-top: 8px;
+  border-top: 1px solid var(--rule-soft);
+  margin-top: 4px;
+}
+
 /* ─── Chart ─────────────────────────────────────────────── */
 .chart { height: 400px; }
 

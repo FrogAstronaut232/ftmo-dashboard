@@ -463,13 +463,14 @@ async function loadBacktest() {
     });
   };
 
-  const [summary, portfolio, perPair, perYear, subPeriod, regime] = await Promise.all([
+  const [summary, portfolio, perPair, perYear, subPeriod, regime, mc] = await Promise.all([
     fetchBt('summary.json'),
     fetchBt('portfolio.csv'),
     fetchBt('per_pair.csv'),
     fetchBt('per_year.csv'),
     fetchBt('sub_period.csv'),
     fetchBt('regime_conditional.csv'),
+    fetchBt('ftmo_montecarlo.json').catch(() => null),
   ]);
 
   // ─ Hero + submetrics ─
@@ -633,6 +634,115 @@ async function loadBacktest() {
     }).join('');
   } else {
     subBody.innerHTML = '<tr><td colspan="4" class="empty">No data.</td></tr>';
+  }
+
+  // ─ FTMO Monte Carlo panel ─
+  renderMonteCarlo(mc);
+}
+
+// ── Monte Carlo renderer ─────────────────────────────────────────────
+// Three sub-views (mini-tabs): suggested 5×, conservative 5×, current 1×.
+// Each shows: 1-Step 60d, 1-Step 90d/252d, 2-Step phase 1, 2-Step chained
+// (where applicable). Pass rate column gets a pos/neg/dim colour based on
+// FTMO viability cut: >=60% pos, 25-60% dim/warn, <25% neg.
+function renderMonteCarlo(mc) {
+  const tbody = document.querySelector('#bt-mc-tbody');
+  const meta  = $('bt-mc-meta');
+  const tabsRoot = document.querySelector('.mc-tabs');
+  if (!tbody) return;
+  if (!mc || !mc.scenarios) {
+    tbody.innerHTML = '<tr><td colspan="4" class="empty">No Monte Carlo data.</td></tr>';
+    return;
+  }
+  if (meta) {
+    const n = (mc._meta && mc._meta.n_sims) ? mc._meta.n_sims.toLocaleString() : '10,000';
+    meta.textContent = `${n} sims · block-bootstrap · CPPI overlay`;
+  }
+
+  const VIEWS = {
+    scale5: {
+      title: 'Suggested 5× sizing',
+      rows: [
+        { label: '1-Step $200k · 60d',           key: 'scale5_1step_60d' },
+        { label: '1-Step $200k · 90d',           key: 'scale5_1step_90d' },
+        { label: '2-Step P1 $50k · 60d',         key: 'scale5_2step_p1_60d' },
+        { label: '2-Step chained (P1+P2)',       key: 'scale5_2step_chained' },
+      ],
+    },
+    conservative: {
+      title: 'Conservative 5× (Sharpe-2 forward)',
+      rows: [
+        { label: '1-Step $200k · 60d',           key: 'scale5_conservative_1step_60d' },
+        { label: '1-Step $200k · 90d',           key: 'scale5_conservative_1step_90d' },
+        { label: '2-Step P1 $50k · 60d',         key: 'scale5_conservative_2step_p1_60d' },
+        { label: '2-Step chained (P1+P2)',       key: 'scale5_conservative_2step_chained' },
+      ],
+    },
+    current: {
+      title: 'Current 1× sizing (under-leveraged)',
+      rows: [
+        { label: '1-Step $200k · 60d',           key: 'current_1step_60d' },
+        { label: '1-Step $200k · 252d (1yr)',    key: 'current_1step_252d' },
+        { label: '2-Step P1 $50k · 60d',         key: 'current_2step_p1_60d' },
+      ],
+    },
+  };
+
+  function passClass(p) {
+    if (p == null || isNaN(p)) return 'dim';
+    if (p >= 0.60) return 'pos';
+    if (p >= 0.25) return 'warn';
+    return 'neg';
+  }
+  function pct(v, dp = 1) {
+    if (v == null || isNaN(v)) return '—';
+    return `${(Number(v) * 100).toFixed(dp)}%`;
+  }
+
+  function render(viewName) {
+    const view = VIEWS[viewName] || VIEWS.scale5;
+    const rows = view.rows.map(r => {
+      const s = mc.scenarios[r.key];
+      if (!s) {
+        return `<tr><td>${r.label}</td><td class="num dim">—</td><td class="num dim">—</td><td class="num dim">—</td></tr>`;
+      }
+      // chained scenarios use overall_pass_rate; flat scenarios use pass_rate
+      const pr = (typeof s.pass_rate === 'number') ? s.pass_rate
+               : (typeof s.overall_pass_rate === 'number') ? s.overall_pass_rate
+               : null;
+      const days = s.median_days_to_pass != null ? `${s.median_days_to_pass}` : '—';
+      const mdl = s.mdl_pct != null ? pct(s.mdl_pct, 1) : '—';
+      const prCls = passClass(pr);
+      const mdlCls = (s.mdl_pct != null && s.mdl_pct >= 0.05) ? 'neg' : 'dim';
+      return `<tr>
+        <td>${r.label}</td>
+        <td class="num ${prCls}">${pct(pr, 1)}</td>
+        <td class="num dim">${days}</td>
+        <td class="num ${mdlCls}">${mdl}</td>
+      </tr>`;
+    });
+    tbody.innerHTML = rows.join('');
+  }
+
+  // Initial render: default to "scale5" tab (already marked is-active in HTML)
+  render('scale5');
+
+  // Wire mini-tab clicks (idempotent — replace listeners by cloning buttons)
+  if (tabsRoot) {
+    tabsRoot.querySelectorAll('.mc-tab').forEach(btn => {
+      const fresh = btn.cloneNode(true);
+      btn.parentNode.replaceChild(fresh, btn);
+    });
+    tabsRoot.querySelectorAll('.mc-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabsRoot.querySelectorAll('.mc-tab').forEach(b => {
+          const active = (b === btn);
+          b.classList.toggle('is-active', active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        render(btn.dataset.mctab);
+      });
+    });
   }
 }
 

@@ -35,12 +35,12 @@
     <button class="tab-btn is-active" id="tab-btn-live" type="button" role="tab" aria-selected="true" aria-controls="tab-live" data-tab="live">
       <span class="tab-label">Live</span>
       <span class="tab-sep">·</span>
-      <span class="tab-strategy">ManifoldFX</span>
+      <span class="tab-strategy">ManifoldFX  (2-pair)</span>
     </button>
     <button class="tab-btn" id="tab-btn-backtest" type="button" role="tab" aria-selected="false" aria-controls="tab-backtest" data-tab="backtest">
       <span class="tab-label">Backtest</span>
       <span class="tab-sep">·</span>
-      <span class="tab-strategy">Strict-OOS FX</span>
+      <span class="tab-strategy">Strict-OOS  (10-pair, separate model)</span>
     </button>
   </nav>
 
@@ -261,8 +261,13 @@
 
     <div class="stream-header">
       <div>
-        <h2 class="stream-title">Strict-OOS Multi-Pair FX Portfolio</h2>
-        <p class="stream-sub" id="bt-sub">Train 2004&ndash;2015 &middot; Val 2016&ndash;2017 (HP search only) &middot; Test 2018+ untouched until report.</p>
+        <h2 class="stream-title">Strict-OOS Multi-Pair FX Portfolio  <span class="title-pill">BACKTEST ONLY</span></h2>
+        <p class="stream-sub" id="bt-sub">
+          <strong>Separate strategy from the live ManifoldFX tab.</strong>
+          Trades a 10-pair G10 FX portfolio (AUDJPY, AUDUSD, EURGBP, EURUSD, GBPJPY, GBPUSD, NZDUSD, USDCAD, USDCHF, USDJPY) &mdash; not the same model as the 2-pair live system.
+          Train 2004&ndash;2015 &middot; Val 2016&ndash;2017 (HP search only) &middot; Test 2018+ untouched until report.
+          <strong>These are out-of-sample backtest results, not a deployed strategy.</strong>
+        </p>
       </div>
       <div class="stream-status">
         <span class="status-pill" id="bt-status">Frozen backtest</span>

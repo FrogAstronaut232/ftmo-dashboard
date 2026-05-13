@@ -472,6 +472,182 @@ body {
 
 /* ─── Chart ─────────────────────────────────────────────── */
 .chart { height: 400px; }
+.chart--short { height: 280px; }
+
+/* ─── Forensic-audit additions (Backtest tab) ────────────── */
+
+/* Inline submetric strip used inside a .panel-body (no top/bottom margin) */
+.submetrics--inline {
+  margin-bottom: 14px;
+  margin-top: 6px;
+}
+
+/* Badge strip — short row of inline status pills */
+.badge-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 4px 0 14px;
+}
+
+/* Tag colour variants */
+.tag-pos {
+  color: var(--pos);
+  border-color: #2a4d33;
+  background: rgba(92, 184, 122, 0.06);
+}
+.tag-warn {
+  color: var(--warn);
+  border-color: #4a3820;
+  background: rgba(198, 146, 86, 0.06);
+}
+.tag-dim {
+  color: var(--text-3);
+  border-color: var(--rule);
+  background: transparent;
+}
+
+/* Callout (deployment recommendation): blue/accent left stripe */
+.panel--callout {
+  border-left: 3px solid #6a96d0;
+  background: rgba(106, 150, 208, 0.04);
+}
+.panel--callout .panel-head {
+  border-bottom-color: rgba(106, 150, 208, 0.18);
+}
+.panel--callout .validation-text strong { color: #6a96d0; }
+.panel--callout .num.pos strong { color: var(--pos); }
+.panel--callout .num.warn strong { color: var(--warn); }
+
+/* Audit / caveats panel — subtle distinction from validation panel */
+.panel--audit .validation-text strong { color: var(--pos); }
+.panel--audit .validation-text em { color: var(--text-2); font-style: italic; }
+.panel--caveats {
+  border-color: #4a3820;
+  background: rgba(198, 146, 86, 0.03);
+}
+.panel--caveats .panel-head {
+  border-bottom-color: rgba(198, 146, 86, 0.18);
+}
+
+/* Sub-panel headers inside a .panel-body */
+.subpanel {
+  background: var(--panel-2);
+  border: 1px solid var(--rule-soft);
+  border-radius: 3px;
+  padding: 12px 14px 10px;
+}
+.subpanel-head {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin: 14px 0 8px;
+}
+.subpanel .subpanel-head {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+.subpanel-note {
+  font-size: 11.5px;
+  color: var(--text-3);
+  margin-top: 8px;
+  line-height: 1.55;
+}
+
+/* Tighter two-column grid for sub-panels inside a panel */
+.cols--tight {
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* Caveat list table — pill column narrow, body column wide */
+.caveat-list tbody td {
+  vertical-align: top;
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.caveat-list tbody td.caveat-pill-cell {
+  width: 1%;
+  white-space: nowrap;
+  padding-right: 18px;
+}
+
+/* Robustness scorecard */
+.scorecard-scroll {
+  max-height: 620px;
+  overflow-y: auto;
+  border: 1px solid var(--rule-soft);
+  border-radius: 2px;
+}
+.scorecard-table {
+  font-size: 12.5px;
+}
+.scorecard-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--panel);
+  z-index: 1;
+  box-shadow: 0 1px 0 var(--rule);
+}
+.scorecard-table tbody td {
+  padding: 9px 12px;
+}
+.scorecard-cat {
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  padding-top: 14px !important;
+  border-top: 1px solid var(--rule-soft);
+}
+.scorecard-cat-empty {
+  padding: 0 !important;
+}
+.scorecard-evidence {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+  max-width: 380px;
+}
+
+/* Scorecard pill variants — reuse .tag base */
+.scorecard-pill-pass {
+  color: var(--pos);
+  border-color: #2a4d33;
+  background: rgba(92, 184, 122, 0.06);
+}
+.scorecard-pill-fail {
+  color: var(--neg);
+  border-color: #4d2a2e;
+  background: rgba(208, 74, 82, 0.06);
+}
+.scorecard-pill-caveat {
+  color: var(--warn);
+  border-color: #4a3820;
+  background: rgba(198, 146, 86, 0.06);
+}
+.scorecard-pill-dim {
+  color: var(--text-3);
+  border-color: var(--rule);
+  background: transparent;
+}
+
+/* Dim variant of validation text */
+.validation-text--dim {
+  color: var(--text-3);
+  font-size: 12px;
+}
+.validation-text + .validation-text { margin-top: 10px; }
+
+/* Inline-strip submetrics width override so .submetrics--inline doesn't
+   force 6 equal columns when fewer are present (4-col layout). */
+.panel-body .submetrics--inline {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
 
 /* ─── Footer ────────────────────────────────────────────── */
 .page-foot {
@@ -496,6 +672,8 @@ body {
   .sub-stat:nth-child(2),
   .sub-stat:nth-child(3) { border-bottom: 1px solid var(--rule-soft); }
   .cols { grid-template-columns: 1fr; }
+  .cols--tight { grid-template-columns: 1fr; }
+  .scorecard-evidence { max-width: none; }
 }
 @media (max-width: 620px) {
   .container { padding: 22px 16px 32px; }

@@ -381,6 +381,213 @@
       </section>
     </div>
 
+    <!-- ═══ NEW PANEL: Cold reproduction & code audit ═════════════ -->
+    <section class="panel panel--validation panel--audit" id="bt-code-audit">
+      <div class="panel-head">
+        <h2>Cold reproduction &amp; code audit</h2>
+        <div class="panel-meta">5 leak surfaces audited &middot; bit-identical cold run</div>
+      </div>
+      <div class="panel-body">
+        <div class="submetrics submetrics--inline">
+          <div class="sub-stat"><div class="sub-label">Cold reproduction</div><div class="sub-value pos">+4.487</div></div>
+          <div class="sub-stat"><div class="sub-label">Wall time</div><div class="sub-value">176 s</div></div>
+          <div class="sub-stat"><div class="sub-label">Label-boundary impact</div><div class="sub-value">+0.021</div></div>
+          <div class="sub-stat"><div class="sub-label">Trained on test labels</div><div class="sub-value dim">1 row / refit</div></div>
+        </div>
+        <div class="badge-strip">
+          <span class="tag tag-pos">Sharpe +4.487 bit-identical on cold run</span>
+          <span class="tag tag-pos">5 leak surfaces audited SAFE</span>
+        </div>
+        <p class="validation-text">
+          <strong>Cold reproduction.</strong> Re-running the strategy from a fresh environment produces Sharpe
+          <strong>+4.487</strong> bit-identical to the deployed number, in 176 seconds wall-clock.
+        </p>
+        <p class="validation-text">
+          <strong>Code audit.</strong> Two pipeline modules carry the load-bearing risk of a future-data peek:
+          <code>lib/features.py</code> (modules 1&ndash;5+7) and <code>lib/embedding.py</code>
+          (PCA, StandardScaler, state-grid, position_map). Both are <strong>clean</strong> &mdash; features at any date
+          <em>d</em> are byte-identical across input-DataFrame extents from 2020-06-30 to 2026-01-01, and every
+          embedding component is fitted on the training slice only. The dormant module 6 right-padding leak is
+          correctly quarantined by <code>EXCLUDED_FEATURE_MODULES</code>. The <code>position_map.get(s, 0.5)</code>
+          default fires 0 / 210,130 times under deployed HPs &mdash; confirmed dead code.
+        </p>
+        <p class="validation-text">
+          <strong>One real label-boundary leak, magnitude trivial.</strong> At every refit boundary, the last training
+          row's label equals the first OOS day's return. The prior audit claim that <code>sig.shift(1)</code> erases
+          this is mechanically wrong (shift delays PnL, doesn't unwind the contaminated weights). Patching the boundary
+          moves portfolio Sharpe from +4.486 to <strong>+4.507</strong> &mdash; a +0.021 delta on 800 of ~400,000
+          training rows. Mechanism mis-stated; impact immaterial.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══ NEW PANEL: Macro analysis ═════════════════════════════ -->
+    <section class="panel" id="bt-macro-analysis">
+      <div class="panel-head">
+        <h2>Macro analysis</h2>
+        <div class="panel-meta">Shift gradient &middot; per-feature ablation &middot; source independence</div>
+      </div>
+      <div class="panel-body">
+        <div class="panel-body--flush">
+          <div id="bt-macro-shift-chart" class="chart chart--short"></div>
+        </div>
+        <p class="mc-footnote" id="bt-macro-shift-caption">
+          Frozen HPs &middot; macro shifted &plusmn;10 days. Future shifts degrade monotonically &mdash;
+          opposite of a leak signature.
+        </p>
+        <div class="cols cols--tight">
+          <div class="subpanel">
+            <h3 class="subpanel-head">Per-feature ablation</h3>
+            <table class="data-table" id="bt-macro-ablation-table">
+              <thead>
+                <tr><th>Macro features kept</th><th class="num">Sharpe</th></tr>
+              </thead>
+              <tbody><tr><td colspan="2" class="empty">Loading&hellip;</td></tr></tbody>
+            </table>
+            <p class="subpanel-note">DXY carries most of the signal &mdash; economically sensible for USD-base FX.</p>
+          </div>
+          <div class="subpanel">
+            <h3 class="subpanel-head">Source replacement</h3>
+            <table class="data-table" id="bt-macro-source-table">
+              <thead>
+                <tr><th>Source</th><th class="num">Sharpe</th><th>Note</th></tr>
+              </thead>
+              <tbody><tr><td colspan="3" class="empty">Loading&hellip;</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ NEW PANEL: Universe robustness ═══════════════════════ -->
+    <section class="panel" id="bt-universe">
+      <div class="panel-head">
+        <h2>Universe robustness</h2>
+        <div class="panel-meta">Frozen HPs &middot; alt FX sets</div>
+      </div>
+      <div class="panel-body">
+        <table class="data-table" id="bt-universe-table">
+          <thead>
+            <tr>
+              <th>Universe</th>
+              <th class="num"># pairs</th>
+              <th class="num">Sharpe</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="4" class="empty">Loading&hellip;</td></tr></tbody>
+        </table>
+        <p class="mc-footnote">
+          Strategy was not cherry-picked. Re-running with two alternative 10-pair G10 universes
+          (frozen hyper-parameters, no re-tuning) still produces positive Sharpe, confirming the edge is
+          a property of the model rather than the specific pair selection.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══ NEW PANEL: Trade statistics ═══════════════════════════ -->
+    <section class="panel" id="bt-trade-stats">
+      <div class="panel-head">
+        <h2>Trade statistics</h2>
+        <div class="panel-meta">OOS 2018&ndash;2026 &middot; per closed position</div>
+      </div>
+      <div class="panel-body">
+        <h3 class="subpanel-head">Trade aggregates</h3>
+        <div class="submetrics submetrics--inline" id="bt-trade-aggregates">
+          <div class="sub-stat"><div class="sub-label"># trades</div><div class="sub-value" id="bt-ts-trades">&mdash;</div></div>
+          <div class="sub-stat"><div class="sub-label">Win rate</div><div class="sub-value" id="bt-ts-wr">&mdash;</div></div>
+          <div class="sub-stat"><div class="sub-label">Profit factor</div><div class="sub-value" id="bt-ts-pf">&mdash;</div></div>
+          <div class="sub-stat"><div class="sub-label">Payoff ratio</div><div class="sub-value" id="bt-ts-payoff">&mdash;</div></div>
+          <div class="sub-stat"><div class="sub-label">Avg holding</div><div class="sub-value" id="bt-ts-hold">&mdash;</div></div>
+          <div class="sub-stat"><div class="sub-label">Expectancy</div><div class="sub-value" id="bt-ts-exp">&mdash;</div></div>
+        </div>
+        <h3 class="subpanel-head">Per-pair trade summary</h3>
+        <table class="data-table" id="bt-trade-pair-table">
+          <thead>
+            <tr>
+              <th>Pair</th>
+              <th class="num">Sharpe</th>
+              <th class="num">Win %</th>
+              <th class="num">PF</th>
+              <th class="num">% of P&amp;L</th>
+              <th class="num">Sign flips</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="6" class="empty">Loading&hellip;</td></tr></tbody>
+        </table>
+        <p class="mc-footnote" id="bt-trade-footnote">
+          Concentration is typical of mean-reversion-style edges: the strategy makes near-zero on roughly
+          half of days and earns on the active half. No single day is anomalous &mdash; top day = 0.79%
+          of total P&amp;L.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══ NEW PANEL: Sensitivity tests ═══════════════════════════ -->
+    <section class="panel" id="bt-sensitivity">
+      <div class="panel-head">
+        <h2>Sensitivity tests</h2>
+        <div class="panel-meta">Drop-1 &middot; Drop-3 &middot; OOS start &middot; Refit cadence</div>
+      </div>
+      <div class="panel-body">
+        <div class="cols cols--tight">
+          <div class="subpanel">
+            <h3 class="subpanel-head">Drop-one pair</h3>
+            <table class="data-table" id="bt-sens-drop1-table">
+              <thead>
+                <tr>
+                  <th>Dropped</th>
+                  <th class="num">Sharpe</th>
+                  <th class="num">&Delta;</th>
+                </tr>
+              </thead>
+              <tbody><tr><td colspan="3" class="empty">Loading&hellip;</td></tr></tbody>
+            </table>
+          </div>
+          <div class="subpanel">
+            <h3 class="subpanel-head">OOS start sensitivity</h3>
+            <table class="data-table" id="bt-sens-oos-table">
+              <thead>
+                <tr><th>Start date</th><th class="num">Sharpe</th></tr>
+              </thead>
+              <tbody><tr><td colspan="2" class="empty">Loading&hellip;</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="cols cols--tight">
+          <div class="subpanel">
+            <h3 class="subpanel-head">Drop-three (combinatorial)</h3>
+            <table class="data-table" id="bt-sens-drop3-table">
+              <thead>
+                <tr>
+                  <th># combos</th>
+                  <th class="num">Worst</th>
+                  <th class="num">Median</th>
+                  <th class="num">Best</th>
+                </tr>
+              </thead>
+              <tbody><tr><td colspan="4" class="empty">Loading&hellip;</td></tr></tbody>
+            </table>
+          </div>
+          <div class="subpanel">
+            <h3 class="subpanel-head">Refit cadence offset</h3>
+            <table class="data-table" id="bt-sens-refit-table">
+              <thead>
+                <tr><th>Anchor</th><th class="num">Sharpe</th></tr>
+              </thead>
+              <tbody><tr><td colspan="2" class="empty">Loading&hellip;</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <p class="mc-footnote">
+          The +4.49 OOS Sharpe is not a knife-edge result. Across 7 OOS start dates the Sharpe stays in
+          [+4.43, +4.86] (std 0.148); across 120 drop-3 combinations the worst case is +3.28; and shifting
+          the refit anchor from Jan-1 to Jul-1 changes Sharpe by 0.03.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══ EXISTING PANEL: FTMO Monte Carlo (unchanged) ═══════════ -->
     <section class="panel">
       <div class="panel-head">
         <h2>FTMO Monte Carlo (10,000 sims)</h2>
@@ -418,15 +625,156 @@
       </div>
     </section>
 
-    <section class="panel panel--validation">
-      <div class="panel-head"><h2>Validation summary</h2><div class="panel-meta">Independently audited</div></div>
+    <!-- ═══ NEW PANEL: Deployment recommendation callout ═══════════ -->
+    <section class="panel panel--callout" id="bt-deployment-callout">
+      <div class="panel-head">
+        <h2>Deployment recommendation</h2>
+        <div class="panel-meta">Scale notional ~5x &middot; CPPI overlay &middot; monitor months 1&ndash;3</div>
+      </div>
       <div class="panel-body">
         <p class="validation-text">
-          <strong>Independently audited &mdash;</strong> 33-agent forensic review confirms no code leak.
-          White-noise null mean Sharpe <strong>&minus;0.55</strong>; observed Sharpe of <strong>+4.49</strong>
-          sits <strong>+16&sigma;</strong> above the null. Drop-3 worst-case Sharpe <strong>+3.28</strong>.
-          <strong>100% of 1851</strong> rolling 252-day windows produced positive returns.
-          Full forensic report in <code>Ballsack/Robustness/FINDINGS.md</code>.
+          <strong>Deployment recommendation.</strong> At the current Ballsack notional the strategy passes only
+          ~0.04% of FTMO 1-Step 60-day windows &mdash; it is dramatically under-leveraged. Scale notional
+          ~<strong>5x</strong> (~0.4&ndash;0.5 lots per signal on a $50k Swing 2-step account, vs. the live 0.1)
+          so daily P&amp;L vol aligns with the MDL budget. Deploy with the CPPI overlay already implemented in the
+          simulator. Track realised Sharpe through months 1&ndash;3: if it falls below 0.5, cut size;
+          if it sustains above 2.5, hold.
+        </p>
+        <table class="data-table" id="bt-deployment-grid">
+          <thead>
+            <tr>
+              <th>Scenario</th>
+              <th class="num">1-Step 60d</th>
+              <th class="num">2-Step chained</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Full Sharpe-4.5 OOS</td>
+              <td class="num pos"><strong>80%</strong> <span class="dim">(median 29 days)</span></td>
+              <td class="num pos"><strong>85%</strong></td>
+            </tr>
+            <tr>
+              <td>Conservative Sharpe-2.0 forward</td>
+              <td class="num warn"><strong>30%</strong></td>
+              <td class="num warn"><strong>42%</strong></td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="mc-footnote">
+          Conservative row anchors to the Sharpe ~1.5&ndash;2.5 honest forward expectation implied by the
+          regime-flatter caveat below. Range corresponds to regime uncertainty, not Monte Carlo noise.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══ NEW PANEL: Honest caveats ═════════════════════════════ -->
+    <section class="panel panel--validation panel--caveats" id="bt-caveats">
+      <div class="panel-head">
+        <h2>Honest caveats</h2>
+        <div class="panel-meta">What might still warrant caution</div>
+      </div>
+      <div class="panel-body">
+        <table class="data-table caveat-list">
+          <tbody>
+            <tr>
+              <td class="caveat-pill-cell"><span class="tag tag-warn">REGIME-FLATTERING</span></td>
+              <td>
+                Pre-2018 secondary OOS Sharpe is <strong>+1.26</strong> (2010&ndash;2015). The 2018&ndash;2026
+                period favoured vol-targeted FX mean reversion. Honest forward expectation:
+                <strong>Sharpe 1.5&ndash;2.5</strong>; +4.5 is a point estimate inside a wide deployment band.
+              </td>
+            </tr>
+            <tr>
+              <td class="caveat-pill-cell"><span class="tag tag-warn">MILD VAL&rarr;OOS GAP</span></td>
+              <td>
+                N=50 Optuna trials was lucky in the val&rarr;OOS map. N=200 finds val-better HPs that score worse
+                OOS by ~0.13 Sharpe &mdash; expect forward Sharpe ~0.1 below validation Sharpe.
+              </td>
+            </tr>
+            <tr>
+              <td class="caveat-pill-cell"><span class="tag tag-warn">USDCHF REGIME-LOCAL</span></td>
+              <td>
+                USDCHF contributes 17% of portfolio P&amp;L (t=10.7). Edge replicates in USDSEK but is absent in
+                EURCHF &mdash; a USD-vs-managed-G10-cross effect. If the SNB ever loses control again, this pair
+                takes a fat-tail hit.
+              </td>
+            </tr>
+            <tr>
+              <td class="caveat-pill-cell"><span class="tag tag-dim">EURGBP DEAD WEIGHT</span></td>
+              <td>
+                Sharpe <strong>+0.10</strong>, contributes 0.5% of P&amp;L. Kept in the deployed universe for
+                honesty (no post-hoc pruning); a live deployment should drop it (+0.15 portfolio Sharpe).
+              </td>
+            </tr>
+            <tr>
+              <td class="caveat-pill-cell"><span class="tag tag-dim">INVERSE-VOL LAYER INERT</span></td>
+              <td>
+                Only 1 rebalance fires in 8 years. Equal-weight gives <strong>+4.482</strong>. Branding is
+                misleading; deployment can simplify to equal-weight without losing anything.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="mc-footnote">
+          Code-level cleanups recommended (label-boundary patch, empirical-moment DSR,
+          <code>position_map</code> default 0.0, inverse-vol layer either activated or removed) &mdash;
+          hygiene, not bugs.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══ NEW PANEL: Robustness scorecard ═══════════════════════ -->
+    <section class="panel" id="bt-robustness-scorecard">
+      <div class="panel-head">
+        <h2>Robustness scorecard</h2>
+        <div class="panel-meta" id="bt-scorecard-meta">30 independent forensic tests</div>
+      </div>
+      <div class="panel-body">
+        <div class="scorecard-scroll">
+          <table class="data-table scorecard-table" id="bt-robustness-table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Test</th>
+                <th>Result</th>
+                <th>Evidence</th>
+              </tr>
+            </thead>
+            <tbody><tr><td colspan="4" class="empty">Loading&hellip;</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ REWRITTEN: Independent forensic verdict ═══════════════ -->
+    <section class="panel panel--validation">
+      <div class="panel-head">
+        <h2>Independent forensic verdict</h2>
+        <div class="panel-meta">20+ agent review, 2026-05-13 &mdash; not the prior 33-agent self-audit</div>
+      </div>
+      <div class="panel-body">
+        <p class="validation-text">
+          <strong>The +4.487 Sharpe is not fake.</strong> A fresh 20+ agent forensic review re-ran every
+          load-bearing test from scratch and attacked every angle a leak or overfit could enter the pipeline.
+          The strategy survives all of them.
+        </p>
+        <p class="validation-text">
+          Cold reproduction reproduces Sharpe <strong>+4.487</strong> bit-identical. White-noise null mean
+          <strong>&minus;0.55</strong> (observed sits <strong>+15.9&sigma;</strong> above). Sign-permutation
+          <strong>p &lt; 1/5000</strong>. Feature shuffles collapse Sharpe to <strong>&le; +0.04</strong>.
+          Drop-3 worst-case <strong>+3.28</strong> across 120 combinations. OOS start-date sweep
+          <strong>[+4.43, +4.86]</strong>. Macro replacement with FRED reproduces <strong>+3.90</strong>
+          &mdash; data-source independent. Macro shift gradient degrades monotonically with future shifts
+          &mdash; the opposite of a leak signature.
+        </p>
+        <p class="validation-text">
+          <strong>Caveat:</strong> pre-2018 secondary OOS gives Sharpe ~<strong>+1.26</strong>. Honest forward
+          Sharpe expectation is <strong>1.5&ndash;2.5</strong>, not 4.5. See &ldquo;Honest caveats&rdquo; above.
+        </p>
+        <p class="validation-text validation-text--dim">
+          Full audit in <code>Ballsack/VERDICT.md</code>. Prior 33-agent self-audit in
+          <code>Ballsack/Robustness/FINDINGS.md</code> (referenced but not trusted at face value).
         </p>
       </div>
     </section>

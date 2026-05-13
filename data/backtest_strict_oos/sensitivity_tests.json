@@ -1,0 +1,79 @@
+{
+  "drop_one_pair": {
+    "description": "Drop each pair, re-compute equal-weight portfolio Sharpe over OOS 2018-01-02 to 2026-05-12. Baseline equal-weight Sharpe 4.474 (deployed inverse-vol Sharpe 4.487).",
+    "baseline_equal_weight_sharpe": 4.474,
+    "baseline_deployed_sharpe": 4.487,
+    "rows": [
+      {"dropped": "EURGBP", "remaining_sharpe": 4.600, "delta": 0.126},
+      {"dropped": "USDCAD", "remaining_sharpe": 4.541, "delta": 0.067},
+      {"dropped": "AUDJPY", "remaining_sharpe": 4.444, "delta": -0.031},
+      {"dropped": "GBPJPY", "remaining_sharpe": 4.429, "delta": -0.045},
+      {"dropped": "NZDUSD", "remaining_sharpe": 4.378, "delta": -0.096},
+      {"dropped": "GBPUSD", "remaining_sharpe": 4.375, "delta": -0.099},
+      {"dropped": "AUDUSD", "remaining_sharpe": 4.371, "delta": -0.103},
+      {"dropped": "EURUSD", "remaining_sharpe": 4.238, "delta": -0.236},
+      {"dropped": "USDJPY", "remaining_sharpe": 4.208, "delta": -0.266},
+      {"dropped": "USDCHF", "remaining_sharpe": 4.000, "delta": -0.474}
+    ],
+    "verdict": "No single pair is structurally required; worst drop (USDCHF) loses only -0.47 Sharpe, leaving +4.00. Dropping EURGBP actually lifts Sharpe by +0.13."
+  },
+  "drop_three_combinatorial": {
+    "description": "All C(10,3)=120 combinations of 3 dropped pairs, equal-weight Sharpe over remaining 7.",
+    "n_combinations": 120,
+    "min_sharpe": 3.280,
+    "median_sharpe": 4.089,
+    "max_sharpe": 4.717,
+    "fraction_above_3": 1.0,
+    "fraction_above_2": 1.0,
+    "verdict": "100% of 120 drop-3 combos keep Sharpe > 3.0; even the worst-case 7-pair subset retains Sharpe 3.28."
+  },
+  "oos_start_date": {
+    "description": "Slide OOS start date with frozen HPs (W=9, lam_shrink=0.267, n1=n2=5, lam_risk=0.529, tau=0.685).",
+    "rows": [
+      {"start": "2017-01-02", "sharpe": 4.433, "cagr_pct": 15.22, "mdd_pct": -1.65, "n_days": 2351},
+      {"start": "2017-07-03", "sharpe": 4.464, "cagr_pct": 15.58, "mdd_pct": -1.64, "n_days": 2226},
+      {"start": "2018-01-02", "sharpe": 4.499, "cagr_pct": 15.85, "mdd_pct": -1.61, "n_days": 2101},
+      {"start": "2018-04-02", "sharpe": 4.549, "cagr_pct": 16.03, "mdd_pct": -1.68, "n_days": 2040},
+      {"start": "2018-07-02", "sharpe": 4.573, "cagr_pct": 16.05, "mdd_pct": -1.68, "n_days": 1976},
+      {"start": "2019-01-02", "sharpe": 4.695, "cagr_pct": 16.64, "mdd_pct": -1.64, "n_days": 1850},
+      {"start": "2020-01-02", "sharpe": 4.855, "cagr_pct": 17.36, "mdd_pct": -1.66, "n_days": 1598}
+    ],
+    "range_min": 4.433,
+    "range_max": 4.855,
+    "std": 0.148,
+    "verdict": "Sharpe robust to start date; range [4.43, 4.86], std 0.148. No discontinuity at the deployed 2018-01-02 boundary."
+  },
+  "refit_cadence_offset": {
+    "description": "Annual refits anchored on Jan-1 (deployed) vs Jul-1 (calendar-offset), same OOS window 2018-01-02 -> 2026-05-12.",
+    "jan_anchored_sharpe": 4.487,
+    "jul_anchored_sharpe": 4.456,
+    "jul_cagr_pct": 15.47,
+    "jul_mdd_pct": -1.96,
+    "delta": -0.031,
+    "verdict": "Calendar boundary not exploitable; Jul-anchored refits give Sharpe 4.456 vs Jan-anchored 4.487 (delta -0.03)."
+  },
+  "alt_universe": {
+    "description": "Run same pipeline with FROZEN deployed HPs on alternative FX universes; OOS 2018-01-02 -> 2026-05-12.",
+    "rows": [
+      {
+        "universe": "Deployed G10 majors (10 pairs)",
+        "pairs": ["AUDJPY", "AUDUSD", "EURGBP", "EURUSD", "GBPJPY", "GBPUSD", "NZDUSD", "USDCAD", "USDCHF", "USDJPY"],
+        "sharpe": 4.487,
+        "n_days": 2102
+      },
+      {
+        "universe": "Alt majors-crosses (10 pairs, no USD-leg)",
+        "pairs": ["EURJPY", "EURAUD", "EURCAD", "EURNZD", "EURCHF", "GBPCAD", "GBPCHF", "GBPNZD", "CADJPY", "CHFJPY"],
+        "sharpe": 1.623,
+        "n_days": 2102
+      },
+      {
+        "universe": "Alt USD vs EM/commodity (10 pairs)",
+        "pairs": ["USDMXN", "USDSEK", "USDNOK", "USDZAR", "EURNOK", "USDSGD", "USDTRY", "USDPLN", "USDHUF", "USDHKD"],
+        "sharpe": 2.820,
+        "n_days": 2102
+      }
+    ],
+    "verdict": "Edge generalises to other FX universes at lower magnitude; alt majors-crosses Sharpe 1.62, alt USD-EM Sharpe 2.82. Strategy is not cherry-picked to the deployed G10 set."
+  }
+}

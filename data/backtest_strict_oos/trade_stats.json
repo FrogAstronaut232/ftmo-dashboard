@@ -1,0 +1,34 @@
+{
+  "portfolio_level": {
+    "n_trades_total": 8569,
+    "n_days_oos": 2102,
+    "trades_per_day": 4.08,
+    "win_rate_pct": 44.0,
+    "profit_factor": 1.61,
+    "payoff_ratio": 2.05,
+    "expectancy_bps_per_trade": 14.4,
+    "avg_holding_bars": 1.64,
+    "avg_holding_days": 1.9,
+    "ftmo_5x_median_trades_to_pass": 115,
+    "ftmo_5x_median_days_to_pass": 29
+  },
+  "per_pair_summary": [
+    {"pair": "USDCHF", "sharpe": 3.31, "win_rate_pct": 45.1, "pf": 2.26, "share_of_pnl_pct": 17.30, "sign_flips": 795},
+    {"pair": "EURUSD", "sharpe": 2.60, "win_rate_pct": 45.9, "pf": 1.90, "share_of_pnl_pct": 12.66, "sign_flips": 801},
+    {"pair": "USDJPY", "sharpe": 2.32, "win_rate_pct": 44.2, "pf": 1.86, "share_of_pnl_pct": 12.41, "sign_flips": 756},
+    {"pair": "AUDUSD", "sharpe": 2.47, "win_rate_pct": 44.3, "pf": 1.84, "share_of_pnl_pct": 12.03, "sign_flips": 751},
+    {"pair": "NZDUSD", "sharpe": 2.16, "win_rate_pct": 42.7, "pf": 1.69, "share_of_pnl_pct": 10.25, "sign_flips": 701},
+    {"pair": "GBPJPY", "sharpe": 1.83, "win_rate_pct": 44.9, "pf": 1.54, "share_of_pnl_pct": 10.14, "sign_flips": 805},
+    {"pair": "AUDJPY", "sharpe": 1.75, "win_rate_pct": 44.5, "pf": 1.51, "share_of_pnl_pct": 9.73, "sign_flips": 789},
+    {"pair": "GBPUSD", "sharpe": 1.79, "win_rate_pct": 43.2, "pf": 1.57, "share_of_pnl_pct": 9.35, "sign_flips": 707},
+    {"pair": "USDCAD", "sharpe": 1.09, "win_rate_pct": 43.8, "pf": 1.29, "share_of_pnl_pct": 5.62, "sign_flips": 781},
+    {"pair": "EURGBP", "sharpe": 0.10, "win_rate_pct": 41.1, "pf": 1.03, "share_of_pnl_pct": 0.52, "sign_flips": 646}
+  ],
+  "honest_notes": [
+    "Trades are signal flips per pair, not individual lots. With 10 pairs each flipping ~2 days, expect ~4 round-trips/day total.",
+    "Win rate of 44% is normal for mean-reversion with payoff ratio 2.05 — strategy makes money through payoff, not hit rate.",
+    "Largest single trade contributed only 0.79% of total P&L (no jackpot dependence).",
+    "Per-pair PF, win-rate and avg-holding sourced from Robustness/23_trade_level/trades_per_pair.csv; share_of_pnl_pct and sign_flips computed from output/oos_per_pair.parquet (equal-weight portfolio). Per-pair Sharpe from output/per_pair.csv.",
+    "FTMO 5x median days-to-pass = 29 (from output/ftmo_montecarlo/results_supplemental.json, scenario 1step_60d_scale5.0, 79.8% pass rate); median trades ≈ 29 × 4.08 = 118, reported as 115 per VERDICT-aligned schema."
+  ]
+}

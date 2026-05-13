@@ -1,0 +1,51 @@
+{
+  "headline_verdict": "The +4.487 OOS Sharpe is real",
+  "summary": "20+ independent forensic agents attacked the strategy from every angle a leak or overfit could enter. No leak found. Cold-reproduces bit-identically. White-noise null mean -0.55 (observed +15.9 sigma above). Universe robust (drop-3 worst case +3.28). Features load-bearing. Data source independent (FRED reproduces 87%). Same-day macro causally clean.",
+  "headline_sharpe": 4.487,
+  "headline_sharpe_ci_low": 3.863,
+  "headline_sharpe_ci_high": 5.140,
+  "honest_forward_expectation": {
+    "sharpe": "1.5 - 2.5",
+    "reason": "Pre-2018 secondary OOS Sharpe is +1.26 (regime-flatter). 2018-2026 favored vol-targeted FX mean reversion (COVID, 2022 cycle, JPY interventions). Deployable expectation should anchor on the slower regime."
+  },
+  "ftmo_deployment": {
+    "current_notional_1step_60d_pass_rate": 0.0004,
+    "scale_5x_1step_60d_pass_rate": 0.798,
+    "scale_5x_median_days_to_pass": 29,
+    "scale_5x_conservative_1step_60d_pass_rate": 0.299,
+    "scale_5x_conservative_2step_chained_pass_rate": 0.417,
+    "recommendation": "Scale notional ~5x current Ballsack; deploy with CPPI overlay; monitor live Sharpe in month 1-3."
+  },
+  "what_is_not_broken": [
+    "Future-data peek in any feature module",
+    "Train-time PCA / scaler / state-grid fitted on test data",
+    "Test labels reaching the trained weights at scale (label boundary leak is 1 row/refit, +0.02 Sharpe)",
+    "HP search seeing post-2017 data",
+    "yfinance retroactive bar revisions",
+    "Cost model silently zeroed",
+    "Sharpe / CAGR / MDD calculation bugs",
+    "Position-permutation or sign-randomization passing as skill",
+    "White-noise / GBM prices producing the observed Sharpe",
+    "Cherry-picked 10-pair universe",
+    "Edge dependent on USDCHF (drop-USDCHF still +4.00)",
+    "Edge dependent on the Jan-1 refit boundary (Jul-1 gives +4.46)",
+    "Edge dependent on the precise 2018-01-02 OOS start"
+  ],
+  "honest_caveats": [
+    "Regime-flatter: Sharpe +1.26 on 2010-2015 secondary OOS",
+    "Trial-budget overfit (mild): N=200 finds val-better HPs that hurt OOS by 0.13",
+    "Macro is essential (Sharpe collapses to 0 without it; same-day macro is causal but mandatory)",
+    "USDCHF edge is partially regime-local (post-SNB managed era)",
+    "EURGBP is dead weight (+0.10 Sharpe, drop would lift portfolio by +0.15)",
+    "Top 5% of days = 50% of net P&L (normal but worth monitoring)",
+    "Inverse-vol portfolio layer is functionally inert (1 rebalance in 8 years; equal-weight gives same result)"
+  ],
+  "audit_meta": {
+    "n_independent_agents": 20,
+    "n_paper_tests_passed": 16,
+    "n_paper_tests_failed": 1,
+    "ic_test_failure_explanation": "Strategy is not a 1-day directional forecaster; edge is in multi-day persistence, sizing, and selective flat-days. Other 16 tests still pass.",
+    "prior_audit_agents": 33,
+    "verdict_doc": "Ballsack/VERDICT.md"
+  }
+}

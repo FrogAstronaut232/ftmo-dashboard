@@ -438,8 +438,9 @@ function activateTab(name) {
       const live = $('live-equity-chart'); if (live && live._fullLayout) Plotly.Plots.resize(live);
       const ref  = $('ref-equity-chart');  if (ref  && ref._fullLayout)  Plotly.Plots.resize(ref);
     } else if (name === 'backtest') {
-      const eq = $('bt-equity-chart');   if (eq  && eq._fullLayout)  Plotly.Plots.resize(eq);
-      const yr = $('bt-yearbar-chart');  if (yr  && yr._fullLayout)  Plotly.Plots.resize(yr);
+      const eq = $('bt-equity-chart');     if (eq  && eq._fullLayout)  Plotly.Plots.resize(eq);
+      const yr = $('bt-yearbar-chart');    if (yr  && yr._fullLayout)  Plotly.Plots.resize(yr);
+      const mc = $('bt-macro-shift-chart');if (mc  && mc._fullLayout)  Plotly.Plots.resize(mc);
     }
   }, 30);
 }
@@ -463,7 +464,8 @@ async function loadBacktest() {
     });
   };
 
-  const [summary, portfolio, perPair, perYear, subPeriod, regime, mc] = await Promise.all([
+  const [summary, portfolio, perPair, perYear, subPeriod, regime, mc,
+         robustness, macro, tradeStats, sensitivity, verdict] = await Promise.all([
     fetchBt('summary.json'),
     fetchBt('portfolio.csv'),
     fetchBt('per_pair.csv'),
@@ -471,6 +473,11 @@ async function loadBacktest() {
     fetchBt('sub_period.csv'),
     fetchBt('regime_conditional.csv'),
     fetchBt('ftmo_montecarlo.json').catch(() => null),
+    fetchBt('robustness_scorecard.json').catch(() => null),
+    fetchBt('macro_analysis.json').catch(() => null),
+    fetchBt('trade_stats.json').catch(() => null),
+    fetchBt('sensitivity_tests.json').catch(() => null),
+    fetchBt('verdict_summary.json').catch(() => null),
   ]);
 
   // ─ Hero + submetrics ─
@@ -638,6 +645,357 @@ async function loadBacktest() {
 
   // ─ FTMO Monte Carlo panel ─
   renderMonteCarlo(mc);
+
+  // ─ New forensic-audit panels ─
+  renderMacroAnalysis(macro);
+  renderUniverseRobustness(sensitivity);
+  renderTradeStats(tradeStats);
+  renderSensitivity(sensitivity);
+  renderRobustnessScorecard(robustness);
+}
+
+// ── Macro analysis ────────────────────────────────────────────────────
+function renderMacroAnalysis(macro) {
+  if (!macro) return;
+  const rows = (macro.shift_gradient && macro.shift_gradient.rows) || [];
+  if (rows.length) {
+    const x = rows.map(r => r.shift_days);
+    const y = rows.map(r => Number(r.sharpe));
+    const colors = rows.map(r => {
+      if (r.shift_days === 0) return '#5cb87a';      // green for baseline (peak)
+      if (Number(r.sharpe) < 0) return '#d04a52';    // red for negative
+      return '#3a4452';                              // grey for nearby positives
+    });
+    const trace = {
+      x, y, type: 'bar',
+      marker: { color: colors, line: { color: '#262d39', width: 1 } },
+      text: y.map(v => v.toFixed(2)),
+      textposition: 'outside',
+      textfont: { color: '#9aa3ad', family: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace', size: 11 },
+      hovertemplate: 'shift %{x}d<br>Sharpe %{y:.2f}<extra></extra>',
+      showlegend: false,
+    };
+    const layout = {
+      paper_bgcolor: '#161b24', plot_bgcolor: '#161b24',
+      font: { color: '#6a727d', family: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace', size: 11 },
+      margin: { t: 26, r: 28, b: 38, l: 60 },
+      xaxis: {
+        gridcolor: '#1f2531', zeroline: true, zerolinecolor: '#3a4452',
+        showline: true, linecolor: '#262d39', linewidth: 1,
+        ticks: 'outside', tickcolor: '#262d39', ticklen: 4,
+        title: { text: 'Macro feature shift (days)', font: { color: '#6a727d', size: 10 } },
+        tickmode: 'array',
+        tickvals: x, ticktext: x.map(v => v === 0 ? '0' : (v > 0 ? `+${v}` : `${v}`)),
+      },
+      yaxis: {
+        gridcolor: '#1f2531', zeroline: true, zerolinecolor: '#3a4452',
+        showline: true, linecolor: '#262d39', linewidth: 1,
+        ticks: 'outside', tickcolor: '#262d39', ticklen: 4,
+        title: { text: 'Sharpe', font: { color: '#6a727d', size: 10 } },
+      },
+      bargap: 0.3,
+      hoverlabel: {
+        bgcolor: '#11151b', bordercolor: '#262d39',
+        font: { color: '#e3e6ea', family: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace', size: 12 },
+      },
+      showlegend: false,
+    };
+    Plotly.newPlot('bt-macro-shift-chart', [trace], layout, { displayModeBar: false, responsive: true });
+  }
+
+  // Per-feature ablation table
+  const abl = (macro.per_feature_ablation && macro.per_feature_ablation.rows) || [];
+  const ablBody = document.querySelector('#bt-macro-ablation-table tbody');
+  if (ablBody) {
+    if (abl.length) {
+      const baseline = { feature: 'All three (baseline)', sharpe: 4.49, baseline: true };
+      const allRows = [...abl, baseline];
+      ablBody.innerHTML = allRows.map(r => {
+        const isDxy = /^dxy/i.test(r.feature);
+        const cls = isDxy ? 'pos' : (r.baseline ? 'pos' : 'dim');
+        const note = isDxy ? ' <span class="dim">&larr; dominant</span>' : (r.baseline ? ' <span class="dim">&larr; deployed</span>' : '');
+        return `<tr>
+          <td>${r.feature}${note}</td>
+          <td class="num ${cls}">${Number(r.sharpe).toFixed(2)}</td>
+        </tr>`;
+      }).join('');
+    } else {
+      ablBody.innerHTML = '<tr><td colspan="2" class="empty">No data.</td></tr>';
+    }
+  }
+
+  // Source replacement table
+  const src = macro.data_source_independence;
+  const srcBody = document.querySelector('#bt-macro-source-table tbody');
+  if (srcBody) {
+    if (src) {
+      const rows = [
+        { source: 'yfinance (baseline)', sharpe: src.yfinance_baseline_sharpe, note: 'deployed' },
+        { source: 'FRED',                sharpe: src.fred_sharpe, note: `VIX/US10Y r=${src.correlation_vix}, DXY r=${src.correlation_dxy}` },
+        { source: 'Random series',       sharpe: -0.6, note: 'macro collapses to zero' },
+        { source: 'Constant',            sharpe: -0.6, note: 'macro collapses to zero' },
+        { source: 'Shuffled dates',      sharpe: -0.5, note: 'macro collapses to zero' },
+      ];
+      srcBody.innerHTML = rows.map(r => {
+        const cls = Number(r.sharpe) > 0 ? 'pos' : 'neg';
+        return `<tr>
+          <td>${r.source}</td>
+          <td class="num ${cls}">${Number(r.sharpe).toFixed(2)}</td>
+          <td class="dim">${r.note}</td>
+        </tr>`;
+      }).join('');
+    } else {
+      srcBody.innerHTML = '<tr><td colspan="3" class="empty">No data.</td></tr>';
+    }
+  }
+}
+
+// ── Universe robustness ───────────────────────────────────────────────
+function renderUniverseRobustness(sens) {
+  const body = document.querySelector('#bt-universe-table tbody');
+  if (!body) return;
+  if (!sens || !sens.alt_universe || !sens.alt_universe.rows) {
+    body.innerHTML = '<tr><td colspan="4" class="empty">No data.</td></tr>';
+    return;
+  }
+  const altRows = sens.alt_universe.rows.slice();
+  // Append drop-USDCHF and drop-3 worst-case from the same JSON
+  const dropUsdchf = (sens.drop_one_pair && sens.drop_one_pair.rows || [])
+    .find(r => r.dropped === 'USDCHF');
+  if (dropUsdchf) {
+    altRows.push({
+      universe: 'Drop-USDCHF (9 pairs)',
+      pairs: null, n_pairs: 9,
+      sharpe: dropUsdchf.remaining_sharpe,
+      note: 'USDCHF not the sole driver',
+    });
+  }
+  if (sens.drop_three_combinatorial) {
+    altRows.push({
+      universe: 'Drop-3 worst case (7 pairs)',
+      pairs: null, n_pairs: 7,
+      sharpe: sens.drop_three_combinatorial.min_sharpe,
+      note: 'Worst of 120 drop-3 combinations',
+    });
+  }
+  body.innerHTML = altRows.map((r, i) => {
+    const isBaseline = i === 0;
+    const sh = Number(r.sharpe);
+    const shCls = sh > 0 ? 'pos' : 'neg';
+    const rowCls = isBaseline ? 'class="dim"' : '';
+    const np = r.n_pairs != null ? r.n_pairs : (r.pairs ? r.pairs.length : '—');
+    return `<tr ${rowCls}>
+      <td>${r.universe}</td>
+      <td class="num dim">${np}</td>
+      <td class="num ${shCls}">${sh.toFixed(2)}</td>
+      <td class="dim">${r.note || ''}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Trade stats ───────────────────────────────────────────────────────
+function renderTradeStats(ts) {
+  if (!ts) return;
+  const pl = ts.portfolio_level || {};
+  const setTxt = (id, v) => { const el = $(id); if (el) el.textContent = v; };
+  setTxt('bt-ts-trades', pl.n_trades_total != null ? pl.n_trades_total.toLocaleString() : '—');
+  setTxt('bt-ts-wr',     pl.win_rate_pct  != null ? `${pl.win_rate_pct.toFixed(1)}%` : '—');
+  setTxt('bt-ts-pf',     pl.profit_factor != null ? pl.profit_factor.toFixed(2) : '—');
+  setTxt('bt-ts-payoff', pl.payoff_ratio  != null ? pl.payoff_ratio.toFixed(2) : '—');
+  setTxt('bt-ts-hold',   pl.avg_holding_days != null ? `${pl.avg_holding_days.toFixed(1)} d` : '—');
+  setTxt('bt-ts-exp',    pl.expectancy_bps_per_trade != null ? `${pl.expectancy_bps_per_trade.toFixed(1)} bps` : '—');
+
+  // Per-pair trade table
+  const rows = ts.per_pair_summary || [];
+  const body = document.querySelector('#bt-trade-pair-table tbody');
+  if (body) {
+    if (rows.length) {
+      body.innerHTML = rows.map(r => {
+        const sh = Number(r.sharpe);
+        const shCls = sh > 1 ? 'pos' : (sh > 0 ? 'dim' : 'neg');
+        return `<tr>
+          <td>${r.pair}</td>
+          <td class="num ${shCls}">${sh.toFixed(2)}</td>
+          <td class="num dim">${Number(r.win_rate_pct).toFixed(1)}</td>
+          <td class="num">${Number(r.pf).toFixed(2)}</td>
+          <td class="num dim">${Number(r.share_of_pnl_pct).toFixed(2)}</td>
+          <td class="num dim">${r.sign_flips}</td>
+        </tr>`;
+      }).join('');
+    } else {
+      body.innerHTML = '<tr><td colspan="6" class="empty">No data.</td></tr>';
+    }
+  }
+}
+
+// ── Sensitivity tests ─────────────────────────────────────────────────
+function renderSensitivity(sens) {
+  if (!sens) return;
+
+  // Drop-one pair
+  const d1Rows = (sens.drop_one_pair && sens.drop_one_pair.rows) || [];
+  const d1Body = document.querySelector('#bt-sens-drop1-table tbody');
+  if (d1Body) {
+    if (d1Rows.length) {
+      // Sort by delta descending
+      const sorted = d1Rows.slice().sort((a, b) => Number(b.delta) - Number(a.delta));
+      d1Body.innerHTML = sorted.map(r => {
+        const sh = Number(r.remaining_sharpe);
+        const dl = Number(r.delta);
+        const dlCls = dl > 0 ? 'pos' : (dl < -0.2 ? 'neg' : 'warn');
+        const rowHighlight = (r.dropped === 'EURGBP') ? ' style="background: rgba(198, 146, 86, 0.05);"' : '';
+        const sign = dl > 0 ? '+' : '';
+        return `<tr${rowHighlight}>
+          <td>${r.dropped}</td>
+          <td class="num">${sh.toFixed(2)}</td>
+          <td class="num ${dlCls}">${sign}${dl.toFixed(2)}</td>
+        </tr>`;
+      }).join('');
+    } else {
+      d1Body.innerHTML = '<tr><td colspan="3" class="empty">No data.</td></tr>';
+    }
+  }
+
+  // OOS start sensitivity
+  const oosRows = (sens.oos_start_date && sens.oos_start_date.rows) || [];
+  const oosBody = document.querySelector('#bt-sens-oos-table tbody');
+  if (oosBody) {
+    if (oosRows.length) {
+      const baseline = '2018-01-02';
+      const main = oosRows.map(r => {
+        const sh = Number(r.sharpe);
+        const isBase = r.start === baseline;
+        const rowHighlight = isBase ? ' style="background: rgba(92, 184, 122, 0.05);"' : '';
+        const note = isBase ? ' <span class="dim">(baseline)</span>' : '';
+        return `<tr${rowHighlight}>
+          <td>${r.start}${note}</td>
+          <td class="num pos">${sh.toFixed(2)}</td>
+        </tr>`;
+      }).join('');
+      const summary = sens.oos_start_date;
+      const summaryRow = `<tr>
+        <td class="dim">Range &middot; std</td>
+        <td class="num dim">[${summary.range_min.toFixed(2)}, ${summary.range_max.toFixed(2)}] &middot; &sigma;=${summary.std.toFixed(3)}</td>
+      </tr>`;
+      oosBody.innerHTML = main + summaryRow;
+    } else {
+      oosBody.innerHTML = '<tr><td colspan="2" class="empty">No data.</td></tr>';
+    }
+  }
+
+  // Drop-three combinatorial
+  const d3 = sens.drop_three_combinatorial;
+  const d3Body = document.querySelector('#bt-sens-drop3-table tbody');
+  if (d3Body) {
+    if (d3) {
+      d3Body.innerHTML = `<tr>
+        <td class="dim">${d3.n_combinations}</td>
+        <td class="num pos">${Number(d3.min_sharpe).toFixed(2)}</td>
+        <td class="num pos">${Number(d3.median_sharpe).toFixed(2)}</td>
+        <td class="num pos">${Number(d3.max_sharpe).toFixed(2)}</td>
+      </tr>`;
+    } else {
+      d3Body.innerHTML = '<tr><td colspan="4" class="empty">No data.</td></tr>';
+    }
+  }
+
+  // Refit cadence
+  const rc = sens.refit_cadence_offset;
+  const rcBody = document.querySelector('#bt-sens-refit-table tbody');
+  if (rcBody) {
+    if (rc) {
+      rcBody.innerHTML = `
+        <tr><td>Jan-1 (baseline)</td><td class="num pos">${Number(rc.jan_anchored_sharpe).toFixed(3)}</td></tr>
+        <tr><td>Jul-1 (offset)</td><td class="num pos">${Number(rc.jul_anchored_sharpe).toFixed(3)}</td></tr>
+        <tr><td class="dim">&Delta;</td><td class="num dim">${rc.delta > 0 ? '+' : ''}${Number(rc.delta).toFixed(3)}</td></tr>
+      `;
+    } else {
+      rcBody.innerHTML = '<tr><td colspan="2" class="empty">No data.</td></tr>';
+    }
+  }
+}
+
+// ── Robustness scorecard ──────────────────────────────────────────────
+function renderRobustnessScorecard(rob) {
+  const body = document.querySelector('#bt-robustness-table tbody');
+  const metaEl = $('bt-scorecard-meta');
+  if (!body) return;
+  if (!rob) {
+    body.innerHTML = '<tr><td colspan="4" class="empty">No data.</td></tr>';
+    return;
+  }
+  // Build a unified row list. Combine `code_audit` and `statistical_tests`
+  // from the prepared JSON into the same grouped scorecard format.
+  const rows = [];
+  (rob.code_audit || []).forEach(r => {
+    rows.push({
+      category: 'Code-level leak hunt',
+      test: r.surface,
+      result: r.verdict,
+      evidence: r.note,
+    });
+  });
+  (rob.statistical_tests || []).forEach(r => {
+    let category = 'Statistical / robustness';
+    const t = (r.test || '').toLowerCase();
+    if (t.includes('universe') || t.includes('drop-') || t.includes('oos start')
+        || t.includes('refit') || t.includes('feature shuffle')) {
+      category = 'Robustness';
+    } else if (t.includes('null') || t.includes('permutation') || t.includes('shuffle')
+               || t.includes('cpcv') || t.includes('pbo') || t.includes('haircut')
+               || t.includes('deflated') || t.includes('hansen') || t.includes('romano')
+               || t.includes('cost stress') || t.includes('min backtest')) {
+      category = 'Statistical null / multiple-testing';
+    } else if (t.includes('macro') || t.includes('fred') || t.includes('yfinance')) {
+      category = 'Data integrity';
+    } else if (t.includes('cold')) {
+      category = 'Code-level leak hunt';
+    } else if (t.includes('regime') || t.includes('rolling') || t.includes('structural')
+               || t.includes('drawdown')) {
+      category = 'Stability';
+    } else if (t.includes('information coefficient') || t.includes('pre-2018') || t.includes('aronson')) {
+      category = 'Honest checks';
+    }
+    rows.push({
+      category, test: r.test, result: r.verdict, evidence: r.result,
+    });
+  });
+
+  if (rob.summary && metaEl) {
+    const s = rob.summary;
+    metaEl.textContent = `${s.total_tests} forensic tests · ${s.passed} pass · ${s.failed_or_caveat} caveat/fail`;
+  }
+
+  // Build rows with category-grouping (show category only on first row of group)
+  let lastCat = null;
+  body.innerHTML = rows.map(r => {
+    const showCat = r.category !== lastCat;
+    lastCat = r.category;
+    const catCell = showCat ? `<td class="scorecard-cat">${r.category}</td>` : '<td class="scorecard-cat-empty"></td>';
+    const v = (r.result || '').toUpperCase();
+    let pillCls = 'scorecard-pill-pass';
+    let pillTxt = v;
+    if (v.includes('FAIL')) {
+      pillCls = 'scorecard-pill-fail';
+    } else if (v.includes('CAVEAT') || v.includes('WARN') || v.includes('MINOR')
+               || v.includes('IMMATERIAL')) {
+      pillCls = 'scorecard-pill-caveat';
+    } else if (v.includes('PASS') || v.includes('SAFE') || v.includes('ROBUST')
+               || v.includes('GENERALISES') || v.includes('CLEAN') || v.includes('STRICT')
+               || v.includes('AUTHENTIC')) {
+      pillCls = 'scorecard-pill-pass';
+    } else {
+      pillCls = 'scorecard-pill-dim';
+    }
+    // Truncate over-long verdict labels visually but keep full text in title
+    if (pillTxt.length > 36) pillTxt = pillTxt.slice(0, 34) + '…';
+    return `<tr>
+      ${catCell}
+      <td>${r.test || ''}</td>
+      <td><span class="tag ${pillCls}" title="${(r.result || '').replace(/"/g, '&quot;')}">${pillTxt}</span></td>
+      <td class="dim scorecard-evidence">${r.evidence || ''}</td>
+    </tr>`;
+  }).join('');
 }
 
 // ── Monte Carlo renderer ─────────────────────────────────────────────

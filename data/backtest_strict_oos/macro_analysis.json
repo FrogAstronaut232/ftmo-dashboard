@@ -1,0 +1,40 @@
+{
+  "shift_gradient": {
+    "description": "Sharpe vs macro shift in trading days. If strategy had future-data leak, Sharpe(+k) would exceed Sharpe(0). Instead future shifts degrade monotonically.",
+    "rows": [
+      {"shift_days": -3, "sharpe": -1.01, "label": "−3d past"},
+      {"shift_days": -2, "sharpe": -0.48, "label": "−2d past"},
+      {"shift_days": -1, "sharpe": -0.56, "label": "−1d past"},
+      {"shift_days": 0,  "sharpe": 4.49,  "label": "baseline (same-day)"},
+      {"shift_days": 1,  "sharpe": 4.04,  "label": "+1d future"},
+      {"shift_days": 2,  "sharpe": 3.60,  "label": "+2d future"},
+      {"shift_days": 3,  "sharpe": 2.68,  "label": "+3d future"},
+      {"shift_days": 5,  "sharpe": -0.25, "label": "+5d future"},
+      {"shift_days": 10, "sharpe": -0.55, "label": "+10d future"}
+    ],
+    "verdict": "No leak signature — future shifts degrade, do not enhance"
+  },
+  "data_source_independence": {
+    "description": "Replacing yfinance macro feed with FRED reproduces the edge.",
+    "yfinance_baseline_sharpe": 4.49,
+    "fred_sharpe": 3.90,
+    "correlation_vix": 0.9999,
+    "correlation_us10y": 0.9999,
+    "correlation_dxy": 0.97,
+    "note": "FRED uses DTWEXBGS (trade-weighted) vs ICE USDX — small basket difference. 87% Sharpe reproduction is high."
+  },
+  "per_feature_ablation": {
+    "description": "Strategy run with only one macro feature (other two zeroed).",
+    "rows": [
+      {"feature": "VIX only",   "sharpe": 1.67},
+      {"feature": "US10Y only", "sharpe": 0.85},
+      {"feature": "DXY only",   "sharpe": 4.16}
+    ],
+    "verdict": "DXY is the dominant macro feature — sensible for USD-base FX universe"
+  },
+  "same_day_verification": {
+    "sample_date": "2018-06-15",
+    "macro_z_at_d_computed_inline": "matches Module7 output byte-identical",
+    "verdict": "feature(d) uses macro values UP TO AND INCLUDING d, never beyond"
+  }
+}

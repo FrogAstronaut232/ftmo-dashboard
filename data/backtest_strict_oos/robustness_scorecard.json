@@ -1,0 +1,48 @@
+{
+  "summary": {
+    "total_tests": 30,
+    "passed": 28,
+    "failed_or_caveat": 2,
+    "headline_verdict": "STRATEGY REAL - NO LEAK FOUND",
+    "honest_caveat": "Regime-flatter: secondary OOS 2010-2015 Sharpe +1.26 (deployable forward 1.5-2.5)"
+  },
+  "code_audit": [
+    {"surface": "features.py modules 1-5,7", "verdict": "SAFE", "note": "byte-identical across input-ddf extents 2020-06-30 to 2026-01-01; M6 right-padding leak quarantined by EXCLUDED_FEATURE_MODULES"},
+    {"surface": "embedding.py", "verdict": "SAFE", "note": "PCA/scaler/grid/position_map fit on train slice only; position_map.get default fires 0/210,130 (or 0/21,013) times across OOS"},
+    {"surface": "_signal_and_pnl label boundary", "verdict": "MINOR LEAK (immaterial)", "note": "patched Sharpe +4.507 vs +4.486, delta +0.021; one training-row label per refit"},
+    {"surface": "HP search envelope", "verdict": "STRICT", "note": "Optuna saw only (2016-01-01, 2017-12-31) val tuple; max input ddf date during HP search 2017-12-29"},
+    {"surface": "yfinance data + auto_adjust", "verdict": "CLEAN", "note": "zero retroactive revisions; auto_adjust no-op on FX (max delta 0.0); DXY ticker is real ICE USDX"}
+  ],
+  "statistical_tests": [
+    {"test": "Cold reproduction", "result": "Sharpe +4.487 bit-identical (176s wall clock)", "verdict": "PASS"},
+    {"test": "White-noise null (random px real/random macro, 10 seeds x 10 pairs)", "result": "Config A mean -0.47 (max +0.12); Config B mean -0.53 (max -0.11); observed +17 sigma above null", "verdict": "PASS"},
+    {"test": "Sign-permutation B=100,000", "result": "null ~0, std 0.39, p=0/100,000 every seed", "verdict": "PASS"},
+    {"test": "Universe robustness (alt majors-crosses, frozen HPs)", "result": "Sharpe +1.62", "verdict": "PASS"},
+    {"test": "Universe robustness (alt USD-vs-EM, frozen HPs)", "result": "Sharpe +2.82", "verdict": "PASS"},
+    {"test": "Drop-3 worst-case combinatorial (120 combos)", "result": "min Sharpe +3.28", "verdict": "PASS"},
+    {"test": "OOS start-date sensitivity (7 starts 2017-01 to 2020-01)", "result": "Sharpe range [+4.43, +4.86], std 0.148", "verdict": "PASS"},
+    {"test": "Refit cadence offset (Jan-1 to Jul-1)", "result": "Sharpe +4.456 vs +4.486", "verdict": "PASS"},
+    {"test": "Feature shuffle (OOS features randomised, 10 seeds)", "result": "mean Sharpe -0.62, max -0.03", "verdict": "PASS (features load-bearing)"},
+    {"test": "1-day OOS feature shift", "result": "Sharpe -0.42", "verdict": "PASS (same-day alignment critical)"},
+    {"test": "USDCHF deep-dive", "result": "every OOS year positive (1.67 to 5.45); t-stat 10.7 clean of autocorrelation inflation", "verdict": "PASS (edge real, partially regime-local)"},
+    {"test": "Macro shift gradient (-3d to +10d, frozen HPs)", "result": "k=0 baseline +4.49; future shifts degrade monotonically (+4.04, +3.61, +2.68); past shift -0.56", "verdict": "PASS (no leak signature)"},
+    {"test": "FRED macro replication", "result": "Sharpe +3.90 vs yfinance +4.49 (87%); VIX/US10Y corr 0.9999, DXY corr 0.97", "verdict": "PASS (data-source independent)"},
+    {"test": "Per-pair concentration", "result": "USDCHF 17%, no other >13%; drop-USDCHF Sharpe +4.00", "verdict": "PASS"},
+    {"test": "Sharpe 95% CIs (Lo/Mertens/Politis-Romano/HAC)", "result": "all exclude 0 by ~3.9 Sharpe units; lower bounds 3.79-3.88", "verdict": "PASS"},
+    {"test": "Min Backtest Length", "result": "MinBTL 1.35y at N=200 vs 8.29y sample (6.1x margin)", "verdict": "PASS"},
+    {"test": "Deflated Sharpe (empirical V from 100 HP)", "result": "DSR=1.000 at N=200; saturates even at N=12000", "verdict": "PASS"},
+    {"test": "PBO via CSCV (12,870 splits at S=16)", "result": "0/12,870 splits IS-positive/OOS-negative", "verdict": "PASS"},
+    {"test": "Hansen SPA / Romano-Wolf StepM", "result": "SPA p<0.0001 vs all benchmarks; RW StepM 16/16 rejected at FWER=0.05", "verdict": "PASS"},
+    {"test": "Haircut Sharpe (Harvey-Liu-Zhu)", "result": "BHY-adjusted SR=4.14 at N=12,000; 4.12 at N=20,000", "verdict": "PASS"},
+    {"test": "Cost stress", "result": "requires 3.91x cost multiplier for Sharpe<3; survives 4x baseline cost", "verdict": "PASS"},
+    {"test": "Regime-conditional Sharpe (26 buckets)", "result": "all buckets >0.5 (weakest low-VIX +2.54)", "verdict": "PASS"},
+    {"test": "CPCV (45 paths, proxy)", "result": "mean +4.46, median +4.59, min +2.31; 100% paths >1, 100% >2, 95.6% >3", "verdict": "PASS"},
+    {"test": "Parameter sensitivity (K=100 random HP draws)", "result": "95% give Sharpe>1; distribution mean +2.13, range [+0.69, +3.73]", "verdict": "PASS"},
+    {"test": "Aronson WFO-MCPT (50 perms x 3 pairs)", "result": "p=0.0196 per pair (USDCHF/EURUSD/AUDUSD); null mean ~0 with normal variance", "verdict": "PASS"},
+    {"test": "Andrews supF structural break", "result": "supF=8.36 < 8.85 crit; sup|Z|=2.48 < 2.97 crit; no significant break (post-break improvement)", "verdict": "PASS"},
+    {"test": "Rolling 252d Sharpe decay", "result": "slope +0.232/year (NW HAC t=+7.27); 100% of 1,851 windows >1; median 4.91", "verdict": "PASS (improving)"},
+    {"test": "Drawdown / Magdon-Ismail validation", "result": "realised MDD -1.61% vs expected -2.11% (0.76x, mildly lucky)", "verdict": "PASS"},
+    {"test": "Information Coefficient (1-day, Pearson)", "result": "0/10 pairs significant positive 1d IC; EURGBP negative -0.079; portfolio-weighted IC -0.0061", "verdict": "FAIL (acceptable - strategy not a 1d direction forecaster; edge in sizing/multi-day persistence)"},
+    {"test": "Pre-2018 secondary OOS replay (E21)", "result": "Sharpe +1.26 over 2010-2015 (HPs never saw it); 2010/2011 negative; walk-forward efficiency 0.28", "verdict": "CAVEAT (regime-flatter)"}
+  ]
+}

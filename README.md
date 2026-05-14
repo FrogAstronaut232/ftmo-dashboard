@@ -1,4 +1,4 @@
-# ManifoldFX — Live Dashboard
+# G2 — Live Dashboard
 
 Public performance dashboard for an FTMO 2-step Swing prop-firm strategy
 (EURUSD, GBPJPY).

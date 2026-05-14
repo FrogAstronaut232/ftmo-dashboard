@@ -1,4 +1,4 @@
-"""Recompute the ManifoldFX reference section to cover the full 2018-2026
+"""Recompute the G2 reference section to cover the full 2018-2026
 backtest, not just the 2025+ OOS replay.
 
 Outputs (mirroring website/data/reference/):
@@ -174,7 +174,7 @@ def _compute_metrics(trades_df: pd.DataFrame, equity_df: pd.DataFrame) -> dict:
 
 
 def main() -> int:
-    print("=== Rebuilding ManifoldFX reference (full 2018-2026) ===")
+    print("=== Rebuilding G2 reference (full 2018-2026) ===")
     print(f"  reading {SIGNAL_CACHE.name}...")
     sig = pd.read_parquet(SIGNAL_CACHE)
     sig.index = pd.to_datetime(sig.index)

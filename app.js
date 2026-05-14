@@ -1,8 +1,8 @@
-// ManifoldFX / G10 dashboard. Reads:
-//   data/state.json            -- ManifoldFX (2-pair) LIVE state + reference summary
-//   data/meta.json             -- ManifoldFX metadata
-//   data/live/*.csv            -- ManifoldFX live forward-test stream
-//   data/reference/*.csv       -- ManifoldFX frozen historical OOS reference
+// G2 / G10 dashboard. Reads:
+//   data/state.json            -- G2 (2-pair) LIVE state + reference summary
+//   data/meta.json             -- G2 metadata
+//   data/live/*.csv            -- G2 live forward-test stream
+//   data/reference/*.csv       -- G2 frozen historical OOS reference
 //   data/g10/state.json        -- G10 (10-pair) LIVE state
 //   data/g10/meta.json         -- G10 metadata
 //   data/g10/live/*.csv        -- G10 live forward-test stream
@@ -67,7 +67,7 @@ function setValue(id, baseClass, text, mod = '') {
   el.className = mod ? `${baseClass} ${mod}` : baseClass;
 }
 
-// -- Header / live summary (driven by ManifoldFX state, since masthead is global) --
+// -- Header / live summary (driven by G2 state, since masthead is global) --
 function renderMasthead(state, meta) {
   $('phase-badge').textContent = (state.phase || 'demo').toUpperCase();
   $('dryrun-tag').hidden = !state.dry_run;
@@ -94,7 +94,7 @@ function renderMasthead(state, meta) {
     ageEl.className   = `data-age ${cls}`;
   }
 
-  const nm     = meta.strategy_name || 'ManifoldFX';
+  const nm     = meta.strategy_name || 'G2';
   const assets = (meta.assets || []).join('  ·  ');
   const initial = state.account_initial_usd || meta.account_initial_usd || 50000;
   const acct   = `${initial.toLocaleString()} USD account`;
@@ -356,7 +356,7 @@ function byAsset(signals, asset) {
   return (signals || []).filter(s => String(s.asset || '').toUpperCase() === asset);
 }
 
-// -- Reference section (ManifoldFX) -----------------------------------
+// -- Reference section (G2) -----------------------------------
 function renderRefSummary(state) {
   const m = state.reference_metrics || {};
   setValue('r-trades', 'sub-value', String(m.total_trades ?? 0));
@@ -372,7 +372,7 @@ function renderRefSummary(state) {
   const sub   = $('ref-sub');
   if (first && last) {
     pill.textContent = `${first} -> ${last}`;
-    sub.textContent = `Full ManifoldFX backtest, ${first} -> ${last}.  Static baseline; not live.`;
+    sub.textContent = `Full G2 backtest, ${first} -> ${last}.  Static baseline; not live.`;
   } else {
     pill.textContent = '—';
     sub.textContent = 'No reference data loaded.';
@@ -407,7 +407,7 @@ function renderG10LiveSummary(state, meta) {
     if (sub) {
       sub.textContent =
         'First scheduled run: 2026-05-15 08:05 AEST (= 2026-05-14 22:05 UTC). '
-      + '10-pair G10 FX swing portfolio on the same MT5 account as ManifoldFX, '
+      + '10-pair G10 FX swing portfolio on the same MT5 account as G2, '
       + 'distinct magic numbers (100010-100019).';
     }
   } else {
@@ -450,7 +450,7 @@ function renderG10LiveSummary(state, meta) {
 // -- Main loop ---------------------------------------------------------
 async function loadAll() {
   try {
-    // ManifoldFX (2-pair) data
+    // G2 (2-pair) data
     const [state, meta, liveEq, liveTr, liveSig, refEq, refTr, refSig] = await Promise.all([
       fetchJson('state.json').catch(() => ({})),
       fetchJson('meta.json').catch(() => ({})),
@@ -571,7 +571,7 @@ async function manualRefresh() {
 $('refresh-btn').addEventListener('click', manualRefresh);
 
 // -- Tab switching -----------------------------------------------------
-// Two top-level tabs: ManifoldFX (2-pair live) and G10 (10-pair live +
+// Two top-level tabs: G2 (2-pair live) and G10 (10-pair live +
 // Strict-OOS reference backtest).
 // G10's backtest section is fetched lazily on first tab activation.
 let backtestLoaded = false;

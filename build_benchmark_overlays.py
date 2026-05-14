@@ -3,7 +3,7 @@
   2. SP500 buy-and-hold (^GSPC, normalised to $50k on the same start date)
 
 Outputs:
-  data/reference/equity.csv               — ManifoldFX, full 2018-01-02 onwards
+  data/reference/equity.csv               — G2, full 2018-01-02 onwards
   data/backtest_strict_oos/portfolio_bh.csv — G10 with bh_sp500 column added
 
 Run:
@@ -41,7 +41,7 @@ def _load_sp500(start: str, end: str) -> pd.Series:
 
 
 def build_manifoldfx() -> None:
-    print("\n=== ManifoldFX reference (full 2018-2026) ===")
+    print("\n=== G2 reference (full 2018-2026) ===")
     src = pd.read_csv(MANIFOLD_RETURNS, parse_dates=["Date"])
     src = src.sort_values("Date").reset_index(drop=True)
     print(f"  port_ret rows: {len(src)}   {src['Date'].min().date()} → {src['Date'].max().date()}")

@@ -53,6 +53,8 @@ def _derive_trades(signals: pd.DataFrame, equity_cache: pd.DataFrame) -> pd.Data
     """
     sig_disc = {a: signals[f"{a}__discrete"].astype(float).fillna(0).clip(-1, 1)
                 for a in ASSETS}
+    sig_cont = {a: signals[f"{a}__continuous"].astype(float).fillna(0).clip(-1, 1)
+                for a in ASSETS}
 
     # Build a per-asset trade ledger.
     # Each trade is (asset, side, entry_date, exit_date, hold_days, pnl_usd)
@@ -91,6 +93,12 @@ def _derive_trades(signals: pd.DataFrame, equity_cache: pd.DataFrame) -> pd.Data
                     open_trade[a] = None
                 # Open a new trade if signal is non-zero
                 if cur_sigs[a] != 0:
+                    # Lot sizing: match Phase-1 portfolio scaling (~p1 vol target
+                    # ÷ realised vol). For the backtest we approximate with the
+                    # continuous-signal strength × max_lots_at_p1. This reproduces
+                    # the realistic variation the live MT5 fires would have shown.
+                    conviction = abs(float(sig_cont[a].get(date, cur_sigs[a])))
+                    lots = round(max(0.05, conviction * 2.2), 2)
                     open_trade[a] = {
                         "trade_id":    next_trade_id,
                         "asset":       a,
@@ -99,7 +107,8 @@ def _derive_trades(signals: pd.DataFrame, equity_cache: pd.DataFrame) -> pd.Data
                         "entry_price": 0.0,
                         "exit_date":   "",
                         "exit_price":  0.0,
-                        "lots":        2.0,
+                        "lots":        lots,
+                        "ensemble_avg_entry": round(float(sig_cont[a].get(date, 0)), 4),
                         "pnl_usd":     0.0,
                         "pnl_pct":     0.0,
                         "hold_days":   0,
@@ -183,15 +192,22 @@ def main() -> int:
         print(f"     win rate (raw): {(trades['pnl_usd']>0).mean()*100:.1f}%")
         print(f"     total P&L (sum of trade P&L): ${trades['pnl_usd'].sum():,.0f}")
 
-    # Build per-day per-asset signal table (rebuild reference/signals.csv)
-    sig_long = sig[[f"{a}__discrete" for a in ASSETS]].stack().reset_index()
-    sig_long.columns = ["as_of_date", "field", "signal"]
-    sig_long["asset"] = sig_long["field"].str.replace("__discrete", "", regex=False)
-    sig_long["direction"] = sig_long["signal"].map(
-        lambda v: "LONG" if v > 0 else "SHORT" if v < 0 else "FLAT"
-    )
-    sig_long["as_of_date"] = pd.to_datetime(sig_long["as_of_date"]).dt.strftime("%Y-%m-%d")
-    sig_csv = sig_long[["as_of_date", "asset", "direction", "signal"]].copy()
+    # Build per-day per-asset signal table (rebuild reference/signals.csv).
+    # Include ensemble_avg (the continuous signal) so the dashboard's
+    # "Conviction" column shows real values, not 0 for every row.
+    rows = []
+    for a in ASSETS:
+        for d, disc_val in sig[f"{a}__discrete"].items():
+            cont_val = float(sig.at[d, f"{a}__continuous"]) if pd.notna(sig.at[d, f"{a}__continuous"]) else 0.0
+            sig_int = int(np.sign(float(disc_val))) if pd.notna(disc_val) else 0
+            rows.append({
+                "as_of_date":   pd.to_datetime(d).strftime("%Y-%m-%d"),
+                "asset":        a,
+                "ensemble_avg": round(cont_val, 4),
+                "signal":       sig_int,
+                "direction":    "LONG" if sig_int > 0 else "SHORT" if sig_int < 0 else "FLAT",
+            })
+    sig_csv = pd.DataFrame(rows).sort_values(["as_of_date", "asset"]).reset_index(drop=True)
 
     # Already-built equity.csv (from build_benchmark_overlays.py)
     eq_path = REF_DIR / "equity.csv"

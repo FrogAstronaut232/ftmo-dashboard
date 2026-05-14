@@ -1,1 +1,8 @@
 trade_id,asset,side,entry_date,entry_price,exit_date,exit_price,lots,pnl_usd,pnl_pct,hold_days,exit_reason,is_dry_run
+99100000,EURUSD,SHORT,2026-05-13,1.17354,2026-05-14,1.16741,0.37,227.81,0.4556,1,missed_fire_replay,False
+99100001,GBPUSD,SHORT,2026-05-13,1.3537,2026-05-14,1.33987,0.26,359.58,0.7192,1,missed_fire_replay,False
+99100002,USDCAD,LONG,2026-05-13,1.36973,2026-05-14,1.37162,0.42,57.87,0.1157,1,missed_fire_replay,False
+99100003,USDCHF,LONG,2026-05-13,0.78041,2026-05-14,0.78378,0.28,120.39,0.2408,1,missed_fire_replay,False
+99100004,EURGBP,SHORT,2026-05-13,0.86677,2026-05-14,0.8664,0.5,22.11,0.0442,1,missed_fire_replay,False
+99100005,AUDJPY,LONG,2026-05-13,114.102,2026-05-14,114.557,0.4,114.94,0.2299,1,missed_fire_replay,False
+99100006,GBPJPY,LONG,2026-05-13,213.405,2026-05-14,212.192,0.24,-183.83,-0.3677,1,missed_fire_replay,False

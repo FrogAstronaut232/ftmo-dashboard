@@ -1,0 +1,18 @@
+{
+  "strategy_name": "G10 10-pair FX",
+  "assets": [
+    "AUDJPY", "AUDUSD", "EURGBP", "EURUSD", "GBPJPY",
+    "GBPUSD", "NZDUSD", "USDCAD", "USDCHF", "USDJPY"
+  ],
+  "account_initial_usd": 50000.0,
+  "max_daily_loss_pct": 0.04,
+  "max_total_loss_pct": 0.08,
+  "phases": {
+    "p1": 0.20,
+    "p2": 0.18,
+    "funded": 0.28,
+    "demo": 0.10
+  },
+  "magic_base": 100010,
+  "last_updated_utc": null
+}

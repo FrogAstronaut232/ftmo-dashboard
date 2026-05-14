@@ -32,25 +32,25 @@
 
   <!-- ═══ TAB NAVIGATION ═════════════════════════════════════════ -->
   <nav class="tab-nav" role="tablist" aria-label="Strategy views">
-    <button class="tab-btn is-active" id="tab-btn-live" type="button" role="tab" aria-selected="true" aria-controls="tab-live" data-tab="live">
-      <span class="tab-label">Live</span>
+    <button class="tab-btn is-active" id="tab-btn-manifoldfx" type="button" role="tab" aria-selected="true" aria-controls="tab-manifoldfx" data-tab="manifoldfx">
+      <span class="tab-label">ManifoldFX</span>
       <span class="tab-sep">·</span>
-      <span class="tab-strategy">ManifoldFX  (2-pair)</span>
+      <span class="tab-strategy">2-pair (live)</span>
     </button>
-    <button class="tab-btn" id="tab-btn-backtest" type="button" role="tab" aria-selected="false" aria-controls="tab-backtest" data-tab="backtest">
-      <span class="tab-label">Backtest</span>
+    <button class="tab-btn" id="tab-btn-g10" type="button" role="tab" aria-selected="false" aria-controls="tab-g10" data-tab="g10">
+      <span class="tab-label">G10</span>
       <span class="tab-sep">·</span>
-      <span class="tab-strategy">Strict-OOS  (10-pair, separate model)</span>
+      <span class="tab-strategy">10-pair (live)</span>
     </button>
   </nav>
 
-  <!-- ═══ TAB: LIVE (ManifoldFX) ═════════════════════════════════ -->
-  <section id="tab-live" class="tab-pane" role="tabpanel" aria-labelledby="tab-btn-live">
+  <!-- ═══ TAB: MANIFOLDFX (2-pair, live + reference) ═════════════ -->
+  <section id="tab-manifoldfx" class="tab-pane" role="tabpanel" aria-labelledby="tab-btn-manifoldfx">
 
   <!-- ═══ LIVE ═══════════════════════════════════════════════════ -->
   <div class="stream-header">
     <div>
-      <h2 class="stream-title">Live forward test</h2>
+      <h2 class="stream-title">Live forward test &mdash; ManifoldFX (2-pair)</h2>
       <p class="stream-sub" id="live-sub">Running autonomously since first scheduled run.</p>
     </div>
     <div class="stream-status">
@@ -254,19 +254,134 @@
     </section>
   </div>
 
-  </section><!-- /#tab-live -->
+  </section><!-- /#tab-manifoldfx -->
 
-  <!-- ═══ TAB: BACKTEST (Strict-OOS FX) ══════════════════════════ -->
-  <section id="tab-backtest" class="tab-pane" role="tabpanel" aria-labelledby="tab-btn-backtest" hidden>
+  <!-- ═══ TAB: G10 (10-pair, live + Strict-OOS reference backtest) ═══ -->
+  <section id="tab-g10" class="tab-pane" role="tabpanel" aria-labelledby="tab-btn-g10" hidden>
 
+    <!-- ═══ G10 LIVE ═════════════════════════════════════════════ -->
     <div class="stream-header">
       <div>
-        <h2 class="stream-title">Strict-OOS Multi-Pair FX Portfolio  <span class="title-pill">BACKTEST ONLY</span></h2>
+        <h2 class="stream-title">Live forward test &mdash; G10 (10-pair)</h2>
+        <p class="stream-sub" id="g10-live-sub">
+          10-pair G10 FX swing portfolio: AUDJPY, AUDUSD, EURGBP, EURUSD, GBPJPY,
+          GBPUSD, NZDUSD, USDCAD, USDCHF, USDJPY. Magic 100010&ndash;100019. Distinct
+          strategy from ManifoldFX on the same MT5 account.
+        </p>
+      </div>
+      <div class="stream-status">
+        <span class="status-pill status-pill--mute" id="g10-live-status">Awaiting first run</span>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="hero-stat">
+        <div class="hero-label">Equity</div>
+        <div class="hero-value" id="g-equity">&mdash;</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-label">Total P&amp;L</div>
+        <div class="hero-value" id="g-total">&mdash;</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-label">Today</div>
+        <div class="hero-value" id="g-today">&mdash;</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-label">Drawdown</div>
+        <div class="hero-value" id="g-dd">&mdash;</div>
+      </div>
+    </section>
+
+    <section class="submetrics">
+      <div class="sub-stat"><div class="sub-label">Win rate</div><div class="sub-value" id="g-wr">&mdash;</div></div>
+      <div class="sub-stat"><div class="sub-label">Trades</div><div class="sub-value" id="g-trades">&mdash;</div></div>
+      <div class="sub-stat"><div class="sub-label">Sharpe (ann.)</div><div class="sub-value" id="g-sharpe">&mdash;</div></div>
+      <div class="sub-stat"><div class="sub-label">Profit factor</div><div class="sub-value" id="g-pf">&mdash;</div></div>
+      <div class="sub-stat"><div class="sub-label">Avg win</div><div class="sub-value" id="g-avgwin">&mdash;</div></div>
+      <div class="sub-stat"><div class="sub-label">Avg loss</div><div class="sub-value" id="g-avgloss">&mdash;</div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Open positions</h2>
+      </div>
+      <div class="panel-body">
+        <table class="data-table" id="g-positions-table">
+          <thead>
+            <tr>
+              <th>Asset</th>
+              <th>Side</th>
+              <th class="num">Lots</th>
+              <th>Since</th>
+              <th class="num">Entry</th>
+              <th class="num">Current</th>
+              <th class="num">Floating P&amp;L</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="7" class="empty">Awaiting first run &mdash; fires daily at 08:05 AEST (= 22:05 UTC).</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Equity curve</h2>
+        <div class="panel-meta" id="g-equity-range">&mdash;</div>
+      </div>
+      <div class="panel-body panel-body--flush">
+        <div id="g-equity-chart" class="chart"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Recent trades</h2></div>
+      <div class="panel-body">
+        <table class="data-table" id="g-trades-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Asset</th>
+              <th>Side</th>
+              <th class="num">Lots</th>
+              <th class="num">P&amp;L</th>
+              <th class="num">Days</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="6" class="empty">Awaiting first closed trade. First scheduled run: 2026-05-15 08:05 AEST.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Recent signals (all pairs)</h2>
+        <div class="panel-meta">Most recent 25 rows</div>
+      </div>
+      <div class="panel-body">
+        <table class="data-table" id="g-signals-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Asset</th>
+              <th class="num">Conviction</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="4" class="empty">Awaiting first scheduled run.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ═══ G10 REFERENCE BACKTEST (Strict-OOS) ══════════════════ -->
+    <div class="stream-header stream-header--secondary">
+      <div>
+        <h2 class="stream-title">Reference backtest &mdash; Strict-OOS 10-pair <span class="title-pill">BACKTEST ONLY</span></h2>
         <p class="stream-sub" id="bt-sub">
-          <strong>Separate strategy from the live ManifoldFX tab.</strong>
-          Trades a 10-pair G10 FX portfolio (AUDJPY, AUDUSD, EURGBP, EURUSD, GBPJPY, GBPUSD, NZDUSD, USDCAD, USDCHF, USDJPY) &mdash; not the same model as the 2-pair live system.
+          Out-of-sample backtest baseline for the deployed G10 strategy.
           Train 2004&ndash;2015 &middot; Val 2016&ndash;2017 (HP search only) &middot; Test 2018+ untouched until report.
-          <strong>These are out-of-sample backtest results, not a deployed strategy.</strong>
+          <strong>These are backtest results, not live deployment numbers.</strong>
+          Live results appear above as they accumulate.
         </p>
       </div>
       <div class="stream-status">
@@ -784,7 +899,7 @@
       </div>
     </section>
 
-  </section><!-- /#tab-backtest -->
+  </section><!-- /#tab-g10 -->
 
   <footer class="page-foot" id="foot-meta">&mdash;</footer>
 

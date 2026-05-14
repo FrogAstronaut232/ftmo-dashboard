@@ -1,0 +1,33 @@
+{
+  "as_of_utc": null,
+  "balance": 50000.00,
+  "equity": 50000.00,
+  "peak_equity": 50000.00,
+  "drawdown_pct": 0.0,
+  "total_pnl_usd": 0.0,
+  "today_pnl": 0.0,
+  "free_margin": 50000.00,
+  "open_positions": [],
+  "last_signals": {},
+  "metrics": {
+    "total_trades": 0,
+    "win_rate": 0.0,
+    "profit_factor": 0.0,
+    "avg_win_usd": 0.0,
+    "avg_loss_usd": 0.0,
+    "max_drawdown_pct": 0.0,
+    "total_pnl_usd": 0.0,
+    "annualised_sharpe": 0.0
+  },
+  "account_initial_usd": 50000.00,
+  "max_daily_loss_pct": 0.04,
+  "max_total_loss_pct": 0.08,
+  "phase": "p1",
+  "dry_run": false,
+  "awaiting_first_run": true,
+  "first_scheduled_run_utc": "2026-05-14T22:05:00Z",
+  "first_scheduled_run_aest": "2026-05-15T08:05:00+10:00",
+  "live_first_date": null,
+  "live_last_date": null,
+  "last_heartbeat_utc": null
+}

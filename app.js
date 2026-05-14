@@ -1,8 +1,12 @@
-// ManifoldFX dashboard. Reads:
-//   data/state.json        — current LIVE state + reference summary
-//   data/meta.json         — strategy metadata
-//   data/live/*.csv        — live forward-test stream
-//   data/reference/*.csv   — frozen historical OOS reference
+// ManifoldFX / G10 dashboard. Reads:
+//   data/state.json            -- ManifoldFX (2-pair) LIVE state + reference summary
+//   data/meta.json             -- ManifoldFX metadata
+//   data/live/*.csv            -- ManifoldFX live forward-test stream
+//   data/reference/*.csv       -- ManifoldFX frozen historical OOS reference
+//   data/g10/state.json        -- G10 (10-pair) LIVE state
+//   data/g10/meta.json         -- G10 metadata
+//   data/g10/live/*.csv        -- G10 live forward-test stream
+//   data/backtest_strict_oos/  -- G10 Strict-OOS reference backtest (folded into G10 tab)
 // Static, no backend. Polls every 60s.
 
 const DATA_BASE  = 'data';
@@ -10,7 +14,7 @@ const REFRESH_MS = 60_000;
 
 const $ = id => document.getElementById(id);
 
-// ── formatters ───────────────────────────────────────────────────────
+// -- formatters --------------------------------------------------------
 function fmtUsd(v, signed = true) {
   if (v == null || isNaN(v)) return '—';
   const sign = signed && v > 0 ? '+' : v < 0 ? '−' : '';
@@ -63,7 +67,7 @@ function setValue(id, baseClass, text, mod = '') {
   el.className = mod ? `${baseClass} ${mod}` : baseClass;
 }
 
-// ── Header / live summary ────────────────────────────────────────────
+// -- Header / live summary (driven by ManifoldFX state, since masthead is global) --
 function renderMasthead(state, meta) {
   $('phase-badge').textContent = (state.phase || 'demo').toUpperCase();
   $('dryrun-tag').hidden = !state.dry_run;
@@ -76,7 +80,7 @@ function renderMasthead(state, meta) {
       ? `${fmt(d)}  ·  hb ${fmt(hb).slice(11)}`
       : fmt(d);
 
-    // Data freshness indicator — based on the most recent of report/heartbeat
+    // Data freshness indicator
     const newest = hb && hb > d ? hb : d;
     const ageMs  = Date.now() - newest.getTime();
     const ageMin = Math.round(ageMs / 60000);
@@ -98,7 +102,7 @@ function renderMasthead(state, meta) {
                                 .filter(Boolean).join('   ·   ');
 
   $('foot-meta').textContent =
-    'Daily-close swing strategy. Strategy logic, model parameters, and per-trade '
+    'Daily-close swing strategies. Strategy logic, model parameters, and per-trade '
   + 'reasoning are private and not exposed in this view.';
 }
 
@@ -122,7 +126,6 @@ function renderLiveSummary(state, meta) {
   setValue('m-avgwin',  'sub-value', m.avg_win_usd  ? fmtUsd(m.avg_win_usd)  : '—', m.avg_win_usd  > 0 ? 'pos' : '');
   setValue('m-avgloss', 'sub-value', m.avg_loss_usd ? fmtUsd(m.avg_loss_usd) : '—', m.avg_loss_usd < 0 ? 'neg' : '');
 
-  // Live-stream status pill + sub
   const liveFirst = state.live_first_date;
   const liveLast  = state.live_last_date;
   const pill   = $('live-status');
@@ -146,12 +149,13 @@ function daysBetween(a, b) {
   return Math.round((db - da) / 86_400_000);
 }
 
-// ── Open positions ───────────────────────────────────────────────────
-function renderPositions(state) {
-  const tbody = document.querySelector('#positions-table tbody');
+// -- Open positions ----------------------------------------------------
+function renderPositions(tableId, state, emptyMsg) {
+  const tbody = document.querySelector(`#${tableId} tbody`);
+  if (!tbody) return;
   const positions = state.open_positions || [];
   if (!positions.length) {
-    tbody.innerHTML = '<tr><td colspan="7" class="empty">No open positions.</td></tr>';
+    tbody.innerHTML = `<tr><td colspan="7" class="empty">${emptyMsg}</td></tr>`;
     return;
   }
   tbody.innerHTML = positions.map(p => {
@@ -173,12 +177,10 @@ function renderPositions(state) {
   }).join('');
 }
 
-// ── Equity curve renderer (reused for both live + reference) ─────────
-// `currentEquity` (optional): live MT5 equity from state.json. If set and
-// it differs from the last historical row, append it as a "today" point so
-// the chart's latest value matches the hero number (closed P&L + floating).
+// -- Equity curve renderer (reused everywhere) ------------------------
 function renderEquity(divId, equity, initial, lineColor, currentEquity) {
   const div = $(divId);
+  if (!div) return;
   let x, y;
   if (!equity || !equity.length) {
     const today = new Date();
@@ -250,9 +252,10 @@ function renderEquity(divId, equity, initial, lineColor, currentEquity) {
   Plotly.newPlot(div, [ref, main], layout, { displayModeBar: false, responsive: true });
 }
 
-// ── Tables (reused for both live + reference) ────────────────────────
+// -- Tables ------------------------------------------------------------
 function renderTradesTable(tableId, trades, emptyMsg) {
   const tbody = document.querySelector(`#${tableId} tbody`);
+  if (!tbody) return;
   if (!trades.length) {
     tbody.innerHTML = `<tr><td colspan="6" class="empty">${emptyMsg}</td></tr>`;
     return;
@@ -274,7 +277,6 @@ function renderTradesTable(tableId, trades, emptyMsg) {
 }
 
 function fmtAction(raw, sigFallback) {
-  // Prefer the reporter's `action` column. Fall back to signal sign if absent.
   let a = raw ? String(raw).toUpperCase() : null;
   if (!a) {
     const sig = parseInt(sigFallback) || 0;
@@ -289,9 +291,8 @@ function fmtAction(raw, sigFallback) {
 }
 
 function renderSignalsTable(tableId, signals, emptyMsg) {
-  // Per-asset table — `signals` is already filtered to one asset, so the
-  // Asset column is dropped (header tells you which one).
   const tbody = document.querySelector(`#${tableId} tbody`);
+  if (!tbody) return;
   if (!signals.length) {
     tbody.innerHTML = `<tr><td colspan="3" class="empty">${emptyMsg}</td></tr>`;
     return;
@@ -308,11 +309,32 @@ function renderSignalsTable(tableId, signals, emptyMsg) {
   }).join('');
 }
 
+// All-pairs signals table (used by G10 tab; includes Asset column)
+function renderSignalsTableAllPairs(tableId, signals, emptyMsg) {
+  const tbody = document.querySelector(`#${tableId} tbody`);
+  if (!tbody) return;
+  if (!signals.length) {
+    tbody.innerHTML = `<tr><td colspan="4" class="empty">${emptyMsg}</td></tr>`;
+    return;
+  }
+  const recent = signals.slice(-25).reverse();
+  tbody.innerHTML = recent.map(s => {
+    const { text: actText, cls: actCls } = fmtAction(s.action, s.signal);
+    const conv = (parseFloat(s.ensemble_avg) || 0).toFixed(2);
+    return `<tr>
+      <td class="dim">${s.as_of_date || '—'}</td>
+      <td>${s.asset || '—'}</td>
+      <td class="num">${conv}</td>
+      <td class="${actCls}">${actText}</td>
+    </tr>`;
+  }).join('');
+}
+
 function byAsset(signals, asset) {
   return (signals || []).filter(s => String(s.asset || '').toUpperCase() === asset);
 }
 
-// ── Reference section ────────────────────────────────────────────────
+// -- Reference section (ManifoldFX) -----------------------------------
 function renderRefSummary(state) {
   const m = state.reference_metrics || {};
   setValue('r-trades', 'sub-value', String(m.total_trades ?? 0));
@@ -327,17 +349,86 @@ function renderRefSummary(state) {
   const pill  = $('ref-status');
   const sub   = $('ref-sub');
   if (first && last) {
-    pill.textContent = `${first} → ${last}`;
-    sub.textContent = `Frozen-model out-of-sample inference, ${first} → ${last}.  Static baseline; not live.`;
+    pill.textContent = `${first} -> ${last}`;
+    sub.textContent = `Frozen-model out-of-sample inference, ${first} -> ${last}.  Static baseline; not live.`;
   } else {
     pill.textContent = '—';
     sub.textContent = 'No reference data loaded.';
   }
 }
 
-// ── Main loop ─────────────────────────────────────────────────────────
+// -- G10 LIVE summary --------------------------------------------------
+function renderG10LiveSummary(state, meta) {
+  const initial = state.account_initial_usd || meta.account_initial_usd || 50000;
+  const awaiting = !!state.awaiting_first_run;
+  const m = state.metrics || {};
+
+  if (awaiting) {
+    // Empty-state placeholders -- don't render zero values as if they were real
+    setValue('g-equity', 'hero-value', '—');
+    setValue('g-total',  'hero-value', '—');
+    setValue('g-today',  'hero-value', '—');
+    setValue('g-dd',     'hero-value', '—');
+    setValue('g-wr',      'sub-value', '—');
+    setValue('g-trades',  'sub-value', '—');
+    setValue('g-sharpe',  'sub-value', '—');
+    setValue('g-pf',      'sub-value', '—');
+    setValue('g-avgwin',  'sub-value', '—');
+    setValue('g-avgloss', 'sub-value', '—');
+
+    const pill = $('g10-live-status');
+    const sub  = $('g10-live-sub');
+    if (pill) {
+      pill.textContent = 'Awaiting first run';
+      pill.className = 'status-pill status-pill--mute';
+    }
+    if (sub) {
+      sub.textContent =
+        'First scheduled run: 2026-05-15 08:05 AEST (= 2026-05-14 22:05 UTC). '
+      + '10-pair G10 FX swing portfolio on the same MT5 account as ManifoldFX, '
+      + 'distinct magic numbers (100010-100019).';
+    }
+  } else {
+    const equity   = state.equity ?? initial;
+    const today    = state.today_pnl ?? 0;
+    const totalPnl = equity - initial;
+    const dd       = state.drawdown_pct ?? 0;
+
+    setValue('g-equity', 'hero-value', fmtUsd(equity, false));
+    setValue('g-total',  'hero-value', fmtUsd(totalPnl), pnlClass(totalPnl));
+    setValue('g-today',  'hero-value', fmtUsd(today),    pnlClass(today));
+    setValue('g-dd',     'hero-value', fmtPct(dd),       dd > 5 ? 'warn' : '');
+
+    setValue('g-wr',      'sub-value', m.total_trades ? fmtPct(m.win_rate, 1) : '—');
+    setValue('g-trades',  'sub-value', String(m.total_trades ?? 0));
+    setValue('g-sharpe',  'sub-value', m.total_trades ? fmtNum(m.annualised_sharpe) : '—');
+    setValue('g-pf',      'sub-value', m.total_trades ? fmtNum(m.profit_factor)     : '—');
+    setValue('g-avgwin',  'sub-value', m.avg_win_usd  ? fmtUsd(m.avg_win_usd)  : '—', m.avg_win_usd  > 0 ? 'pos' : '');
+    setValue('g-avgloss', 'sub-value', m.avg_loss_usd ? fmtUsd(m.avg_loss_usd) : '—', m.avg_loss_usd < 0 ? 'neg' : '');
+
+    const liveFirst = state.live_first_date;
+    const liveLast  = state.live_last_date;
+    const pill = $('g10-live-status');
+    const sub  = $('g10-live-sub');
+    if (pill && sub) {
+      if (liveFirst && liveLast) {
+        const days = daysBetween(liveFirst, liveLast) + 1;
+        const n = m.total_trades || 0;
+        pill.textContent = `Live · ${days} day${days === 1 ? '' : 's'}`;
+        pill.className = 'status-pill';
+        sub.textContent = `Running since ${liveFirst}.  ${days} trading day${days === 1 ? '' : 's'} · ${n} closed trade${n === 1 ? '' : 's'}.`;
+      } else {
+        pill.textContent = 'Live';
+        pill.className = 'status-pill';
+      }
+    }
+  }
+}
+
+// -- Main loop ---------------------------------------------------------
 async function loadAll() {
   try {
+    // ManifoldFX (2-pair) data
     const [state, meta, liveEq, liveTr, liveSig, refEq, refTr, refSig] = await Promise.all([
       fetchJson('state.json').catch(() => ({})),
       fetchJson('meta.json').catch(() => ({})),
@@ -352,15 +443,14 @@ async function loadAll() {
 
     renderMasthead(state, meta);
     renderLiveSummary(state, meta);
-    renderPositions(state);
+    renderPositions('positions-table', state, 'No open positions.');
     renderEquity('live-equity-chart', liveEq, initial, '#cdd2d8', state.equity);
     renderTradesTable('live-trades-table',   liveTr,  'Awaiting first closed trade.');
     renderSignalsTable('live-signals-eurusd-table', byAsset(liveSig, 'EURUSD'), 'Awaiting first scheduled run.');
     renderSignalsTable('live-signals-gbpjpy-table', byAsset(liveSig, 'GBPJPY'), 'Awaiting first scheduled run.');
 
-    // Live equity range label
     if (liveEq.length) {
-      $('live-equity-range').textContent = `${liveEq[0].date} → ${liveEq[liveEq.length-1].date}`;
+      $('live-equity-range').textContent = `${liveEq[0].date} -> ${liveEq[liveEq.length-1].date}`;
     } else {
       $('live-equity-range').textContent = '— (no data yet)';
     }
@@ -372,19 +462,65 @@ async function loadAll() {
     renderSignalsTable('ref-signals-gbpjpy-table', byAsset(refSig, 'GBPJPY'), '—');
 
     if (refEq.length) {
-      $('ref-equity-range').textContent = `${refEq[0].date} → ${refEq[refEq.length-1].date}`;
+      $('ref-equity-range').textContent = `${refEq[0].date} -> ${refEq[refEq.length-1].date}`;
     } else {
       $('ref-equity-range').textContent = '—';
     }
+
+    // G10 (10-pair) LIVE data
+    await loadG10Live();
   } catch (e) {
     console.error('Dashboard load failed:', e);
   }
 }
 
-// Manual refresh button — re-fetches everything from GitHub. Doesn't reach into
-// the user's desktop; if their machine is asleep, this just shows the last data
-// the heartbeat was able to push. Useful when the desktop IS awake (data is
-// at most ~15 min old in that case).
+// -- G10 LIVE loader ---------------------------------------------------
+async function loadG10Live() {
+  try {
+    const [gState, gMeta, gEq, gTr, gSig] = await Promise.all([
+      fetchJson('g10/state.json').catch(() => ({ awaiting_first_run: true })),
+      fetchJson('g10/meta.json').catch(() => ({})),
+      fetchCsv('g10/live/equity.csv'),
+      fetchCsv('g10/live/trades.csv'),
+      fetchCsv('g10/live/signals.csv'),
+    ]);
+    const initial = gState.account_initial_usd || gMeta.account_initial_usd || 50000;
+    const awaiting = !!gState.awaiting_first_run;
+
+    renderG10LiveSummary(gState, gMeta);
+    renderPositions('g-positions-table', gState,
+      awaiting
+        ? 'Awaiting first run — fires daily at 08:05 AEST (= 22:05 UTC).'
+        : 'No open positions.');
+
+    // Only paint a live equity curve if we actually have data
+    if (gEq.length || !awaiting) {
+      renderEquity('g-equity-chart', gEq, initial, '#cdd2d8', awaiting ? null : gState.equity);
+      if (gEq.length) {
+        $('g-equity-range').textContent = `${gEq[0].date} -> ${gEq[gEq.length-1].date}`;
+      } else {
+        $('g-equity-range').textContent = '— (no data yet)';
+      }
+    } else {
+      // Awaiting-first-run: draw flat $50k baseline so the chart isn't empty
+      renderEquity('g-equity-chart', [], initial, '#3a4452', null);
+      $('g-equity-range').textContent = 'Awaiting first run';
+    }
+
+    renderTradesTable('g-trades-table', gTr,
+      awaiting
+        ? 'Awaiting first closed trade. First scheduled run: 2026-05-15 08:05 AEST.'
+        : 'No closed trades yet.');
+    renderSignalsTableAllPairs('g-signals-table', gSig,
+      awaiting
+        ? 'Awaiting first scheduled run.'
+        : 'No signals yet.');
+  } catch (e) {
+    console.error('G10 live load failed:', e);
+  }
+}
+
+// Manual refresh button -- reloads everything for BOTH strategies.
 async function manualRefresh() {
   const btn = $('refresh-btn');
   if (!btn || btn.disabled) return;
@@ -394,6 +530,10 @@ async function manualRefresh() {
   const original = label ? label.textContent : 'Refresh';
   try {
     await loadAll();
+    // Also re-pull the Strict-OOS backtest data so the G10 tab's reference section refreshes.
+    if (backtestLoaded) {
+      try { await loadBacktest(); } catch (_) { /* ignore */ }
+    }
     if (label) label.textContent = 'Refreshed';
   } catch (e) {
     if (label) label.textContent = 'Failed';
@@ -408,13 +548,14 @@ async function manualRefresh() {
 }
 $('refresh-btn').addEventListener('click', manualRefresh);
 
-// ── Tab switching ────────────────────────────────────────────────────
-// Two tabs: Live (ManifoldFX, polled) and Backtest (Strict-OOS FX, static).
-// Backtest data is fetched lazily on first activation, then cached.
+// -- Tab switching -----------------------------------------------------
+// Two top-level tabs: ManifoldFX (2-pair live) and G10 (10-pair live +
+// Strict-OOS reference backtest).
+// G10's backtest section is fetched lazily on first tab activation.
 let backtestLoaded = false;
 
 function activateTab(name) {
-  const tabs = ['live', 'backtest'];
+  const tabs = ['manifoldfx', 'g10'];
   tabs.forEach(t => {
     const pane = $(`tab-${t}`);
     const btn  = $(`tab-btn-${t}`);
@@ -424,23 +565,23 @@ function activateTab(name) {
     btn.classList.toggle('is-active', active);
     btn.setAttribute('aria-selected', active ? 'true' : 'false');
   });
-  if (name === 'backtest' && !backtestLoaded) {
+  if (name === 'g10' && !backtestLoaded) {
     backtestLoaded = true;
     loadBacktest().catch(e => {
       console.error('Backtest load failed:', e);
-      backtestLoaded = false; // allow retry
+      backtestLoaded = false;
     });
   }
   // Plotly charts can mis-size when drawn while their container is hidden.
-  // Re-trigger a resize after the pane becomes visible.
   setTimeout(() => {
-    if (name === 'live') {
+    if (name === 'manifoldfx') {
       const live = $('live-equity-chart'); if (live && live._fullLayout) Plotly.Plots.resize(live);
       const ref  = $('ref-equity-chart');  if (ref  && ref._fullLayout)  Plotly.Plots.resize(ref);
-    } else if (name === 'backtest') {
-      const eq = $('bt-equity-chart');     if (eq  && eq._fullLayout)  Plotly.Plots.resize(eq);
-      const yr = $('bt-yearbar-chart');    if (yr  && yr._fullLayout)  Plotly.Plots.resize(yr);
-      const mc = $('bt-macro-shift-chart');if (mc  && mc._fullLayout)  Plotly.Plots.resize(mc);
+    } else if (name === 'g10') {
+      const gl = $('g-equity-chart');      if (gl && gl._fullLayout) Plotly.Plots.resize(gl);
+      const eq = $('bt-equity-chart');     if (eq && eq._fullLayout) Plotly.Plots.resize(eq);
+      const yr = $('bt-yearbar-chart');    if (yr && yr._fullLayout) Plotly.Plots.resize(yr);
+      const mc = $('bt-macro-shift-chart');if (mc && mc._fullLayout) Plotly.Plots.resize(mc);
     }
   }, 30);
 }
@@ -448,7 +589,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => activateTab(btn.dataset.tab));
 });
 
-// ── Backtest tab loader ──────────────────────────────────────────────
+// -- Backtest tab loader (G10 Strict-OOS reference) -------------------
 async function loadBacktest() {
   const BT_BASE = `${DATA_BASE}/backtest_strict_oos`;
   const fetchBt = async (name) => {
@@ -480,25 +621,25 @@ async function loadBacktest() {
     fetchBt('verdict_summary.json').catch(() => null),
   ]);
 
-  // ─ Hero + submetrics ─
+  // Hero + submetrics
   const signed = v => (v > 0 ? `+${v.toFixed(2)}` : v.toFixed(2));
   $('bt-sharpe').textContent  = signed(summary.sharpe);
   $('bt-cagr').textContent    = `${summary.cagr_pct > 0 ? '+' : ''}${summary.cagr_pct.toFixed(2)}%`;
   $('bt-mdd').textContent     = `${summary.mdd_pct.toFixed(2)}%`;
   $('bt-calmar').textContent  = summary.calmar.toFixed(2);
 
-  $('bt-period').textContent  = `${summary.period_start} → ${summary.period_end}`;
+  $('bt-period').textContent  = `${summary.period_start} -> ${summary.period_end}`;
   $('bt-days').textContent    = String(summary.n_days);
   $('bt-wr').textContent      = `${summary.win_rate_pct.toFixed(1)}%`;
   $('bt-vol').textContent     = `${summary.ann_vol_pct.toFixed(2)}%`;
   $('bt-pf').textContent      = summary.profit_factor.toFixed(2);
   $('bt-sortino').textContent = summary.sortino.toFixed(2);
 
-  // ─ Equity curve (log scale) ─
+  // Equity curve (log scale)
   const eqX = portfolio.map(r => r.date);
   const eqY = portfolio.map(r => Number(r.equity));
   if (eqX.length) {
-    $('bt-equity-range').textContent = `${eqX[0]} → ${eqX[eqX.length - 1]}`;
+    $('bt-equity-range').textContent = `${eqX[0]} -> ${eqX[eqX.length - 1]}`;
   }
   const eqTrace = {
     x: eqX, y: eqY,
@@ -539,7 +680,7 @@ async function loadBacktest() {
   };
   Plotly.newPlot('bt-equity-chart', [eqRef, eqTrace], eqLayout, { displayModeBar: false, responsive: true });
 
-  // ─ Per-year Sharpe bar chart ─
+  // Per-year Sharpe bar chart
   const yrX = perYear.map(r => String(r.year));
   const yrY = perYear.map(r => Number(r.sharpe));
   const yrTrace = {
@@ -579,7 +720,7 @@ async function loadBacktest() {
   };
   Plotly.newPlot('bt-yearbar-chart', [yrTrace], yrLayout, { displayModeBar: false, responsive: true });
 
-  // ─ Per-pair table (sorted by Sharpe desc) ─
+  // Per-pair table (sorted by Sharpe desc)
   const pairs = perPair
     .filter(r => r && r.pair)
     .slice()
@@ -604,7 +745,7 @@ async function loadBacktest() {
     pairBody.innerHTML = '<tr><td colspan="6" class="empty">No data.</td></tr>';
   }
 
-  // ─ Regime table ─
+  // Regime table
   const regimeLabels = { low_vol: 'Low VIX', mid_vol: 'Mid VIX', high_vol: 'High VIX' };
   const regimeBody = document.querySelector('#bt-regime-table tbody');
   if (regime.length) {
@@ -623,7 +764,7 @@ async function loadBacktest() {
     regimeBody.innerHTML = '<tr><td colspan="4" class="empty">No data.</td></tr>';
   }
 
-  // ─ Sub-period table ─
+  // Sub-period table
   const subBody = document.querySelector('#bt-subperiod-table tbody');
   if (subPeriod.length) {
     subBody.innerHTML = subPeriod.map(r => {
@@ -643,10 +784,10 @@ async function loadBacktest() {
     subBody.innerHTML = '<tr><td colspan="4" class="empty">No data.</td></tr>';
   }
 
-  // ─ FTMO Monte Carlo panel ─
+  // FTMO Monte Carlo panel
   renderMonteCarlo(mc);
 
-  // ─ New forensic-audit panels ─
+  // Forensic-audit panels
   renderMacroAnalysis(macro);
   renderUniverseRobustness(sensitivity);
   renderTradeStats(tradeStats);
@@ -654,7 +795,7 @@ async function loadBacktest() {
   renderRobustnessScorecard(robustness);
 }
 
-// ── Macro analysis ────────────────────────────────────────────────────
+// -- Macro analysis ----------------------------------------------------
 function renderMacroAnalysis(macro) {
   if (!macro) return;
   const rows = (macro.shift_gradient && macro.shift_gradient.rows) || [];
@@ -662,9 +803,9 @@ function renderMacroAnalysis(macro) {
     const x = rows.map(r => r.shift_days);
     const y = rows.map(r => Number(r.sharpe));
     const colors = rows.map(r => {
-      if (r.shift_days === 0) return '#5cb87a';      // green for baseline (peak)
-      if (Number(r.sharpe) < 0) return '#d04a52';    // red for negative
-      return '#3a4452';                              // grey for nearby positives
+      if (r.shift_days === 0) return '#5cb87a';
+      if (Number(r.sharpe) < 0) return '#d04a52';
+      return '#3a4452';
     });
     const trace = {
       x, y, type: 'bar',
@@ -703,7 +844,6 @@ function renderMacroAnalysis(macro) {
     Plotly.newPlot('bt-macro-shift-chart', [trace], layout, { displayModeBar: false, responsive: true });
   }
 
-  // Per-feature ablation table
   const abl = (macro.per_feature_ablation && macro.per_feature_ablation.rows) || [];
   const ablBody = document.querySelector('#bt-macro-ablation-table tbody');
   if (ablBody) {
@@ -724,7 +864,6 @@ function renderMacroAnalysis(macro) {
     }
   }
 
-  // Source replacement table
   const src = macro.data_source_independence;
   const srcBody = document.querySelector('#bt-macro-source-table tbody');
   if (srcBody) {
@@ -750,7 +889,7 @@ function renderMacroAnalysis(macro) {
   }
 }
 
-// ── Universe robustness ───────────────────────────────────────────────
+// -- Universe robustness -----------------------------------------------
 function renderUniverseRobustness(sens) {
   const body = document.querySelector('#bt-universe-table tbody');
   if (!body) return;
@@ -759,7 +898,6 @@ function renderUniverseRobustness(sens) {
     return;
   }
   const altRows = sens.alt_universe.rows.slice();
-  // Append drop-USDCHF and drop-3 worst-case from the same JSON
   const dropUsdchf = (sens.drop_one_pair && sens.drop_one_pair.rows || [])
     .find(r => r.dropped === 'USDCHF');
   if (dropUsdchf) {
@@ -793,7 +931,7 @@ function renderUniverseRobustness(sens) {
   }).join('');
 }
 
-// ── Trade stats ───────────────────────────────────────────────────────
+// -- Trade stats -------------------------------------------------------
 function renderTradeStats(ts) {
   if (!ts) return;
   const pl = ts.portfolio_level || {};
@@ -805,7 +943,6 @@ function renderTradeStats(ts) {
   setTxt('bt-ts-hold',   pl.avg_holding_days != null ? `${pl.avg_holding_days.toFixed(1)} d` : '—');
   setTxt('bt-ts-exp',    pl.expectancy_bps_per_trade != null ? `${pl.expectancy_bps_per_trade.toFixed(1)} bps` : '—');
 
-  // Per-pair trade table
   const rows = ts.per_pair_summary || [];
   const body = document.querySelector('#bt-trade-pair-table tbody');
   if (body) {
@@ -828,16 +965,14 @@ function renderTradeStats(ts) {
   }
 }
 
-// ── Sensitivity tests ─────────────────────────────────────────────────
+// -- Sensitivity tests -------------------------------------------------
 function renderSensitivity(sens) {
   if (!sens) return;
 
-  // Drop-one pair
   const d1Rows = (sens.drop_one_pair && sens.drop_one_pair.rows) || [];
   const d1Body = document.querySelector('#bt-sens-drop1-table tbody');
   if (d1Body) {
     if (d1Rows.length) {
-      // Sort by delta descending
       const sorted = d1Rows.slice().sort((a, b) => Number(b.delta) - Number(a.delta));
       d1Body.innerHTML = sorted.map(r => {
         const sh = Number(r.remaining_sharpe);
@@ -856,7 +991,6 @@ function renderSensitivity(sens) {
     }
   }
 
-  // OOS start sensitivity
   const oosRows = (sens.oos_start_date && sens.oos_start_date.rows) || [];
   const oosBody = document.querySelector('#bt-sens-oos-table tbody');
   if (oosBody) {
@@ -883,7 +1017,6 @@ function renderSensitivity(sens) {
     }
   }
 
-  // Drop-three combinatorial
   const d3 = sens.drop_three_combinatorial;
   const d3Body = document.querySelector('#bt-sens-drop3-table tbody');
   if (d3Body) {
@@ -899,7 +1032,6 @@ function renderSensitivity(sens) {
     }
   }
 
-  // Refit cadence
   const rc = sens.refit_cadence_offset;
   const rcBody = document.querySelector('#bt-sens-refit-table tbody');
   if (rcBody) {
@@ -915,7 +1047,7 @@ function renderSensitivity(sens) {
   }
 }
 
-// ── Robustness scorecard ──────────────────────────────────────────────
+// -- Robustness scorecard ----------------------------------------------
 function renderRobustnessScorecard(rob) {
   const body = document.querySelector('#bt-robustness-table tbody');
   const metaEl = $('bt-scorecard-meta');
@@ -924,8 +1056,6 @@ function renderRobustnessScorecard(rob) {
     body.innerHTML = '<tr><td colspan="4" class="empty">No data.</td></tr>';
     return;
   }
-  // Build a unified row list. Combine `code_audit` and `statistical_tests`
-  // from the prepared JSON into the same grouped scorecard format.
   const rows = [];
   (rob.code_audit || []).forEach(r => {
     rows.push({
@@ -966,7 +1096,6 @@ function renderRobustnessScorecard(rob) {
     metaEl.textContent = `${s.total_tests} forensic tests · ${s.passed} pass · ${s.failed_or_caveat} caveat/fail`;
   }
 
-  // Build rows with category-grouping (show category only on first row of group)
   let lastCat = null;
   body.innerHTML = rows.map(r => {
     const showCat = r.category !== lastCat;
@@ -987,7 +1116,6 @@ function renderRobustnessScorecard(rob) {
     } else {
       pillCls = 'scorecard-pill-dim';
     }
-    // Truncate over-long verdict labels visually but keep full text in title
     if (pillTxt.length > 36) pillTxt = pillTxt.slice(0, 34) + '…';
     return `<tr>
       ${catCell}
@@ -998,11 +1126,7 @@ function renderRobustnessScorecard(rob) {
   }).join('');
 }
 
-// ── Monte Carlo renderer ─────────────────────────────────────────────
-// Three sub-views (mini-tabs): suggested 5×, conservative 5×, current 1×.
-// Each shows: 1-Step 60d, 1-Step 90d/252d, 2-Step phase 1, 2-Step chained
-// (where applicable). Pass rate column gets a pos/neg/dim colour based on
-// FTMO viability cut: >=60% pos, 25-60% dim/warn, <25% neg.
+// -- Monte Carlo renderer ---------------------------------------------
 function renderMonteCarlo(mc) {
   const tbody = document.querySelector('#bt-mc-tbody');
   const meta  = $('bt-mc-meta');
@@ -1064,7 +1188,6 @@ function renderMonteCarlo(mc) {
       if (!s) {
         return `<tr><td>${r.label}</td><td class="num dim">—</td><td class="num dim">—</td><td class="num dim">—</td></tr>`;
       }
-      // chained scenarios use overall_pass_rate; flat scenarios use pass_rate
       const pr = (typeof s.pass_rate === 'number') ? s.pass_rate
                : (typeof s.overall_pass_rate === 'number') ? s.overall_pass_rate
                : null;
@@ -1082,10 +1205,8 @@ function renderMonteCarlo(mc) {
     tbody.innerHTML = rows.join('');
   }
 
-  // Initial render: default to "scale5" tab (already marked is-active in HTML)
   render('scale5');
 
-  // Wire mini-tab clicks (idempotent — replace listeners by cloning buttons)
   if (tabsRoot) {
     tabsRoot.querySelectorAll('.mc-tab').forEach(btn => {
       const fresh = btn.cloneNode(true);

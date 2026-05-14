@@ -178,7 +178,9 @@ function renderPositions(tableId, state, emptyMsg) {
 }
 
 // -- Equity curve renderer (reused everywhere) ------------------------
-function renderEquity(divId, equity, initial, lineColor, currentEquity) {
+// If equity rows include a `bh_sp500` column, plot it as a muted dashed
+// overlay so the strategy can be compared against SP500 buy-and-hold.
+function renderEquity(divId, equity, initial, lineColor, currentEquity, opts = {}) {
   const div = $(divId);
   if (!div) return;
   let x, y;
@@ -210,11 +212,13 @@ function renderEquity(divId, equity, initial, lineColor, currentEquity) {
       }
     }
   }
+  const hasBh = equity && equity.length && equity.some(r => r.bh_sp500 != null && r.bh_sp500 !== '');
   const main = {
     x, y, type: 'scatter', mode: 'lines',
+    name: opts.mainLabel || 'Strategy',
     line: { color: lineColor, width: 1.4, shape: 'linear' },
-    hovertemplate: '%{x}<br>$%{y:,.0f}<extra></extra>',
-    showlegend: false,
+    hovertemplate: '%{x}<br>$%{y:,.0f}<extra>' + (opts.mainLabel || 'Strategy') + '</extra>',
+    showlegend: hasBh,
   };
   const ref = {
     x: [x[0], x[x.length-1]], y: [initial, initial],
@@ -222,6 +226,18 @@ function renderEquity(divId, equity, initial, lineColor, currentEquity) {
     line: { color: '#2c3340', width: 1, dash: 'dot' },
     hoverinfo: 'skip', showlegend: false,
   };
+  let bhTrace = null;
+  if (hasBh) {
+    const bhX = equity.map(r => r.date);
+    const bhY = equity.map(r => Number(r.bh_sp500) || initial);
+    bhTrace = {
+      x: bhX, y: bhY, type: 'scatter', mode: 'lines',
+      name: 'SP500 buy & hold',
+      line: { color: '#c9a14a', width: 1.2, dash: 'dash' },
+      hovertemplate: '%{x}<br>$%{y:,.0f}<extra>SP500 B&H</extra>',
+      showlegend: true,
+    };
+  }
   const layout = {
     paper_bgcolor: '#161b24',
     plot_bgcolor:  '#161b24',
@@ -247,9 +263,15 @@ function renderEquity(divId, equity, initial, lineColor, currentEquity) {
               family: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace',
               size: 12 },
     },
-    showlegend: false,
+    showlegend: hasBh,
+    legend: hasBh ? {
+      orientation: 'h', x: 0, y: 1.08,
+      bgcolor: 'rgba(0,0,0,0)',
+      font: { color: '#9aa3ad', size: 10 },
+    } : undefined,
   };
-  Plotly.newPlot(div, [ref, main], layout, { displayModeBar: false, responsive: true });
+  const traces = bhTrace ? [ref, bhTrace, main] : [ref, main];
+  Plotly.newPlot(div, traces, layout, { displayModeBar: false, responsive: true });
 }
 
 // -- Tables ------------------------------------------------------------
@@ -644,9 +666,10 @@ async function loadBacktest() {
   const eqTrace = {
     x: eqX, y: eqY,
     type: 'scatter', mode: 'lines',
+    name: 'G10 strategy',
     line: { color: '#5cb87a', width: 1.4, shape: 'linear' },
-    hovertemplate: '%{x}<br>equity %{y:.3f}×<extra></extra>',
-    showlegend: false,
+    hovertemplate: '%{x}<br>equity %{y:.3f}×<extra>G10</extra>',
+    showlegend: true,
   };
   const eqRef = {
     x: [eqX[0], eqX[eqX.length - 1]], y: [1, 1],
@@ -654,6 +677,21 @@ async function loadBacktest() {
     line: { color: '#2c3340', width: 1, dash: 'dot' },
     hoverinfo: 'skip', showlegend: false,
   };
+  // SP500 B&H overlay (same unit-multiple scale: bh_sp500 / 50_000)
+  const bhRows = portfolio.filter(r => r.bh_sp500 != null && r.bh_sp500 !== '');
+  let bhTrace = null;
+  if (bhRows.length) {
+    const initialUsd = 50000;
+    bhTrace = {
+      x: bhRows.map(r => r.date),
+      y: bhRows.map(r => Number(r.bh_sp500) / initialUsd),
+      type: 'scatter', mode: 'lines',
+      name: 'SP500 buy & hold',
+      line: { color: '#c9a14a', width: 1.2, dash: 'dash' },
+      hovertemplate: '%{x}<br>equity %{y:.3f}×<extra>SP500 B&H</extra>',
+      showlegend: true,
+    };
+  }
   const eqLayout = {
     paper_bgcolor: '#161b24', plot_bgcolor: '#161b24',
     font: { color: '#6a727d', family: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace', size: 11 },
@@ -676,9 +714,15 @@ async function loadBacktest() {
       bgcolor: '#11151b', bordercolor: '#262d39',
       font: { color: '#e3e6ea', family: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace', size: 12 },
     },
-    showlegend: false,
+    showlegend: !!bhTrace,
+    legend: bhTrace ? {
+      orientation: 'h', x: 0, y: 1.08,
+      bgcolor: 'rgba(0,0,0,0)',
+      font: { color: '#9aa3ad', size: 10 },
+    } : undefined,
   };
-  Plotly.newPlot('bt-equity-chart', [eqRef, eqTrace], eqLayout, { displayModeBar: false, responsive: true });
+  const eqTraces = bhTrace ? [eqRef, bhTrace, eqTrace] : [eqRef, eqTrace];
+  Plotly.newPlot('bt-equity-chart', eqTraces, eqLayout, { displayModeBar: false, responsive: true });
 
   // Per-year Sharpe bar chart
   const yrX = perYear.map(r => String(r.year));

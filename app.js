@@ -792,7 +792,7 @@ async function loadBacktest() {
   // Regime table
   const regimeLabels = { low_vol: 'Low VIX', mid_vol: 'Mid VIX', high_vol: 'High VIX' };
   const regimeBody = document.querySelector('#bt-regime-table tbody');
-  if (regime.length) {
+  if (regimeBody && regime.length) {
     regimeBody.innerHTML = regime.map(r => {
       const sh = Number(r.sharpe);
       const cagr = Number(r.cagr_pct);
@@ -804,13 +804,13 @@ async function loadBacktest() {
         <td class="num dim">${r.n_days}</td>
       </tr>`;
     }).join('');
-  } else {
+  } else if (regimeBody) {
     regimeBody.innerHTML = '<tr><td colspan="4" class="empty">No data.</td></tr>';
   }
 
   // Sub-period table
   const subBody = document.querySelector('#bt-subperiod-table tbody');
-  if (subPeriod.length) {
+  if (subBody && subPeriod.length) {
     subBody.innerHTML = subPeriod.map(r => {
       const sh = Number(r.sharpe);
       const cagr = Number(r.cagr_pct);
@@ -824,19 +824,20 @@ async function loadBacktest() {
         <td class="num neg">${mdd.toFixed(2)}</td>
       </tr>`;
     }).join('');
-  } else {
+  } else if (subBody) {
     subBody.innerHTML = '<tr><td colspan="4" class="empty">No data.</td></tr>';
   }
 
-  // FTMO Monte Carlo panel
-  renderMonteCarlo(mc);
-
-  // Forensic-audit panels
-  renderMacroAnalysis(macro);
-  renderUniverseRobustness(sensitivity);
-  renderTradeStats(tradeStats);
-  renderSensitivity(sensitivity);
-  renderRobustnessScorecard(robustness);
+  // The Monte Carlo / validation / forensic-audit panels were removed from
+  // the G10 tab on 2026-05-14 (user wanted a cleaner backtest view). Their
+  // renderers are kept in the file but no longer called from here, so the
+  // DOM lookups don't trigger null-deref errors.
+  // renderMonteCarlo(mc);
+  // renderMacroAnalysis(macro);
+  // renderUniverseRobustness(sensitivity);
+  // renderTradeStats(tradeStats);
+  // renderSensitivity(sensitivity);
+  // renderRobustnessScorecard(robustness);
 }
 
 // -- Macro analysis ----------------------------------------------------

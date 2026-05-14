@@ -233,7 +233,7 @@ function renderEquity(divId, equity, initial, lineColor, currentEquity, opts = {
     bhTrace = {
       x: bhX, y: bhY, type: 'scatter', mode: 'lines',
       name: 'SP500 buy & hold',
-      line: { color: '#c9a14a', width: 1.2, dash: 'dash' },
+      line: { color: '#4a90d9', width: 1.4, shape: 'linear' },
       hovertemplate: '%{x}<br>$%{y:,.0f}<extra>SP500 B&H</extra>',
       showlegend: true,
     };
@@ -372,7 +372,7 @@ function renderRefSummary(state) {
   const sub   = $('ref-sub');
   if (first && last) {
     pill.textContent = `${first} -> ${last}`;
-    sub.textContent = `Frozen-model out-of-sample inference, ${first} -> ${last}.  Static baseline; not live.`;
+    sub.textContent = `Full ManifoldFX backtest, ${first} -> ${last}.  Static baseline; not live.`;
   } else {
     pill.textContent = '—';
     sub.textContent = 'No reference data loaded.';
@@ -687,7 +687,7 @@ async function loadBacktest() {
       y: bhRows.map(r => Number(r.bh_sp500) / initialUsd),
       type: 'scatter', mode: 'lines',
       name: 'SP500 buy & hold',
-      line: { color: '#c9a14a', width: 1.2, dash: 'dash' },
+      line: { color: '#4a90d9', width: 1.4, shape: 'linear' },
       hovertemplate: '%{x}<br>equity %{y:.3f}×<extra>SP500 B&H</extra>',
       showlegend: true,
     };

@@ -32,6 +32,8 @@ SIGNAL_CACHE = PROJECT_ROOT / "2_Assets_FX" / "backtester" / "backtest" / "outpu
 
 REF_DIR      = HERE / "data" / "reference"
 STATE_PATH   = HERE / "data" / "state.json"
+LOCAL_STATE  = PROJECT_ROOT / "2_Assets_FX" / "results" / "state.json"
+LOCAL_REF    = PROJECT_ROOT / "2_Assets_FX" / "results" / "reference"
 META_PATH    = HERE / "data" / "meta.json"
 
 ASSETS = ["EURUSD", "GBPJPY"]
@@ -204,18 +206,35 @@ def main() -> int:
     print(f"  wrote {REF_DIR / 'trades.csv'}  ({len(trades)} rows)")
     print(f"  wrote {REF_DIR / 'signals.csv'} ({len(sig_csv)} rows)")
 
-    # Update state.json
-    state = json.loads(STATE_PATH.read_text(encoding="utf-8"))
-    state["reference_metrics"] = metrics
-    if not trades.empty:
-        state["reference_first_date"] = trades["entry_date"].min()
-        state["reference_last_date"]  = trades["exit_date"].max()
-    else:
-        state["reference_first_date"] = eq_df["date"].iloc[0]
-        state["reference_last_date"]  = eq_df["date"].iloc[-1]
-    STATE_PATH.write_text(json.dumps(state, indent=2, default=str), encoding="utf-8")
-    print(f"  updated {STATE_PATH}")
-    print(f"     ref window: {state['reference_first_date']} → {state['reference_last_date']}")
+    # Update BOTH state.json files (website + local results). Heartbeat reads
+    # from local state and pushes to website, so updating only website gets
+    # silently reverted on the next cron heartbeat.
+    for state_path in (STATE_PATH, LOCAL_STATE):
+        if not state_path.exists():
+            print(f"  [skip] {state_path} does not exist")
+            continue
+        state = json.loads(state_path.read_text(encoding="utf-8"))
+        state["reference_metrics"] = metrics
+        if not trades.empty:
+            state["reference_first_date"] = trades["entry_date"].min()
+            state["reference_last_date"]  = trades["exit_date"].max()
+        else:
+            state["reference_first_date"] = eq_df["date"].iloc[0]
+            state["reference_last_date"]  = eq_df["date"].iloc[-1]
+        state_path.write_text(json.dumps(state, indent=2, default=str), encoding="utf-8")
+        print(f"  updated {state_path}")
+
+    # Also mirror the rebuilt reference CSVs to the local results/reference/
+    # folder so the next report.py pass doesn't disagree with the website.
+    if LOCAL_REF.exists():
+        for fname in ("equity.csv", "trades.csv", "signals.csv"):
+            src = REF_DIR / fname
+            if src.exists():
+                import shutil
+                shutil.copy2(src, LOCAL_REF / fname)
+                print(f"  mirrored {fname} -> {LOCAL_REF / fname}")
+
+    print(f"     ref window: {state.get('reference_first_date')} → {state.get('reference_last_date')}")
     print(f"     metrics:    {json.dumps(metrics, indent=4)}")
     return 0
 

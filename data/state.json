@@ -1,8 +1,7 @@
 {
   "as_of_utc": "2026-05-13T16:17:22.007983+00:00",
-  "balance": 49793.03,
-  "equity": 49793.03,
-  "drawdown_pct": 0.0,
+  "balance": 50131.21,
+  "equity": 50131.21,
   "today_pnl": 0.0,
   "open_positions": [],
   "last_signals": {
@@ -46,7 +45,8 @@
   "live_last_date": "2026-05-12",
   "reference_first_date": "2025-01-02",
   "reference_last_date": "2026-05-08",
-  "last_heartbeat_utc": "2026-05-14T03:18:18.446030+00:00",
+  "last_heartbeat_utc": "2026-05-14T03:30:24.285234+00:00",
   "free_margin": 49793.03,
-  "peak_equity": 49793.03
+  "drawdown_pct": 0.0,
+  "peak_equity": 50131.21
 }

@@ -1,0 +1,2 @@
+Reference stream is owned by website/rebuild_reference_full.py.
+Delete this file to let report.py rebuild from JSONL again.

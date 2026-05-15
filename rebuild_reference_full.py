@@ -250,6 +250,17 @@ def main() -> int:
                 shutil.copy2(src, LOCAL_REF / fname)
                 print(f"  mirrored {fname} -> {LOCAL_REF / fname}")
 
+    # Drop a lock marker so report.py knows the reference stream is owned
+    # by this script and won't try to overwrite it with the narrower OOS replay.
+    for d in (LOCAL_REF, REF_DIR):
+        if d.exists():
+            (d / ".locked_by_rebuild").write_text(
+                "Reference stream is owned by website/rebuild_reference_full.py.\n"
+                "Delete this file to let report.py rebuild from JSONL again.\n",
+                encoding="utf-8"
+            )
+            print(f"  locked {d / '.locked_by_rebuild'}")
+
     print(f"     ref window: {state.get('reference_first_date')} → {state.get('reference_last_date')}")
     print(f"     metrics:    {json.dumps(metrics, indent=4)}")
     return 0

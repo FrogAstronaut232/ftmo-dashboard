@@ -1,8 +1,8 @@
 {
-  "as_of_utc": "2026-05-14T22:05:37.861252+00:00",
+  "as_of_utc": "2026-05-15T22:05:32.870139+00:00",
   "balance": 50718.87,
   "equity": 51227.770000000004,
-  "drawdown_pct": 0.08061385903010146,
+  "drawdown_pct": 0.0,
   "today_pnl": 508.9,
   "open_positions": [
     {
@@ -53,54 +53,54 @@
   ],
   "last_signals": {
     "AUDJPY": {
-      "date": "2026-05-13",
-      "ensemble_avg": 0.6,
+      "date": "2026-05-14",
+      "ensemble_avg": 0.8,
       "signal": 1
     },
     "AUDUSD": {
-      "date": "2026-05-13",
-      "ensemble_avg": -0.2,
-      "signal": 0
+      "date": "2026-05-14",
+      "ensemble_avg": -0.8,
+      "signal": -1
     },
     "EURGBP": {
-      "date": "2026-05-13",
-      "ensemble_avg": -0.4,
-      "signal": -1
+      "date": "2026-05-15",
+      "ensemble_avg": -0.295,
+      "signal": 0
     },
     "EURUSD": {
-      "date": "2026-05-13",
-      "ensemble_avg": -0.6,
-      "signal": -1
+      "date": "2026-05-15",
+      "ensemble_avg": -0.126,
+      "signal": 0
     },
     "GBPJPY": {
-      "date": "2026-05-13",
-      "ensemble_avg": 0.6,
-      "signal": 1
+      "date": "2026-05-15",
+      "ensemble_avg": 0.0,
+      "signal": 0
     },
     "GBPUSD": {
-      "date": "2026-05-13",
-      "ensemble_avg": -0.795,
+      "date": "2026-05-15",
+      "ensemble_avg": -0.837,
       "signal": -1
     },
     "NZDUSD": {
-      "date": "2026-05-13",
-      "ensemble_avg": -0.2,
-      "signal": 0
+      "date": "2026-05-15",
+      "ensemble_avg": -0.6,
+      "signal": -1
     },
     "USDCAD": {
-      "date": "2026-05-13",
-      "ensemble_avg": 0.598,
-      "signal": 1
+      "date": "2026-05-15",
+      "ensemble_avg": 0.336,
+      "signal": 0
     },
     "USDCHF": {
-      "date": "2026-05-13",
-      "ensemble_avg": 0.6,
-      "signal": 1
+      "date": "2026-05-15",
+      "ensemble_avg": 0.212,
+      "signal": 0
     },
     "USDJPY": {
-      "date": "2026-05-13",
-      "ensemble_avg": 0.036,
-      "signal": 0
+      "date": "2026-05-15",
+      "ensemble_avg": 0.8,
+      "signal": 1
     }
   },
   "phase": "p1",
@@ -132,7 +132,7 @@
   "live_last_date": "2026-05-14",
   "reference_first_date": null,
   "reference_last_date": null,
-  "last_heartbeat_utc": "2026-05-15T21:52:53.350054+00:00",
+  "last_heartbeat_utc": "2026-05-15T22:07:54.086461+00:00",
   "free_margin": 46525.24,
-  "peak_equity": 51269.100000000006
+  "peak_equity": 51227.770000000004
 }

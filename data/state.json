@@ -1,7 +1,7 @@
 {
   "as_of_utc": "2026-05-15T22:05:32.762377+00:00",
-  "balance": 50905.242006378176,
-  "equity": 50905.242006378176,
+  "balance": 51424.64,
+  "equity": 51424.64,
   "drawdown_pct": 0.0,
   "today_pnl": 0.0,
   "open_positions": [],
@@ -23,14 +23,14 @@
   "max_daily_loss_pct": 0.04,
   "max_total_loss_pct": 0.08,
   "metrics": {
-    "total_trades": 2,
-    "win_rate": 50.0,
-    "profit_factor": 3.3223624493903348,
-    "avg_win_usd": 1295.0356006622314,
-    "avg_loss_usd": -389.7935942840538,
-    "max_drawdown_pct": 0.7795871885681117,
-    "total_pnl_usd": 905.2420063781776,
-    "annualised_sharpe": 4.116584809797117
+    "total_trades": 3,
+    "win_rate": 66.66666666666666,
+    "profit_factor": 12.72446712204757,
+    "avg_win_usd": 773.075,
+    "avg_loss_usd": -121.50999999999999,
+    "max_drawdown_pct": 0.0,
+    "total_pnl_usd": 1424.64,
+    "annualised_sharpe": 0.0
   },
   "reference_metrics": {
     "total_trades": 139,
@@ -43,7 +43,10 @@
     "annualised_sharpe": 3.8048576465300235
   },
   "live_first_date": "2026-05-08",
-  "live_last_date": "2026-05-15",
+  "live_last_date": "2026-05-14",
   "reference_first_date": "2025-01-02",
-  "reference_last_date": "2026-05-08"
+  "reference_last_date": "2026-05-08",
+  "last_heartbeat_utc": "2026-05-15T22:05:37.092228+00:00",
+  "free_margin": 46525.24,
+  "peak_equity": 51424.64
 }

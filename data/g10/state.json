@@ -1,17 +1,17 @@
 {
   "as_of_utc": "2026-05-14T22:05:37.861252+00:00",
   "balance": 50718.87,
-  "equity": 51140.43,
-  "drawdown_pct": 0.08090760316550458,
-  "today_pnl": 421.55999999999995,
+  "equity": 51185.600000000006,
+  "drawdown_pct": 0.0,
+  "today_pnl": 466.72999999999996,
   "open_positions": [
     {
       "asset": "AUDJPY",
       "side": "LONG",
       "lots": 0.36,
       "entry_price": 114.372,
-      "current_price": 113.442,
-      "floating_pnl_usd": -211.05,
+      "current_price": 113.452,
+      "floating_pnl_usd": -208.79,
       "ticket": 8641759515
     },
     {
@@ -19,8 +19,8 @@
       "side": "SHORT",
       "lots": 0.33,
       "entry_price": 0.72203,
-      "current_price": 0.71512,
-      "floating_pnl_usd": 228.03,
+      "current_price": 0.71521,
+      "floating_pnl_usd": 225.06,
       "ticket": 8641759586
     },
     {
@@ -28,8 +28,8 @@
       "side": "SHORT",
       "lots": 0.25,
       "entry_price": 1.33981,
-      "current_price": 1.33413,
-      "floating_pnl_usd": 142.0,
+      "current_price": 1.3323800000000001,
+      "floating_pnl_usd": 185.75,
       "ticket": 8641759971
     },
     {
@@ -37,8 +37,8 @@
       "side": "SHORT",
       "lots": 0.34,
       "entry_price": 0.59113,
-      "current_price": 0.5844,
-      "floating_pnl_usd": 228.82,
+      "current_price": 0.58431,
+      "floating_pnl_usd": 231.88,
       "ticket": 8641760005
     },
     {
@@ -46,8 +46,8 @@
       "side": "LONG",
       "lots": 0.21,
       "entry_price": 158.382,
-      "current_price": 158.637,
-      "floating_pnl_usd": 33.76,
+      "current_price": 158.63,
+      "floating_pnl_usd": 32.83,
       "ticket": 8641760219
     }
   ],
@@ -132,7 +132,7 @@
   "live_last_date": "2026-05-14",
   "reference_first_date": null,
   "reference_last_date": null,
-  "last_heartbeat_utc": "2026-05-15T15:07:53.166520+00:00",
-  "free_margin": 46444.35,
-  "peak_equity": 51181.840000000004
+  "last_heartbeat_utc": "2026-05-15T15:22:53.136287+00:00",
+  "free_margin": 46489.52,
+  "peak_equity": 51185.600000000006
 }

@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-05-15T22:05:32.870139+00:00",
+  "as_of_utc": "2026-05-16T22:05:16.681711+00:00",
   "balance": 50718.87,
   "equity": 51227.770000000004,
   "drawdown_pct": 0.0,
@@ -58,7 +58,7 @@
       "signal": 1
     },
     "AUDUSD": {
-      "date": "2026-05-14",
+      "date": "2026-05-15",
       "ensemble_avg": -0.8,
       "signal": -1
     },
@@ -132,7 +132,7 @@
   "live_last_date": "2026-05-14",
   "reference_first_date": null,
   "reference_last_date": null,
-  "last_heartbeat_utc": "2026-05-16T21:52:53.366648+00:00",
+  "last_heartbeat_utc": "2026-05-16T22:07:53.372911+00:00",
   "free_margin": 46525.24,
   "peak_equity": 51227.770000000004
 }

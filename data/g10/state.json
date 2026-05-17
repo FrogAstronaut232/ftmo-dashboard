@@ -1,17 +1,17 @@
 {
-  "as_of_utc": "2026-05-16T22:05:16.681711+00:00",
+  "as_of_utc": "2026-05-17T22:05:15.868821+00:00",
   "balance": 50718.87,
-  "equity": 51192.62,
-  "drawdown_pct": 0.06861512808385267,
-  "today_pnl": 473.75,
+  "equity": 51229.58,
+  "drawdown_pct": 0.02527197622756793,
+  "today_pnl": 510.71,
   "open_positions": [
     {
       "asset": "AUDJPY",
       "side": "LONG",
       "lots": 0.36,
       "entry_price": 114.372,
-      "current_price": 113.462,
-      "floating_pnl_usd": -206.42,
+      "current_price": 113.566,
+      "floating_pnl_usd": -182.75,
       "ticket": 8641759515
     },
     {
@@ -19,8 +19,8 @@
       "side": "SHORT",
       "lots": 0.33,
       "entry_price": 0.72203,
-      "current_price": 0.71509,
-      "floating_pnl_usd": 229.02,
+      "current_price": 0.7154,
+      "floating_pnl_usd": 218.79,
       "ticket": 8641759586
     },
     {
@@ -28,8 +28,8 @@
       "side": "SHORT",
       "lots": 0.25,
       "entry_price": 1.33981,
-      "current_price": 1.33286,
-      "floating_pnl_usd": 173.75,
+      "current_price": 1.33217,
+      "floating_pnl_usd": 191.0,
       "ticket": 8641759971
     },
     {
@@ -37,8 +37,8 @@
       "side": "SHORT",
       "lots": 0.34,
       "entry_price": 0.59113,
-      "current_price": 0.58424,
-      "floating_pnl_usd": 234.26,
+      "current_price": 0.5843,
+      "floating_pnl_usd": 232.22,
       "ticket": 8641760005
     },
     {
@@ -46,8 +46,8 @@
       "side": "LONG",
       "lots": 0.21,
       "entry_price": 158.382,
-      "current_price": 158.708,
-      "floating_pnl_usd": 43.14,
+      "current_price": 158.771,
+      "floating_pnl_usd": 51.45,
       "ticket": 8641760219
     }
   ],
@@ -132,7 +132,7 @@
   "live_last_date": "2026-05-14",
   "reference_first_date": null,
   "reference_last_date": null,
-  "last_heartbeat_utc": "2026-05-17T21:52:53.187972+00:00",
-  "free_margin": 46490.09,
-  "peak_equity": 51227.770000000004
+  "last_heartbeat_utc": "2026-05-17T22:07:53.243268+00:00",
+  "free_margin": 46527.05,
+  "peak_equity": 51242.530000000006
 }

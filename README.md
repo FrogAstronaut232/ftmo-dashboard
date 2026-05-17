@@ -31,7 +31,7 @@ demo period is to confirm:
 
 If the demo month is clean, the better-performing of the two strategies will
 be deployed on a funded Challenge. If both look strong, both get deployed
-on separate accounts.
+on separate accounts (kinda suspicious of the G10 strategy might be future leaking somehow lol).
 
 ## What's in this repo
 

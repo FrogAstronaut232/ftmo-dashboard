@@ -201,11 +201,17 @@ function renderEquity(divId, equity, initial, lineColor, currentEquity, opts = {
     x = equity.map(r => r.date);
     y = equity.map(r => Number(r.balance) || initial);
     if (currentEquity != null && !isNaN(currentEquity)) {
-      const today = new Date().toISOString().slice(0, 10);
+      // equity.csv dates are AEST (trade exit_date in user TZ), but
+      // new Date().toISOString() returns UTC — which can be 1 day BEHIND
+      // AEST during AEST-morning hours. If we naively append "todayUtc"
+      // we end up plotting it BEFORE the latest CSV row → backward curve.
+      // Strategy: only APPEND a new point if today's UTC date is strictly
+      // greater than the last CSV date. Otherwise update the last row in place.
+      const todayUtc = new Date().toISOString().slice(0, 10);
       const lastDate = x[x.length - 1];
       const lastBal  = y[y.length - 1];
-      if (today !== lastDate) {
-        x.push(today);
+      if (todayUtc > lastDate) {
+        x.push(todayUtc);
         y.push(currentEquity);
       } else if (Math.abs(currentEquity - lastBal) > 0.005) {
         y[y.length - 1] = currentEquity;

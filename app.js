@@ -94,12 +94,12 @@ function renderMasthead(state, meta) {
     ageEl.className   = `data-age ${cls}`;
   }
 
-  const nm     = meta.strategy_name || 'G2';
-  const assets = (meta.assets || []).join('  ·  ');
   const initial = state.account_initial_usd || meta.account_initial_usd || 50000;
-  const acct   = `${initial.toLocaleString()} USD account`;
-  $('meta-line').textContent = [nm + '  ·  FTMO 2-step swing', assets, acct]
-                                .filter(Boolean).join('   ·   ');
+  // Brand subtitle: this dashboard hosts TWO strategies on one demo account.
+  // Hardcoded label (not driven by per-strategy meta) since both tabs share it.
+  $('meta-line').textContent =
+    `Dry run  ·  G2 (2-pair) + G10 (10-pair)  ·  FTMO 2-step swing  ·  `
+    + `$${initial.toLocaleString()} demo account`;
 
   $('foot-meta').textContent =
     'Daily-close swing strategies. Strategy logic, model parameters, and per-trade '

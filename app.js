@@ -119,6 +119,12 @@ function renderLiveSummary(state, meta) {
   setValue('m-today',  'hero-value', fmtUsd(today),    pnlClass(today));
   setValue('m-dd',     'hero-value', fmtPct(dd),       dd > 5 ? 'warn' : '');
 
+  // % of initial under each $ value
+  const pctOfInitial = v => initial > 0 ? `${v >= 0 ? '+' : ''}${(v/initial*100).toFixed(2)}%` : '—';
+  setValue('m-equity-pct', 'hero-pct', pctOfInitial(equity - initial), pnlClass(totalPnl));
+  setValue('m-total-pct',  'hero-pct', pctOfInitial(totalPnl),         pnlClass(totalPnl));
+  setValue('m-today-pct',  'hero-pct', pctOfInitial(today),            pnlClass(today));
+
   setValue('m-wr',      'sub-value', m.total_trades ? fmtPct(m.win_rate, 1) : '—');
   setValue('m-trades',  'sub-value', String(m.total_trades ?? 0));
   setValue('m-sharpe',  'sub-value', m.total_trades ? fmtNum(m.annualised_sharpe) : '—');
@@ -397,6 +403,9 @@ function renderG10LiveSummary(state, meta) {
     setValue('g-total',  'hero-value', '—');
     setValue('g-today',  'hero-value', '—');
     setValue('g-dd',     'hero-value', '—');
+    setValue('g-equity-pct', 'hero-pct', '—');
+    setValue('g-total-pct',  'hero-pct', '—');
+    setValue('g-today-pct',  'hero-pct', '—');
     setValue('g-wr',      'sub-value', '—');
     setValue('g-trades',  'sub-value', '—');
     setValue('g-sharpe',  'sub-value', '—');
@@ -426,6 +435,11 @@ function renderG10LiveSummary(state, meta) {
     setValue('g-total',  'hero-value', fmtUsd(totalPnl), pnlClass(totalPnl));
     setValue('g-today',  'hero-value', fmtUsd(today),    pnlClass(today));
     setValue('g-dd',     'hero-value', fmtPct(dd),       dd > 5 ? 'warn' : '');
+
+    const pctOfInitial = v => initial > 0 ? `${v >= 0 ? '+' : ''}${(v/initial*100).toFixed(2)}%` : '—';
+    setValue('g-equity-pct', 'hero-pct', pctOfInitial(equity - initial), pnlClass(totalPnl));
+    setValue('g-total-pct',  'hero-pct', pctOfInitial(totalPnl),         pnlClass(totalPnl));
+    setValue('g-today-pct',  'hero-pct', pctOfInitial(today),            pnlClass(today));
 
     setValue('g-wr',      'sub-value', m.total_trades ? fmtPct(m.win_rate, 1) : '—');
     setValue('g-trades',  'sub-value', String(m.total_trades ?? 0));

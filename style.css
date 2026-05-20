@@ -307,6 +307,17 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.hero-pct {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-dim);
+  letter-spacing: -0.005em;
+  margin-top: 4px;
+  line-height: 1;
+}
+.hero-pct.pos { color: var(--pos); }
+.hero-pct.neg { color: var(--neg); }
 .hero-value.pos  { color: var(--pos); }
 .hero-value.neg  { color: var(--neg); }
 .hero-value.warn { color: var(--warn); }

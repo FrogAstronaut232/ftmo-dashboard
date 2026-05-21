@@ -1,29 +1,36 @@
 {
-  "as_of_utc": "2026-05-20T22:05:14.935320+00:00",
-  "balance": 52084.59,
-  "equity": 52267.969999999994,
-  "drawdown_pct": 0.2986007880664996,
-  "today_pnl": 183.38,
+  "as_of_utc": "2026-05-21T22:05:14.442914+00:00",
+  "balance": 51573.22744567871,
+  "equity": 51573.22744567871,
+  "drawdown_pct": 0.0,
+  "today_pnl": 0.0,
   "open_positions": [
+    {
+      "asset": "EURUSD",
+      "side": "SHORT",
+      "lots": 2.16,
+      "entry_date": "2026-05-21",
+      "entry_price": 1.16225004196167,
+      "current_price": 1.16225004196167
+    },
     {
       "asset": "GBPJPY",
       "side": "LONG",
-      "lots": 1.19,
-      "entry_price": 213.316,
-      "current_price": 213.561,
-      "floating_pnl_usd": 183.38,
-      "ticket": 8686204182
+      "lots": 1.18,
+      "entry_date": "2026-05-18",
+      "entry_price": 213.2689971923828,
+      "current_price": 213.53799438476562
     }
   ],
   "last_signals": {
     "EURUSD": {
-      "date": "2026-05-20",
-      "ensemble_avg": -0.03,
-      "signal": 0
+      "date": "2026-05-21",
+      "ensemble_avg": -0.209,
+      "signal": -1
     },
     "GBPJPY": {
-      "date": "2026-05-20",
-      "ensemble_avg": 0.837,
+      "date": "2026-05-21",
+      "ensemble_avg": 0.698,
       "signal": 1
     }
   },
@@ -33,14 +40,14 @@
   "max_daily_loss_pct": 0.04,
   "max_total_loss_pct": 0.08,
   "metrics": {
-    "total_trades": 4,
-    "win_rate": 75.0,
-    "profit_factor": 18.15570734918937,
-    "avg_win_usd": 735.3666666666668,
-    "avg_loss_usd": -121.50999999999999,
-    "max_drawdown_pct": 0.0,
-    "total_pnl_usd": 2084.59,
-    "annualised_sharpe": 0.0
+    "total_trades": 3,
+    "win_rate": 66.66666666666666,
+    "profit_factor": 5.036052589751535,
+    "avg_win_usd": 981.5105199813843,
+    "avg_loss_usd": -389.7935942840538,
+    "max_drawdown_pct": 0.7795871885681117,
+    "total_pnl_usd": 1573.2274456787147,
+    "annualised_sharpe": 5.261446459071065
   },
   "live_first_date": "2026-05-08",
   "live_last_date": "2026-05-21",
@@ -55,8 +62,5 @@
     "annualised_sharpe": 2.572
   },
   "reference_first_date": "2018-01-03",
-  "reference_last_date": "2026-04-17",
-  "last_heartbeat_utc": "2026-05-21T22:03:17.876226+00:00",
-  "free_margin": 40281.15,
-  "peak_equity": 52424.509999999995
+  "reference_last_date": "2026-04-17"
 }

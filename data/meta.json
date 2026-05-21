@@ -8,10 +8,10 @@
   "max_daily_loss_pct": 0.04,
   "max_total_loss_pct": 0.08,
   "phases": {
-    "p1": 0.24,
-    "p2": 0.22,
+    "p1": 0.26,
+    "p2": 0.26,
     "funded": 0.32,
     "demo": 0.1
   },
-  "last_updated_utc": "2026-05-20T22:05:14.935447+00:00"
+  "last_updated_utc": "2026-05-21T22:05:14.443039+00:00"
 }

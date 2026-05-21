@@ -1,17 +1,17 @@
 {
   "as_of_utc": "2026-05-20T22:05:14.935320+00:00",
   "balance": 52084.59,
-  "equity": 52300.13,
-  "drawdown_pct": 0.23725543643612004,
-  "today_pnl": 215.54,
+  "equity": 52291.27,
+  "drawdown_pct": 0.2541559282099117,
+  "today_pnl": 206.68,
   "open_positions": [
     {
       "asset": "GBPJPY",
       "side": "LONG",
       "lots": 1.19,
       "entry_price": 213.316,
-      "current_price": 213.604,
-      "floating_pnl_usd": 215.54,
+      "current_price": 213.592,
+      "floating_pnl_usd": 206.68,
       "ticket": 8686204182
     }
   ],
@@ -56,7 +56,7 @@
   },
   "reference_first_date": "2018-01-03",
   "reference_last_date": "2026-04-17",
-  "last_heartbeat_utc": "2026-05-21T19:18:19.141033+00:00",
-  "free_margin": 40359.4,
+  "last_heartbeat_utc": "2026-05-21T19:33:17.784337+00:00",
+  "free_margin": 40305.95,
   "peak_equity": 52424.509999999995
 }

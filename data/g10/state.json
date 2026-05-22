@@ -1,8 +1,8 @@
 {
-  "as_of_utc": "2026-05-21T22:05:17.279148+00:00",
+  "as_of_utc": "2026-05-22T22:05:17.759473+00:00",
   "balance": 51150.54,
   "equity": 51998.18,
-  "drawdown_pct": 0.14527450736771513,
+  "drawdown_pct": 0.0,
   "today_pnl": 847.6399999999999,
   "open_positions": [
     {
@@ -71,28 +71,28 @@
   ],
   "last_signals": {
     "AUDJPY": {
-      "date": "2026-05-21",
-      "ensemble_avg": 0.71,
+      "date": "2026-05-22",
+      "ensemble_avg": 0.4,
       "signal": 1
     },
     "AUDUSD": {
-      "date": "2026-05-21",
-      "ensemble_avg": 0.035,
-      "signal": 0
-    },
-    "EURGBP": {
-      "date": "2026-05-21",
-      "ensemble_avg": -1.0,
-      "signal": -1
-    },
-    "EURUSD": {
-      "date": "2026-05-21",
+      "date": "2026-05-22",
       "ensemble_avg": -0.2,
       "signal": 0
     },
+    "EURGBP": {
+      "date": "2026-05-22",
+      "ensemble_avg": -0.8,
+      "signal": -1
+    },
+    "EURUSD": {
+      "date": "2026-05-22",
+      "ensemble_avg": 0.0,
+      "signal": 0
+    },
     "GBPJPY": {
-      "date": "2026-05-21",
-      "ensemble_avg": 0.8,
+      "date": "2026-05-22",
+      "ensemble_avg": 0.4,
       "signal": 1
     },
     "GBPUSD": {
@@ -101,8 +101,8 @@
       "signal": -1
     },
     "NZDUSD": {
-      "date": "2026-05-21",
-      "ensemble_avg": -0.2,
+      "date": "2026-05-22",
+      "ensemble_avg": 0.0,
       "signal": 0
     },
     "USDCAD": {
@@ -116,8 +116,8 @@
       "signal": 1
     },
     "USDJPY": {
-      "date": "2026-05-21",
-      "ensemble_avg": 0.895,
+      "date": "2026-05-22",
+      "ensemble_avg": 0.8,
       "signal": 1
     }
   },
@@ -150,7 +150,7 @@
   "live_last_date": "2026-05-22",
   "reference_first_date": null,
   "reference_last_date": null,
-  "last_heartbeat_utc": "2026-05-22T21:52:53.352275+00:00",
+  "last_heartbeat_utc": "2026-05-22T22:07:53.341146+00:00",
   "free_margin": 32961.72,
-  "peak_equity": 52073.83
+  "peak_equity": 51998.18
 }

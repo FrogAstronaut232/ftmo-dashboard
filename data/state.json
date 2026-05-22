@@ -1,17 +1,17 @@
 {
   "as_of_utc": "2026-05-21T22:05:14.442914+00:00",
   "balance": 52084.59,
-  "equity": 52681.219999999994,
-  "drawdown_pct": 0.13807468088712752,
-  "today_pnl": 596.63,
+  "equity": 52618.34,
+  "drawdown_pct": 0.25726929832509793,
+  "today_pnl": 533.75,
   "open_positions": [
     {
       "asset": "EURUSD",
       "side": "SHORT",
       "lots": 2.16,
       "entry_price": 1.1617899999999999,
-      "current_price": 1.1606,
-      "floating_pnl_usd": 257.04,
+      "current_price": 1.16129,
+      "floating_pnl_usd": 108.0,
       "ticket": 8749310092
     },
     {
@@ -19,8 +19,8 @@
       "side": "LONG",
       "lots": 1.19,
       "entry_price": 213.316,
-      "current_price": 213.77,
-      "floating_pnl_usd": 339.59,
+      "current_price": 213.885,
+      "floating_pnl_usd": 425.75,
       "ticket": 8686204182
     }
   ],
@@ -65,7 +65,7 @@
   },
   "reference_first_date": "2018-01-03",
   "reference_last_date": "2026-04-17",
-  "last_heartbeat_utc": "2026-05-22T13:03:18.285240+00:00",
-  "free_margin": 32811.71,
+  "last_heartbeat_utc": "2026-05-22T13:18:18.293128+00:00",
+  "free_margin": 32717.24,
   "peak_equity": 52754.06
 }

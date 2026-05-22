@@ -1,17 +1,17 @@
 {
   "as_of_utc": "2026-05-21T22:05:17.279148+00:00",
   "balance": 51150.54,
-  "equity": 51960.51,
-  "drawdown_pct": 0.2176141067403717,
-  "today_pnl": 809.97,
+  "equity": 51955.020000000004,
+  "drawdown_pct": 0.22815683040789905,
+  "today_pnl": 804.4799999999999,
   "open_positions": [
     {
       "asset": "AUDJPY",
       "side": "LONG",
       "lots": 0.35,
       "entry_price": 113.633,
-      "current_price": 113.579,
-      "floating_pnl_usd": -11.88,
+      "current_price": 113.596,
+      "floating_pnl_usd": -8.14,
       "ticket": 8728608326
     },
     {
@@ -19,8 +19,8 @@
       "side": "SHORT",
       "lots": 0.47,
       "entry_price": 0.8725,
-      "current_price": 0.86354,
-      "floating_pnl_usd": 566.28,
+      "current_price": 0.86356,
+      "floating_pnl_usd": 565.05,
       "ticket": 8663887406
     },
     {
@@ -28,8 +28,8 @@
       "side": "LONG",
       "lots": 0.21,
       "entry_price": 213.316,
-      "current_price": 213.982,
-      "floating_pnl_usd": 87.88,
+      "current_price": 213.988,
+      "floating_pnl_usd": 88.68,
       "ticket": 8686204052
     },
     {
@@ -37,8 +37,8 @@
       "side": "SHORT",
       "lots": 0.19,
       "entry_price": 1.3434599999999999,
-      "current_price": 1.34474,
-      "floating_pnl_usd": -24.32,
+      "current_price": 1.34485,
+      "floating_pnl_usd": -26.41,
       "ticket": 8728608640
     },
     {
@@ -55,8 +55,8 @@
       "side": "LONG",
       "lots": 0.34,
       "entry_price": 0.78661,
-      "current_price": 0.78442,
-      "floating_pnl_usd": -94.92,
+      "current_price": 0.78429,
+      "floating_pnl_usd": -100.58,
       "ticket": 8749310520
     },
     {
@@ -64,8 +64,8 @@
       "side": "LONG",
       "lots": 0.21,
       "entry_price": 158.382,
-      "current_price": 159.145,
-      "floating_pnl_usd": 100.68,
+      "current_price": 159.137,
+      "floating_pnl_usd": 99.63,
       "ticket": 8641760219
     }
   ],
@@ -150,7 +150,7 @@
   "live_last_date": "2026-05-22",
   "reference_first_date": null,
   "reference_last_date": null,
-  "last_heartbeat_utc": "2026-05-22T18:37:53.255076+00:00",
-  "free_margin": 32867.68,
+  "last_heartbeat_utc": "2026-05-22T18:52:53.265109+00:00",
+  "free_margin": 32840.78,
   "peak_equity": 52073.83
 }

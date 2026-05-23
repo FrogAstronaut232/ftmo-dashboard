@@ -342,9 +342,12 @@ body {
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-  max-width: 560px;            /* cap cell width to ~76px on desktop */
+  gap: 5px;
+  max-width: 680px;            /* cap cell width ~93px on desktop */
+  margin: 0 auto;              /* center horizontally */
+  width: 100%;
 }
+.calendar-month-label { text-align: center; }
 .calendar-dow {
   font-family: var(--font-mono);
   font-size: 9px;

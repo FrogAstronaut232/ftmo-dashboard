@@ -318,6 +318,58 @@ body {
 }
 .hero-pct.pos { color: var(--pos); }
 .hero-pct.neg { color: var(--neg); }
+
+/* Daily P&L calendar — month-wise grid, one cell per trading day */
+.calendar { display: flex; flex-direction: column; gap: 18px; }
+.calendar-month { display: flex; flex-direction: column; gap: 6px; }
+.calendar-month-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.calendar-dow {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 2px 0;
+  letter-spacing: 0.04em;
+}
+.calendar-cell {
+  border: 1px solid var(--rule-soft);
+  border-radius: 4px;
+  padding: 6px 4px;
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.01);
+  font-family: var(--font-mono);
+}
+.calendar-cell.empty { background: transparent; border: 1px dashed var(--rule-soft); opacity: 0.35; }
+.calendar-cell.pos   { background: rgba(92, 184, 122, 0.10); border-color: rgba(92, 184, 122, 0.35); }
+.calendar-cell.neg   { background: rgba(208, 74, 82,  0.10); border-color: rgba(208, 74, 82,  0.35); }
+.calendar-cell.zero  { background: rgba(255,255,255,0.02); }
+.calendar-date  { font-size: 10px; color: var(--text-dim); }
+.calendar-pnl   { font-size: 12px; font-weight: 500; color: var(--text); margin-top: 4px; line-height: 1; }
+.calendar-pnl.pos { color: var(--pos); }
+.calendar-pnl.neg { color: var(--neg); }
+.calendar-pct   { font-size: 9px; color: var(--text-dim); line-height: 1; margin-top: 2px; }
+.calendar-pct.pos { color: var(--pos); }
+.calendar-pct.neg { color: var(--neg); }
+@media (max-width: 620px) {
+  .calendar-cell { min-height: 44px; padding: 4px 2px; }
+  .calendar-date { font-size: 9px; }
+  .calendar-pnl  { font-size: 10px; }
+  .calendar-pct  { font-size: 8px; }
+}
 .hero-value.pos  { color: var(--pos); }
 .hero-value.neg  { color: var(--neg); }
 .hero-value.warn { color: var(--warn); }
@@ -724,4 +776,25 @@ body {
   .brand { font-size: 19px; }
   .hero-value { font-size: 22px; }
   .panel-head { flex-direction: column; gap: 4px; }
+
+  /* --- Mobile table compression: hide secondary columns ---
+     Positions tables (7 cols): hide Since, Entry, Current → keep Asset, Side, Lots, P&L
+     Trades tables (6 cols):    hide Hold → keep Date, Asset, Side, Lots, P&L
+     Signals tables (3 cols):   keep all (already narrow)
+     Smaller font + tighter padding so what's left fits on a phone screen. */
+  .data-table { font-size: 11px; }
+  .data-table th, .data-table td { padding: 6px 4px; }
+
+  /* Hide Since (col 4), Entry (col 5), Current (col 6) on positions tables */
+  #positions-table   th:nth-child(4), #positions-table   td:nth-child(4),
+  #g-positions-table th:nth-child(4), #g-positions-table td:nth-child(4),
+  #positions-table   th:nth-child(5), #positions-table   td:nth-child(5),
+  #g-positions-table th:nth-child(5), #g-positions-table td:nth-child(5),
+  #positions-table   th:nth-child(6), #positions-table   td:nth-child(6),
+  #g-positions-table th:nth-child(6), #g-positions-table td:nth-child(6) { display: none; }
+
+  /* Hide Hold (last col) on trades tables */
+  #live-trades-table th:nth-child(6), #live-trades-table td:nth-child(6),
+  #g-trades-table    th:nth-child(6), #g-trades-table    td:nth-child(6),
+  #ref-trades-table  th:nth-child(6), #ref-trades-table  td:nth-child(6) { display: none; }
 }

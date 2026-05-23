@@ -127,7 +127,7 @@ function renderLiveSummary(state, meta) {
 
   setValue('m-wr',      'sub-value', m.total_trades ? fmtPct(m.win_rate, 1) : '—');
   setValue('m-trades',  'sub-value', String(m.total_trades ?? 0));
-  setValue('m-sharpe',  'sub-value', m.total_trades ? fmtNum(m.annualised_sharpe) : '—');
+  setValue('m-sharpe',  'sub-value', (m.total_trades && m.annualised_sharpe) ? fmtNum(m.annualised_sharpe) : '— (<21d)');
   setValue('m-pf',      'sub-value', m.total_trades ? fmtNum(m.profit_factor)     : '—');
   setValue('m-avgwin',  'sub-value', m.avg_win_usd  ? fmtUsd(m.avg_win_usd)  : '—', m.avg_win_usd  > 0 ? 'pos' : '');
   setValue('m-avgloss', 'sub-value', m.avg_loss_usd ? fmtUsd(m.avg_loss_usd) : '—', m.avg_loss_usd < 0 ? 'neg' : '');
@@ -284,6 +284,74 @@ function renderEquity(divId, equity, initial, lineColor, currentEquity, opts = {
   };
   const traces = bhTrace ? [ref, bhTrace, main] : [ref, main];
   Plotly.newPlot(div, traces, layout, { displayModeBar: false, responsive: true });
+}
+
+// -- Daily P&L calendar ------------------------------------------------
+// Renders a month-grouped grid of cells, one per day, showing daily P&L in
+// $ and % of initial. Days with zero P&L (no trades / weekend) shown muted.
+function renderDailyCalendar(divId, equity, initial) {
+  const div = $(divId);
+  if (!div) return;
+  if (!equity || !equity.length) {
+    div.innerHTML = `<div class="empty">No data yet.</div>`;
+    return;
+  }
+  // Index daily_pnl by ISO date string
+  const pnlByDate = {};
+  equity.forEach(r => {
+    const d = String(r.date || '').slice(0, 10);
+    if (d) pnlByDate[d] = Number(r.daily_pnl) || 0;
+  });
+  const dates = Object.keys(pnlByDate).sort();
+  if (!dates.length) {
+    div.innerHTML = `<div class="empty">No data yet.</div>`;
+    return;
+  }
+
+  // Group by YYYY-MM, render one month-grid per month from first → last
+  const firstDate = new Date(dates[0] + 'T00:00:00Z');
+  const lastDate  = new Date(dates[dates.length - 1] + 'T00:00:00Z');
+  const months = [];
+  const cursor = new Date(Date.UTC(firstDate.getUTCFullYear(), firstDate.getUTCMonth(), 1));
+  const end    = new Date(Date.UTC(lastDate.getUTCFullYear(),  lastDate.getUTCMonth(),  1));
+  while (cursor <= end) {
+    months.push(new Date(cursor));
+    cursor.setUTCMonth(cursor.getUTCMonth() + 1);
+  }
+  const monthName = ['January','February','March','April','May','June',
+                     'July','August','September','October','November','December'];
+  const dow = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+  div.innerHTML = months.map(m => {
+    const y = m.getUTCFullYear(), mo = m.getUTCMonth();
+    const daysInMonth = new Date(Date.UTC(y, mo + 1, 0)).getUTCDate();
+    const firstDay   = new Date(Date.UTC(y, mo, 1)).getUTCDay(); // 0=Sun,1=Mon..6=Sat
+    const leadEmpty  = (firstDay + 6) % 7; // Mon-first → Sun=6
+    const cells = [];
+    for (let i = 0; i < leadEmpty; i++) cells.push(`<div class="calendar-cell empty"></div>`);
+    for (let d = 1; d <= daysInMonth; d++) {
+      const iso = `${y}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const pnl = pnlByDate[iso];
+      if (pnl === undefined) {
+        cells.push(`<div class="calendar-cell zero"><div class="calendar-date">${d}</div></div>`);
+      } else {
+        const cls = pnl > 0 ? 'pos' : pnl < 0 ? 'neg' : 'zero';
+        const pct = initial > 0 ? `${pnl >= 0 ? '+' : ''}${(pnl/initial*100).toFixed(2)}%` : '';
+        cells.push(`<div class="calendar-cell ${cls}">
+          <div class="calendar-date">${d}</div>
+          <div class="calendar-pnl ${cls}">${fmtUsd(pnl)}</div>
+          <div class="calendar-pct ${cls}">${pct}</div>
+        </div>`);
+      }
+    }
+    return `<div class="calendar-month">
+      <div class="calendar-month-label">${monthName[mo]} ${y}</div>
+      <div class="calendar-grid">
+        ${dow.map(d => `<div class="calendar-dow">${d}</div>`).join('')}
+        ${cells.join('')}
+      </div>
+    </div>`;
+  }).join('');
 }
 
 // -- Tables ------------------------------------------------------------
@@ -443,7 +511,7 @@ function renderG10LiveSummary(state, meta) {
 
     setValue('g-wr',      'sub-value', m.total_trades ? fmtPct(m.win_rate, 1) : '—');
     setValue('g-trades',  'sub-value', String(m.total_trades ?? 0));
-    setValue('g-sharpe',  'sub-value', m.total_trades ? fmtNum(m.annualised_sharpe) : '—');
+    setValue('g-sharpe',  'sub-value', (m.total_trades && m.annualised_sharpe) ? fmtNum(m.annualised_sharpe) : '— (<21d)');
     setValue('g-pf',      'sub-value', m.total_trades ? fmtNum(m.profit_factor)     : '—');
     setValue('g-avgwin',  'sub-value', m.avg_win_usd  ? fmtUsd(m.avg_win_usd)  : '—', m.avg_win_usd  > 0 ? 'pos' : '');
     setValue('g-avgloss', 'sub-value', m.avg_loss_usd ? fmtUsd(m.avg_loss_usd) : '—', m.avg_loss_usd < 0 ? 'neg' : '');
@@ -487,6 +555,7 @@ async function loadAll() {
     renderLiveSummary(state, meta);
     renderPositions('positions-table', state, 'No open positions.');
     renderEquity('live-equity-chart', liveEq, initial, '#cdd2d8', state.equity);
+    renderDailyCalendar('live-calendar', liveEq, initial);
     renderTradesTable('live-trades-table',   liveTr,  'Awaiting first closed trade.');
     renderSignalsTable('live-signals-eurusd-table', byAsset(liveSig, 'EURUSD'), 'Awaiting first scheduled run.');
     renderSignalsTable('live-signals-gbpjpy-table', byAsset(liveSig, 'GBPJPY'), 'Awaiting first scheduled run.');
@@ -538,6 +607,7 @@ async function loadG10Live() {
     // Only paint a live equity curve if we actually have data
     if (gEq.length || !awaiting) {
       renderEquity('g-equity-chart', gEq, initial, '#cdd2d8', awaiting ? null : gState.equity);
+      renderDailyCalendar('g-calendar', gEq, initial);
       if (gEq.length) {
         $('g-equity-range').textContent = `${gEq[0].date} -> ${gEq[gEq.length-1].date}`;
       } else {
@@ -546,6 +616,7 @@ async function loadG10Live() {
     } else {
       // Awaiting-first-run: draw flat $50k baseline so the chart isn't empty
       renderEquity('g-equity-chart', [], initial, '#3a4452', null);
+      renderDailyCalendar('g-calendar', [], initial);
       $('g-equity-range').textContent = 'Awaiting first run';
     }
 

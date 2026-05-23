@@ -343,11 +343,8 @@ body {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 5px;
-  max-width: 680px;            /* cap cell width ~93px on desktop */
-  margin: 0 auto;              /* center horizontally */
-  width: 100%;
+  width: 100%;                 /* fill the panel — rectangular cells on desktop */
 }
-.calendar-month-label { text-align: center; }
 .calendar-dow {
   font-family: var(--font-mono);
   font-size: 9px;
@@ -359,9 +356,8 @@ body {
 .calendar-cell {
   border: 1px solid var(--rule-soft);
   border-radius: 4px;
-  padding: 6px 4px;
-  aspect-ratio: 1 / 1;          /* square cell (was rectangular on desktop) */
-  min-height: 56px;             /* fallback for older browsers */
+  padding: 8px 6px;
+  min-height: 64px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -395,18 +391,18 @@ body {
   background: rgba(255,255,255,0.015);
   line-height: 1.5;
 }
-.calendar-date  { font-size: 10px; color: var(--text-dim); }
-.calendar-pnl   { font-size: 12px; font-weight: 500; color: var(--text); margin-top: 4px; line-height: 1; }
+.calendar-date  { font-size: 12px; color: var(--text-dim); font-weight: 500; }
+.calendar-pnl   { font-size: 14px; font-weight: 500; color: var(--text); margin-top: 4px; line-height: 1; }
 .calendar-pnl.pos { color: var(--pos); }
 .calendar-pnl.neg { color: var(--neg); }
-.calendar-pct   { font-size: 9px; color: var(--text-dim); line-height: 1; margin-top: 2px; }
+.calendar-pct   { font-size: 11px; color: var(--text-dim); line-height: 1; margin-top: 3px; }
 .calendar-pct.pos { color: var(--pos); }
 .calendar-pct.neg { color: var(--neg); }
 @media (max-width: 620px) {
-  .calendar-cell { min-height: 44px; padding: 4px 2px; }
-  .calendar-date { font-size: 9px; }
-  .calendar-pnl  { font-size: 10px; }
-  .calendar-pct  { font-size: 8px; }
+  .calendar-cell { min-height: 50px; padding: 5px 3px; }
+  .calendar-date { font-size: 10px; }
+  .calendar-pnl  { font-size: 11px; }
+  .calendar-pct  { font-size: 9px; }
 }
 .hero-value.pos  { color: var(--pos); }
 .hero-value.neg  { color: var(--neg); }

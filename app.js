@@ -109,21 +109,22 @@ function renderMasthead(state, meta) {
 function renderLiveSummary(state, meta) {
   const initial  = state.account_initial_usd || meta.account_initial_usd || 50000;
   const equity   = state.equity ?? initial;
-  const today    = state.today_pnl ?? 0;
+  const balance  = state.balance ?? initial;
+  const floating = equity - balance;                  // pure current open MTM
   const totalPnl = equity - initial;
   const dd       = state.drawdown_pct ?? 0;
   const m        = state.metrics || {};
 
   setValue('m-equity', 'hero-value', fmtUsd(equity, false));
   setValue('m-total',  'hero-value', fmtUsd(totalPnl), pnlClass(totalPnl));
-  setValue('m-today',  'hero-value', fmtUsd(today),    pnlClass(today));
+  setValue('m-today',  'hero-value', fmtUsd(floating), pnlClass(floating));
   setValue('m-dd',     'hero-value', fmtPct(dd),       dd > 5 ? 'warn' : '');
 
   // % of initial under each $ value
   const pctOfInitial = v => initial > 0 ? `${v >= 0 ? '+' : ''}${(v/initial*100).toFixed(2)}%` : '—';
   setValue('m-equity-pct', 'hero-pct', pctOfInitial(equity - initial), pnlClass(totalPnl));
   setValue('m-total-pct',  'hero-pct', pctOfInitial(totalPnl),         pnlClass(totalPnl));
-  setValue('m-today-pct',  'hero-pct', pctOfInitial(today),            pnlClass(today));
+  setValue('m-today-pct',  'hero-pct', pctOfInitial(floating),         pnlClass(floating));
 
   setValue('m-wr',      'sub-value', m.total_trades ? fmtPct(m.win_rate, 1) : '—');
   setValue('m-trades',  'sub-value', String(m.total_trades ?? 0));
@@ -517,19 +518,20 @@ function renderG10LiveSummary(state, meta) {
     }
   } else {
     const equity   = state.equity ?? initial;
-    const today    = state.today_pnl ?? 0;
+    const balance  = state.balance ?? initial;
+    const floating = equity - balance;                // pure current open MTM
     const totalPnl = equity - initial;
     const dd       = state.drawdown_pct ?? 0;
 
     setValue('g-equity', 'hero-value', fmtUsd(equity, false));
     setValue('g-total',  'hero-value', fmtUsd(totalPnl), pnlClass(totalPnl));
-    setValue('g-today',  'hero-value', fmtUsd(today),    pnlClass(today));
+    setValue('g-today',  'hero-value', fmtUsd(floating), pnlClass(floating));
     setValue('g-dd',     'hero-value', fmtPct(dd),       dd > 5 ? 'warn' : '');
 
     const pctOfInitial = v => initial > 0 ? `${v >= 0 ? '+' : ''}${(v/initial*100).toFixed(2)}%` : '—';
     setValue('g-equity-pct', 'hero-pct', pctOfInitial(equity - initial), pnlClass(totalPnl));
     setValue('g-total-pct',  'hero-pct', pctOfInitial(totalPnl),         pnlClass(totalPnl));
-    setValue('g-today-pct',  'hero-pct', pctOfInitial(today),            pnlClass(today));
+    setValue('g-today-pct',  'hero-pct', pctOfInitial(floating),         pnlClass(floating));
 
     setValue('g-wr',      'sub-value', m.total_trades ? fmtPct(m.win_rate, 1) : '—');
     setValue('g-trades',  'sub-value', String(m.total_trades ?? 0));

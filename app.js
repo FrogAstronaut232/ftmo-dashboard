@@ -338,7 +338,7 @@ function renderDailyCalendar(divId, equity, initial, todayPnl) {
                      'July','August','September','October','November','December'];
   const dow = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 
-  const note = `<div class="calendar-note">FX markets closed Sat/Sun (hatched cells). The algorithm doesn't fire signals on weekends — but open positions carry through the weekend gap.</div>`;
+  const note = `<div class="calendar-note">FX markets closed Sat/Sun (hatched cells). The algorithm doesn't fire signals on weekends. Open positions carry through the weekend gap.</div>`;
   div.innerHTML = note + months.map(m => {
     const y = m.getUTCFullYear(), mo = m.getUTCMonth();
     const daysInMonth = new Date(Date.UTC(y, mo + 1, 0)).getUTCDate();

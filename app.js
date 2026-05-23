@@ -337,7 +337,8 @@ function renderDailyCalendar(divId, equity, initial, todayPnl) {
                      'July','August','September','October','November','December'];
   const dow = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 
-  div.innerHTML = months.map(m => {
+  const note = `<div class="calendar-note">FX markets closed Sat/Sun (hatched cells). The algorithm doesn't fire signals on weekends — but open positions carry through the weekend gap.</div>`;
+  div.innerHTML = note + months.map(m => {
     const y = m.getUTCFullYear(), mo = m.getUTCMonth();
     const daysInMonth = new Date(Date.UTC(y, mo + 1, 0)).getUTCDate();
     const firstDay   = new Date(Date.UTC(y, mo, 1)).getUTCDay(); // 0=Sun,1=Mon..6=Sat
@@ -346,8 +347,14 @@ function renderDailyCalendar(divId, equity, initial, todayPnl) {
     for (let i = 0; i < leadEmpty; i++) cells.push(`<div class="calendar-cell empty"></div>`);
     for (let d = 1; d <= daysInMonth; d++) {
       const iso = `${y}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const dayDate = new Date(Date.UTC(y, mo, d));
+      const dow = dayDate.getUTCDay();             // 0=Sun, 6=Sat
+      const isWeekend = (dow === 0 || dow === 6);
       const pnl = pnlByDate[iso];
-      if (pnl === undefined) {
+      if (isWeekend && (pnl === undefined || pnl === 0)) {
+        // FX market closed — algo doesn't fire signals Sat/Sun
+        cells.push(`<div class="calendar-cell weekend" title="Markets closed (weekend)"><div class="calendar-date">${d}</div></div>`);
+      } else if (pnl === undefined) {
         cells.push(`<div class="calendar-cell zero"><div class="calendar-date">${d}</div></div>`);
       } else {
         const cls = pnl > 0 ? 'pos' : pnl < 0 ? 'neg' : 'zero';

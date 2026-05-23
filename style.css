@@ -355,10 +355,32 @@ body {
   font-family: var(--font-mono);
   overflow: hidden;
 }
-.calendar-cell.empty { background: transparent; border: 1px dashed var(--rule-soft); opacity: 0.35; }
-.calendar-cell.pos   { background: rgba(92, 184, 122, 0.10); border-color: rgba(92, 184, 122, 0.35); }
-.calendar-cell.neg   { background: rgba(208, 74, 82,  0.10); border-color: rgba(208, 74, 82,  0.35); }
-.calendar-cell.zero  { background: rgba(255,255,255,0.02); }
+.calendar-cell.empty   { background: transparent; border: 1px dashed var(--rule-soft); opacity: 0.35; }
+.calendar-cell.pos     { background: rgba(92, 184, 122, 0.10); border-color: rgba(92, 184, 122, 0.35); }
+.calendar-cell.neg     { background: rgba(208, 74, 82,  0.10); border-color: rgba(208, 74, 82,  0.35); }
+.calendar-cell.zero    { background: rgba(255,255,255,0.02); }
+.calendar-cell.weekend {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255,255,255,0.015),
+    rgba(255,255,255,0.015) 4px,
+    rgba(255,255,255,0.04)  4px,
+    rgba(255,255,255,0.04)  8px
+  );
+  border-color: var(--rule-soft);
+  opacity: 0.55;
+}
+.calendar-cell.weekend .calendar-date { font-style: italic; }
+.calendar-note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+  padding: 6px 8px;
+  border-left: 2px solid var(--rule-soft);
+  background: rgba(255,255,255,0.015);
+  line-height: 1.5;
+}
 .calendar-date  { font-size: 10px; color: var(--text-dim); }
 .calendar-pnl   { font-size: 12px; font-weight: 500; color: var(--text); margin-top: 4px; line-height: 1; }
 .calendar-pnl.pos { color: var(--pos); }

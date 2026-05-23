@@ -346,12 +346,14 @@ body {
   border: 1px solid var(--rule-soft);
   border-radius: 4px;
   padding: 6px 4px;
-  min-height: 56px;
+  aspect-ratio: 1 / 1;          /* square cell (was rectangular on desktop) */
+  min-height: 56px;             /* fallback for older browsers */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   background: rgba(255,255,255,0.01);
   font-family: var(--font-mono);
+  overflow: hidden;
 }
 .calendar-cell.empty { background: transparent; border: 1px dashed var(--rule-soft); opacity: 0.35; }
 .calendar-cell.pos   { background: rgba(92, 184, 122, 0.10); border-color: rgba(92, 184, 122, 0.35); }

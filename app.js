@@ -289,7 +289,10 @@ function renderEquity(divId, equity, initial, lineColor, currentEquity, opts = {
 // -- Daily P&L calendar ------------------------------------------------
 // Renders a month-grouped grid of cells, one per day, showing daily P&L in
 // $ and % of initial. Days with zero P&L (no trades / weekend) shown muted.
-function renderDailyCalendar(divId, equity, initial) {
+// If `todayPnl` is provided (= state.today_pnl from heartbeat, includes
+// realized today + total floating), it OVERRIDES today's cell so the
+// calendar sum matches the hero "Total P&L" card.
+function renderDailyCalendar(divId, equity, initial, todayPnl) {
   const div = $(divId);
   if (!div) return;
   if (!equity || !equity.length) {
@@ -302,6 +305,18 @@ function renderDailyCalendar(divId, equity, initial) {
     const d = String(r.date || '').slice(0, 10);
     if (d) pnlByDate[d] = Number(r.daily_pnl) || 0;
   });
+
+  // Inject "today" cell with live P&L (realized + floating). Use the latest
+  // equity csv date if it's already today (or ahead of UTC due to AEST), else
+  // add a new entry for today's UTC date.
+  if (todayPnl != null && !isNaN(todayPnl)) {
+    const sortedDates = Object.keys(pnlByDate).sort();
+    const lastDate = sortedDates[sortedDates.length - 1];
+    const todayUtc = new Date().toISOString().slice(0, 10);
+    const useDate  = (lastDate && lastDate >= todayUtc) ? lastDate : todayUtc;
+    pnlByDate[useDate] = Number(todayPnl);
+  }
+
   const dates = Object.keys(pnlByDate).sort();
   if (!dates.length) {
     div.innerHTML = `<div class="empty">No data yet.</div>`;
@@ -555,7 +570,7 @@ async function loadAll() {
     renderLiveSummary(state, meta);
     renderPositions('positions-table', state, 'No open positions.');
     renderEquity('live-equity-chart', liveEq, initial, '#cdd2d8', state.equity);
-    renderDailyCalendar('live-calendar', liveEq, initial);
+    renderDailyCalendar('live-calendar', liveEq, initial, state.today_pnl);
     renderTradesTable('live-trades-table',   liveTr,  'Awaiting first closed trade.');
     renderSignalsTable('live-signals-eurusd-table', byAsset(liveSig, 'EURUSD'), 'Awaiting first scheduled run.');
     renderSignalsTable('live-signals-gbpjpy-table', byAsset(liveSig, 'GBPJPY'), 'Awaiting first scheduled run.');
@@ -607,7 +622,7 @@ async function loadG10Live() {
     // Only paint a live equity curve if we actually have data
     if (gEq.length || !awaiting) {
       renderEquity('g-equity-chart', gEq, initial, '#cdd2d8', awaiting ? null : gState.equity);
-      renderDailyCalendar('g-calendar', gEq, initial);
+      renderDailyCalendar('g-calendar', gEq, initial, gState.today_pnl);
       if (gEq.length) {
         $('g-equity-range').textContent = `${gEq[0].date} -> ${gEq[gEq.length-1].date}`;
       } else {

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FTMO Dry Run · G2 + G10</title>
-<link rel="stylesheet" href="style.css?v=20260523-weekends">
+<link rel="stylesheet" href="style.css?v=20260523-cleanup">
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
@@ -65,12 +65,12 @@
       <div class="hero-pct"   id="m-equity-pct">&mdash;</div>
     </div>
     <div class="hero-stat">
-      <div class="hero-label">Total P&amp;L</div>
+      <div class="hero-label">Total P&amp;L<span class="hero-label-sub">realized + floating</span></div>
       <div class="hero-value" id="m-total">&mdash;</div>
       <div class="hero-pct"   id="m-total-pct">&mdash;</div>
     </div>
     <div class="hero-stat">
-      <div class="hero-label">Today</div>
+      <div class="hero-label">Today<span class="hero-label-sub">closed + floating</span></div>
       <div class="hero-value" id="m-today">&mdash;</div>
       <div class="hero-pct"   id="m-today-pct">&mdash;</div>
     </div>
@@ -292,12 +292,12 @@
         <div class="hero-pct"   id="g-equity-pct">&mdash;</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-label">Total P&amp;L</div>
+        <div class="hero-label">Total P&amp;L<span class="hero-label-sub">realized + floating</span></div>
         <div class="hero-value" id="g-total">&mdash;</div>
         <div class="hero-pct"   id="g-total-pct">&mdash;</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-label">Today</div>
+        <div class="hero-label">Today<span class="hero-label-sub">closed + floating</span></div>
         <div class="hero-value" id="g-today">&mdash;</div>
         <div class="hero-pct"   id="g-today-pct">&mdash;</div>
       </div>
@@ -487,6 +487,6 @@
   <footer class="page-foot" id="foot-meta">&mdash;</footer>
 
 </div>
-<script src="app.js?v=20260523-weekends"></script>
+<script src="app.js?v=20260523-cleanup"></script>
 </body>
 </html>

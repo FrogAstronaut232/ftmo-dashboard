@@ -316,6 +316,16 @@ body {
   margin-top: 4px;
   line-height: 1;
 }
+.hero-label-sub {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--text-dim);
+  letter-spacing: 0.02em;
+  margin-top: 2px;
+  text-transform: none;
+}
 .hero-pct.pos { color: var(--pos); }
 .hero-pct.neg { color: var(--neg); }
 
@@ -333,6 +343,7 @@ body {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
+  max-width: 560px;            /* cap cell width to ~76px on desktop */
 }
 .calendar-dow {
   font-family: var(--font-mono);

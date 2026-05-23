@@ -307,15 +307,28 @@ function renderDailyCalendar(divId, equity, initial, todayPnl) {
     if (d) pnlByDate[d] = Number(r.daily_pnl) || 0;
   });
 
-  // Inject "today" cell with live P&L (realized + floating). Use the latest
-  // equity csv date if it's already today (or ahead of UTC due to AEST), else
-  // add a new entry for today's UTC date.
+  // Inject "today" cell with live P&L (realized + floating).
+  // If today is a weekend (markets closed), attribute the floating to the
+  // most recent weekday cell instead — otherwise the calendar appears to
+  // show "weekend trades" when the algo only fires Mon-Fri.
   if (todayPnl != null && !isNaN(todayPnl)) {
     const sortedDates = Object.keys(pnlByDate).sort();
     const lastDate = sortedDates[sortedDates.length - 1];
     const todayUtc = new Date().toISOString().slice(0, 10);
-    const useDate  = (lastDate && lastDate >= todayUtc) ? lastDate : todayUtc;
-    pnlByDate[useDate] = Number(todayPnl);
+    const todayObj = new Date(todayUtc + 'T00:00:00Z');
+    const dow = todayObj.getUTCDay();       // 0=Sun, 6=Sat
+    if (dow === 0 || dow === 6) {
+      // Weekend: roll back to previous Friday, ADD floating to whatever's
+      // already there (Friday's realized closes stay intact)
+      const offset = (dow === 0) ? 2 : 1;
+      todayObj.setUTCDate(todayObj.getUTCDate() - offset);
+      const useDate = todayObj.toISOString().slice(0, 10);
+      pnlByDate[useDate] = (pnlByDate[useDate] || 0) + Number(todayPnl);
+    } else {
+      // Weekday: replace today's cell (todayPnl already includes today's realized)
+      const useDate = (lastDate && lastDate >= todayUtc) ? lastDate : todayUtc;
+      pnlByDate[useDate] = Number(todayPnl);
+    }
   }
 
   const dates = Object.keys(pnlByDate).sort();

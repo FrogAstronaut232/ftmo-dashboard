@@ -1,9 +1,9 @@
 {
   "as_of_utc": "2026-05-23T22:05:18.015675+00:00",
-  "balance": 51998.18,
-  "equity": 51998.18,
-  "drawdown_pct": 0.0,
-  "today_pnl": 847.64,
+  "balance": 50000.0,
+  "equity": 50000.0,
+  "drawdown_pct": 3.842788343745878,
+  "today_pnl": 0.0,
   "open_positions": [],
   "last_signals": {
     "AUDJPY": {
@@ -64,12 +64,12 @@
   "max_total_loss_pct": 0.08,
   "metrics": {
     "total_trades": 21,
-    "win_rate": 71.4286,
-    "profit_factor": 3.5384,
-    "avg_win_usd": 198.14,
-    "avg_loss_usd": -100.8,
-    "max_drawdown_pct": 0.1776,
-    "total_pnl_usd": 1998.18,
+    "win_rate": 71.42857142857143,
+    "profit_factor": 3.9051336851746847,
+    "avg_win_usd": 179.066,
+    "avg_loss_usd": -114.635,
+    "max_drawdown_pct": 0.17764591364121193,
+    "total_pnl_usd": 1998.1799999999998,
     "annualised_sharpe": 0.0
   },
   "reference_metrics": {
@@ -83,11 +83,11 @@
     "annualised_sharpe": 0.0
   },
   "live_first_date": "2026-05-13",
-  "live_last_date": "2026-05-22",
+  "live_last_date": "2026-05-23",
   "reference_first_date": null,
   "reference_last_date": null,
-  "last_heartbeat_utc": "2026-05-24T10:01:32.716893+00:00",
-  "free_margin": 32961.72,
+  "last_heartbeat_utc": "2026-05-24T10:22:53.383813+00:00",
+  "free_margin": 200000.0,
   "peak_equity": 51998.18,
   "migration_locked_at": "2026-05-24T19:57+10:00",
   "migration_note": "Pre-FTMO-Demo migration. Old account positions assumed closed. See OLD_FTMO_account/MIGRATION.md."

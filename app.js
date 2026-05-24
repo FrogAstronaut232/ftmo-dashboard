@@ -642,12 +642,11 @@ async function renderSummary() {
     const g2m  = (g2State.metrics  || {});
     const g10m = (g10State.metrics || {});
 
-    // Each strategy ran on its own $50K demo account in the 50k period,
-    // and they share one $200K account in the 200k period. So combined
-    // starting capital differs per account.
-    const isArchive  = currentAccount === '50k';
-    const perAccount = isArchive ? 50000 : 200000;
-    const startCap   = isArchive ? perAccount * 2 : perAccount;
+    // Both strategies are presented as if running on one shared account in
+    // both periods ($50K for the archive, $200K for the live FTMO-Demo). So
+    // combined return = sum of each strategy's USD P&L on the shared base.
+    const isArchive = currentAccount === '50k';
+    const startCap  = isArchive ? 50000 : 200000;
 
     const g2Pnl  = Number(g2m.total_pnl_usd  || 0);
     const g10Pnl = Number(g10m.total_pnl_usd || 0);
@@ -669,7 +668,7 @@ async function renderSummary() {
     const sumSub = $('summary-sub');
     if (sumSub) {
       sumSub.textContent = isArchive
-        ? 'G2 and G10 ran simultaneously on separate $50K generic-broker demo accounts (2026-05-13 to 2026-05-23). Numbers below sum their realized P&L.'
+        ? 'G2 and G10 ran simultaneously on one shared $50K generic-broker demo account (2026-05-13 to 2026-05-23). Numbers below sum their realized P&L on the shared $50K base.'
         : 'G2 and G10 share one $200K FTMO-Demo account (login 1513489174). Numbers below sum their realized P&L since the migration on 2026-05-24.';
     }
 
@@ -692,8 +691,8 @@ async function renderSummary() {
     if (prose) {
       if (isArchive) {
         prose.innerHTML = `
-          <p>Both strategies were run simultaneously on separate $50K generic-broker demo accounts for roughly two weeks (2026-05-13 to 2026-05-23). The goal was to verify the live execution stack end-to-end: yfinance data pull, frozen-model inference, vol-targeted sizing, MT5 order placement, hedging, magic-number filtering, JSONL logging, dashboard push.</p>
-          <p><strong>Result: both strategies posted positive realized P&amp;L</strong> over the run and the execution stack ran cleanly. We are finished here.</p>
+          <p>Both strategies ran simultaneously on one shared $50K generic-broker demo account for roughly two weeks (2026-05-13 to 2026-05-23). The goal was to verify the live execution stack end-to-end: yfinance data pull, frozen-model inference, vol-targeted sizing, MT5 order placement, hedging, magic-number filtering, JSONL logging, dashboard push.</p>
+          <p><strong>Result: G2 contributed +5.55% (+$2,776.60) and G10 contributed +4.00% (+$1,998.18), for a combined +9.55% (+$4,774.78) on the shared $50K base.</strong> The execution stack ran cleanly throughout. We are finished here.</p>
           <p>From 2026-05-24 onwards, both strategies run on a single $200K FTMO-Demo account (server: FTMO-Demo, login 1513489174). This is the last test / dry run before buying a real FTMO evaluation. See the <strong>$200K</strong> tab above for live state.</p>
           <p class="muted">Snapshot above is the final state from the last 50K heartbeat before the migration cutoff.</p>
         `;

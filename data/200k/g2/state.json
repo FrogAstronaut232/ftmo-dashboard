@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-05-24T10:31:30.793467+00:00",
+  "as_of_utc": "2026-05-24T10:44:21.246928+00:00",
   "balance": 200000.0,
   "equity": 200000.0,
   "today_pnl": 0.0,
@@ -22,9 +22,9 @@
   },
   "live_first_date": null,
   "live_last_date": null,
-  "last_heartbeat_utc": "2026-05-24T10:31:30.793482+00:00",
+  "last_heartbeat_utc": "2026-05-24T10:47:12.485265+00:00",
   "peak_equity": 200000.0,
   "drawdown_pct": 0.0,
   "free_margin": 200000.0,
-  "migration_note": "Fresh FTMO-Demo $200k account 1513489174. First fire: Mon 2026-05-25 08:05 AEST."
+  "migration_note": "Fresh FTMO-Demo $200k account (1513489174). G2 strategy. First fire: Mon 2026-05-25 08:05 AEST."
 }

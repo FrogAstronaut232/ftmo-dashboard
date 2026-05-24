@@ -1,10 +1,62 @@
 {
-  "as_of_utc": "2026-05-24T10:44:21.248532+00:00",
+  "as_of_utc": "2026-05-24T22:06:10.445052+00:00",
   "balance": 200000.0,
   "equity": 200000.0,
+  "drawdown_pct": 0.0,
   "today_pnl": 0.0,
   "open_positions": [],
-  "last_signals": {},
+  "last_signals": {
+    "AUDJPY": {
+      "date": "2026-05-22",
+      "ensemble_avg": 0.4,
+      "signal": 1
+    },
+    "AUDUSD": {
+      "date": "2026-05-22",
+      "ensemble_avg": -0.323,
+      "signal": 0
+    },
+    "EURGBP": {
+      "date": "2026-05-22",
+      "ensemble_avg": -0.8,
+      "signal": -1
+    },
+    "EURUSD": {
+      "date": "2026-05-22",
+      "ensemble_avg": 0.0,
+      "signal": 0
+    },
+    "GBPJPY": {
+      "date": "2026-05-22",
+      "ensemble_avg": 0.4,
+      "signal": 1
+    },
+    "GBPUSD": {
+      "date": "2026-05-21",
+      "ensemble_avg": -0.8,
+      "signal": -1
+    },
+    "NZDUSD": {
+      "date": "2026-05-22",
+      "ensemble_avg": 0.143,
+      "signal": 0
+    },
+    "USDCAD": {
+      "date": "2026-05-21",
+      "ensemble_avg": 0.6,
+      "signal": 1
+    },
+    "USDCHF": {
+      "date": "2026-05-21",
+      "ensemble_avg": 0.4,
+      "signal": 1
+    },
+    "USDJPY": {
+      "date": "2026-05-22",
+      "ensemble_avg": 0.8,
+      "signal": 1
+    }
+  },
   "phase": "p1",
   "dry_run": false,
   "account_initial_usd": 200000.0,
@@ -20,11 +72,21 @@
     "total_pnl_usd": 0.0,
     "annualised_sharpe": 0.0
   },
-  "live_first_date": null,
-  "live_last_date": null,
-  "last_heartbeat_utc": "2026-05-24T21:52:53.219631+00:00",
-  "peak_equity": 200000.0,
-  "drawdown_pct": 0.0,
+  "reference_metrics": {
+    "total_trades": 0,
+    "win_rate": 0.0,
+    "profit_factor": 0.0,
+    "avg_win_usd": 0.0,
+    "avg_loss_usd": 0.0,
+    "max_drawdown_pct": 0.0,
+    "total_pnl_usd": 0.0,
+    "annualised_sharpe": 0.0
+  },
+  "live_first_date": "2026-05-12",
+  "live_last_date": "2026-05-22",
+  "reference_first_date": null,
+  "reference_last_date": null,
+  "last_heartbeat_utc": "2026-05-24T22:37:53.191653+00:00",
   "free_margin": 200000.0,
-  "migration_note": "Fresh FTMO-Demo $200k account (1513489174). G10 strategy. First fire: Mon 2026-05-25 08:05 AEST."
+  "peak_equity": 200000.0
 }

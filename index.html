@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FTMO Dry Run · G2 + G10</title>
-<link rel="stylesheet" href="style.css?v=20260523-weekend-fix">
+<link rel="stylesheet" href="style.css?v=20260524-50k200k">
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
@@ -30,17 +30,31 @@
     </div>
   </header>
 
-  <!-- ═══ TAB NAVIGATION ═════════════════════════════════════════ -->
+  <!-- ═══ ACCOUNT TOGGLE (top-level: 50K archive / 200K live) ════ -->
+  <nav class="account-nav" role="tablist" aria-label="Account views">
+    <button class="account-btn is-active" type="button" data-account="50k">
+      <span class="account-size">$50K</span>
+      <span class="account-sep">·</span>
+      <span class="account-note">archived (initial demo period)</span>
+    </button>
+    <button class="account-btn" type="button" data-account="200k">
+      <span class="account-size">$200K</span>
+      <span class="account-sep">·</span>
+      <span class="account-note">FTMO-Demo (live)</span>
+    </button>
+  </nav>
+
+  <!-- ═══ STRATEGY TABS (inner: G2 / G10) ═══════════════════════ -->
   <nav class="tab-nav" role="tablist" aria-label="Strategy views">
     <button class="tab-btn is-active" id="tab-btn-manifoldfx" type="button" role="tab" aria-selected="true" aria-controls="tab-manifoldfx" data-tab="manifoldfx">
       <span class="tab-label">G2</span>
       <span class="tab-sep">·</span>
-      <span class="tab-strategy">2-pair (live)</span>
+      <span class="tab-strategy">2-pair</span>
     </button>
     <button class="tab-btn" id="tab-btn-g10" type="button" role="tab" aria-selected="false" aria-controls="tab-g10" data-tab="g10">
       <span class="tab-label">G10</span>
       <span class="tab-sep">·</span>
-      <span class="tab-strategy">10-pair (live)</span>
+      <span class="tab-strategy">10-pair</span>
     </button>
   </nav>
 
@@ -487,6 +501,6 @@
   <footer class="page-foot" id="foot-meta">&mdash;</footer>
 
 </div>
-<script src="app.js?v=20260523-weekend-fix"></script>
+<script src="app.js?v=20260524-50k200k"></script>
 </body>
 </html>

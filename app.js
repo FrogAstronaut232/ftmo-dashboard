@@ -11,6 +11,10 @@
 
 const DATA_BASE  = 'data';
 const REFRESH_MS = 60_000;
+// Account selector: '50k' (archived initial demo) or '200k' (FTMO-Demo live).
+// Persisted via localStorage so it sticks across reloads.
+let currentAccount = (typeof localStorage !== 'undefined' && localStorage.getItem('account')) || '50k';
+const accountBase = () => `${DATA_BASE}/${currentAccount}`;
 
 const $ = id => document.getElementById(id);
 
@@ -575,13 +579,14 @@ function renderG10LiveSummary(state, meta) {
 // -- Main loop ---------------------------------------------------------
 async function loadAll() {
   try {
-    // G2 (2-pair) data
+    // G2 (2-pair) data — account-scoped (50k archive / 200k live)
+    const ab = `${currentAccount}/g2`;
     const [state, meta, liveEq, liveTr, liveSig, refEq, refTr, refSig] = await Promise.all([
-      fetchJson('state.json').catch(() => ({})),
-      fetchJson('meta.json').catch(() => ({})),
-      fetchCsv('live/equity.csv'),
-      fetchCsv('live/trades.csv'),
-      fetchCsv('live/signals.csv'),
+      fetchJson(`${ab}/state.json`).catch(() => ({})),
+      fetchJson(`${ab}/meta.json`).catch(() => ({})),
+      fetchCsv(`${ab}/live/equity.csv`),
+      fetchCsv(`${ab}/live/trades.csv`),
+      fetchCsv(`${ab}/live/signals.csv`),
       fetchCsv('reference/equity.csv'),
       fetchCsv('reference/trades.csv'),
       fetchCsv('reference/signals.csv'),
@@ -625,14 +630,16 @@ async function loadAll() {
 // -- G10 LIVE loader ---------------------------------------------------
 async function loadG10Live() {
   try {
+    // G10 data — account-scoped (50k archive / 200k live)
+    const ab = `${currentAccount}/g10`;
     const [gState, gMeta, gEq, gTr, gSig] = await Promise.all([
-      fetchJson('g10/state.json').catch(() => ({ awaiting_first_run: true })),
-      fetchJson('g10/meta.json').catch(() => ({})),
-      fetchCsv('g10/live/equity.csv'),
-      fetchCsv('g10/live/trades.csv'),
-      fetchCsv('g10/live/signals.csv'),
+      fetchJson(`${ab}/state.json`).catch(() => ({ awaiting_first_run: true })),
+      fetchJson(`${ab}/meta.json`).catch(() => ({})),
+      fetchCsv(`${ab}/live/equity.csv`),
+      fetchCsv(`${ab}/live/trades.csv`),
+      fetchCsv(`${ab}/live/signals.csv`),
     ]);
-    const initial = gState.account_initial_usd || gMeta.account_initial_usd || 50000;
+    const initial = gState.account_initial_usd || gMeta.account_initial_usd || 200000;
     const awaiting = !!gState.awaiting_first_run;
 
     renderG10LiveSummary(gState, gMeta);
@@ -737,6 +744,25 @@ function activateTab(name) {
 }
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+});
+
+// Account toggle (50k archive / 200k live) — reroutes data fetches and reloads
+function activateAccount(acc) {
+  if (acc !== '50k' && acc !== '200k') return;
+  currentAccount = acc;
+  try { localStorage.setItem('account', acc); } catch (e) {}
+  document.querySelectorAll('.account-btn').forEach(b => {
+    b.classList.toggle('is-active', b.dataset.account === acc);
+  });
+  // Re-fetch everything for the new account
+  loadAll().catch(e => console.error('loadAll on account switch:', e));
+}
+document.querySelectorAll('.account-btn').forEach(btn => {
+  btn.addEventListener('click', () => activateAccount(btn.dataset.account));
+});
+// Initial UI state for persisted selection
+document.querySelectorAll('.account-btn').forEach(b => {
+  b.classList.toggle('is-active', b.dataset.account === currentAccount);
 });
 
 // -- Backtest tab loader (G10 Strict-OOS reference) -------------------

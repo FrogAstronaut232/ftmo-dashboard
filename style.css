@@ -137,6 +137,44 @@ body {
 }
 
 /* ─── Tab navigation ───────────────────────────────────── */
+.account-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 6px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--rule-soft);
+  border-radius: 6px;
+}
+.account-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  letter-spacing: -0.005em;
+}
+.account-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+.account-btn.is-active {
+  background: rgba(92, 184, 122, 0.08);
+  border-color: rgba(92, 184, 122, 0.35);
+  color: var(--text);
+}
+.account-btn.is-active .account-size { color: var(--pos); }
+.account-size { font-weight: 600; letter-spacing: 0; }
+.account-sep { color: var(--text-dim); opacity: 0.55; }
+.account-note { font-weight: 400; font-size: 11px; color: var(--text-dim); }
+
 .tab-nav {
   display: flex;
   gap: 4px;
@@ -797,6 +835,9 @@ body {
   .tab-nav { gap: 0; }
   .tab-btn { padding: 9px 10px 11px; font-size: 10.5px; }
   .tab-btn .tab-sep, .tab-btn .tab-strategy { display: none; }
+  .account-btn { padding: 8px 6px; font-size: 11px; gap: 4px; }
+  .account-btn .account-note { display: none; }
+  .account-btn .account-sep  { display: none; }
   .masthead { flex-direction: column; align-items: flex-start; gap: 14px; }
   .masthead-meta { text-align: left; }
   .tags { justify-content: flex-start; }

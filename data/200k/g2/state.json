@@ -1,0 +1,30 @@
+{
+  "as_of_utc": "2026-05-24T10:31:30.793467+00:00",
+  "balance": 200000.0,
+  "equity": 200000.0,
+  "today_pnl": 0.0,
+  "open_positions": [],
+  "last_signals": {},
+  "phase": "p1",
+  "dry_run": false,
+  "account_initial_usd": 200000.0,
+  "max_daily_loss_pct": 0.04,
+  "max_total_loss_pct": 0.08,
+  "metrics": {
+    "total_trades": 0,
+    "win_rate": 0.0,
+    "profit_factor": 0.0,
+    "avg_win_usd": 0.0,
+    "avg_loss_usd": 0.0,
+    "max_drawdown_pct": 0.0,
+    "total_pnl_usd": 0.0,
+    "annualised_sharpe": 0.0
+  },
+  "live_first_date": null,
+  "live_last_date": null,
+  "last_heartbeat_utc": "2026-05-24T10:31:30.793482+00:00",
+  "peak_equity": 200000.0,
+  "drawdown_pct": 0.0,
+  "free_margin": 200000.0,
+  "migration_note": "Fresh FTMO-Demo $200k account 1513489174. First fire: Mon 2026-05-25 08:05 AEST."
+}

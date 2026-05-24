@@ -175,6 +175,20 @@ body {
 .account-sep { color: var(--text-dim); opacity: 0.55; }
 .account-note { font-weight: 400; font-size: 11px; color: var(--text-dim); }
 
+.stream-note {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 6px;
+  padding: 8px 10px;
+  background: rgba(74, 144, 217, 0.06);
+  border-left: 2px solid rgba(74, 144, 217, 0.4);
+  border-radius: 3px;
+  line-height: 1.5;
+  max-width: 720px;
+}
+.stream-note.hidden { display: none; }
+
 .tab-nav {
   display: flex;
   gap: 4px;

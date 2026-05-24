@@ -754,6 +754,10 @@ function activateAccount(acc) {
   document.querySelectorAll('.account-btn').forEach(b => {
     b.classList.toggle('is-active', b.dataset.account === acc);
   });
+  // Migration notes only visible on the 200k view
+  document.querySelectorAll('.stream-note').forEach(n => {
+    n.classList.toggle('hidden', acc !== '200k');
+  });
   // Re-fetch everything for the new account
   loadAll().catch(e => console.error('loadAll on account switch:', e));
 }
@@ -763,6 +767,9 @@ document.querySelectorAll('.account-btn').forEach(btn => {
 // Initial UI state for persisted selection
 document.querySelectorAll('.account-btn').forEach(b => {
   b.classList.toggle('is-active', b.dataset.account === currentAccount);
+});
+document.querySelectorAll('.stream-note').forEach(n => {
+  n.classList.toggle('hidden', currentAccount !== '200k');
 });
 
 // -- Backtest tab loader (G10 Strict-OOS reference) -------------------

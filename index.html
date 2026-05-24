@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FTMO Dry Run · G2 + G10</title>
-<link rel="stylesheet" href="style.css?v=20260524-50k200k">
+<link rel="stylesheet" href="style.css?v=20260524-200k-fresh">
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
@@ -64,8 +64,9 @@
   <!-- ═══ LIVE ═══════════════════════════════════════════════════ -->
   <div class="stream-header">
     <div>
-      <h2 class="stream-title">Live forward test &mdash; G2 (2-pair)</h2>
+      <h2 class="stream-title">Live forward test: G2 (2-pair)</h2>
       <p class="stream-sub" id="live-sub">Running autonomously since first scheduled run.</p>
+      <p class="stream-note" id="account-note-g2">$200K view: FTMO free trial account 1513489174 on FTMO-Demo server. We switched here on 2026-05-24 to surface FTMO-specific quirks (spreads, fills, margin behaviour) before paying for a real evaluation. The $50K archive tab shows the initial demo period (2026-05-08 to 2026-05-23) on a generic broker.</p>
     </div>
     <div class="stream-status">
       <span class="status-pill" id="live-status">Awaiting first run</span>
@@ -199,7 +200,7 @@
   <!-- ═══ REFERENCE ══════════════════════════════════════════════ -->
   <div class="stream-header stream-header--secondary">
     <div>
-      <h2 class="stream-title">Reference &mdash; full backtest history</h2>
+      <h2 class="stream-title">Reference: full backtest history</h2>
       <p class="stream-sub" id="ref-sub">Full 2018-2026 backtest of the G2 strategy. Static baseline; not live.</p>
     </div>
     <div class="stream-status">
@@ -287,12 +288,13 @@
     <!-- ═══ G10 LIVE ═════════════════════════════════════════════ -->
     <div class="stream-header">
       <div>
-        <h2 class="stream-title">Live forward test &mdash; G10 (10-pair)</h2>
+        <h2 class="stream-title">Live forward test: G10 (10-pair)</h2>
         <p class="stream-sub" id="g10-live-sub">
           10-pair G10 FX swing portfolio: AUDJPY, AUDUSD, EURGBP, EURUSD, GBPJPY,
           GBPUSD, NZDUSD, USDCAD, USDCHF, USDJPY. Magic 100010&ndash;100019. Distinct
           strategy from G2 on the same MT5 account.
         </p>
+        <p class="stream-note" id="account-note-g10">$200K view: FTMO free trial account 1513489174 on FTMO-Demo server. We switched here on 2026-05-24 to surface FTMO-specific quirks (spreads, fills, margin behaviour) before paying for a real evaluation. The $50K archive tab shows the initial demo period (2026-05-13 to 2026-05-23) on a generic broker.</p>
       </div>
       <div class="stream-status">
         <span class="status-pill status-pill--mute" id="g10-live-status">Awaiting first run</span>
@@ -412,7 +414,7 @@
     <!-- ═══ G10 REFERENCE BACKTEST (Strict-OOS) ══════════════════ -->
     <div class="stream-header stream-header--secondary">
       <div>
-        <h2 class="stream-title">Reference backtest &mdash; Strict-OOS 10-pair <span class="title-pill">BACKTEST ONLY</span></h2>
+        <h2 class="stream-title">Reference backtest: Strict-OOS 10-pair <span class="title-pill">BACKTEST ONLY</span></h2>
         <p class="stream-sub" id="bt-sub">
           Out-of-sample backtest baseline for the deployed G10 strategy.
           Train 2004&ndash;2015 &middot; Val 2016&ndash;2017 (HP search only) &middot; Test 2018+ untouched until report.
@@ -501,6 +503,6 @@
   <footer class="page-foot" id="foot-meta">&mdash;</footer>
 
 </div>
-<script src="app.js?v=20260524-50k200k"></script>
+<script src="app.js?v=20260524-200k-fresh"></script>
 </body>
 </html>

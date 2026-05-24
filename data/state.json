@@ -1,29 +1,10 @@
 {
   "as_of_utc": "2026-05-23T22:05:15.184642+00:00",
-  "balance": 52084.59,
+  "balance": 52776.6,
   "equity": 52776.6,
   "drawdown_pct": 0.0,
   "today_pnl": 692.01,
-  "open_positions": [
-    {
-      "asset": "EURUSD",
-      "side": "SHORT",
-      "lots": 2.16,
-      "entry_price": 1.1617899999999999,
-      "current_price": 1.16032,
-      "floating_pnl_usd": 317.52,
-      "ticket": 8749310092
-    },
-    {
-      "asset": "GBPJPY",
-      "side": "LONG",
-      "lots": 1.19,
-      "entry_price": 213.316,
-      "current_price": 213.817,
-      "floating_pnl_usd": 374.49,
-      "ticket": 8686204182
-    }
-  ],
+  "open_positions": [],
   "last_signals": {
     "EURUSD": {
       "date": "2026-05-22",
@@ -42,13 +23,13 @@
   "max_daily_loss_pct": 0.04,
   "max_total_loss_pct": 0.08,
   "metrics": {
-    "total_trades": 4,
-    "win_rate": 75.0,
-    "profit_factor": 18.15570734918937,
-    "avg_win_usd": 735.3666666666668,
-    "avg_loss_usd": -121.50999999999999,
+    "total_trades": 6,
+    "win_rate": 83.3333,
+    "profit_factor": 13.2062,
+    "avg_win_usd": 401.17,
+    "avg_loss_usd": -121.51,
     "max_drawdown_pct": 0.0,
-    "total_pnl_usd": 2084.59,
+    "total_pnl_usd": 2776.6,
     "annualised_sharpe": 0.0
   },
   "live_first_date": "2026-05-08",
@@ -65,7 +46,9 @@
   },
   "reference_first_date": "2018-01-03",
   "reference_last_date": "2026-04-17",
-  "last_heartbeat_utc": "2026-05-24T09:48:18.549519+00:00",
+  "last_heartbeat_utc": "2026-05-24T10:01:32.698983+00:00",
   "free_margin": 32961.72,
-  "peak_equity": 52776.6
+  "peak_equity": 52776.6,
+  "migration_locked_at": "2026-05-24T19:57+10:00",
+  "migration_note": "Pre-FTMO-Demo migration. Old account positions assumed closed. See OLD_FTMO_account/MIGRATION.md."
 }

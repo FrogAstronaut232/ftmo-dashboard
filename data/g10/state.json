@@ -1,74 +1,10 @@
 {
   "as_of_utc": "2026-05-23T22:05:18.015675+00:00",
-  "balance": 51150.54,
+  "balance": 51998.18,
   "equity": 51998.18,
   "drawdown_pct": 0.0,
-  "today_pnl": 847.6399999999999,
-  "open_positions": [
-    {
-      "asset": "AUDJPY",
-      "side": "LONG",
-      "lots": 0.35,
-      "entry_price": 113.633,
-      "current_price": 113.452,
-      "floating_pnl_usd": -39.79,
-      "ticket": 8728608326
-    },
-    {
-      "asset": "EURGBP",
-      "side": "SHORT",
-      "lots": 0.47,
-      "entry_price": 0.8725,
-      "current_price": 0.8638,
-      "floating_pnl_usd": 549.25,
-      "ticket": 8663887406
-    },
-    {
-      "asset": "GBPJPY",
-      "side": "LONG",
-      "lots": 0.21,
-      "entry_price": 213.316,
-      "current_price": 213.817,
-      "floating_pnl_usd": 66.09,
-      "ticket": 8686204052
-    },
-    {
-      "asset": "GBPUSD",
-      "side": "SHORT",
-      "lots": 0.19,
-      "entry_price": 1.3434599999999999,
-      "current_price": 1.34324,
-      "floating_pnl_usd": 4.18,
-      "ticket": 8728608640
-    },
-    {
-      "asset": "USDCAD",
-      "side": "LONG",
-      "lots": 0.43,
-      "entry_price": 1.37463,
-      "current_price": 1.3820700000000001,
-      "floating_pnl_usd": 231.48,
-      "ticket": 8707289670
-    },
-    {
-      "asset": "USDCHF",
-      "side": "LONG",
-      "lots": 0.34,
-      "entry_price": 0.78661,
-      "current_price": 0.78496,
-      "floating_pnl_usd": -71.47,
-      "ticket": 8749310520
-    },
-    {
-      "asset": "USDJPY",
-      "side": "LONG",
-      "lots": 0.21,
-      "entry_price": 158.382,
-      "current_price": 159.2,
-      "floating_pnl_usd": 107.9,
-      "ticket": 8641760219
-    }
-  ],
+  "today_pnl": 847.64,
+  "open_positions": [],
   "last_signals": {
     "AUDJPY": {
       "date": "2026-05-22",
@@ -127,13 +63,13 @@
   "max_daily_loss_pct": 0.04,
   "max_total_loss_pct": 0.08,
   "metrics": {
-    "total_trades": 14,
-    "win_rate": 71.42857142857143,
-    "profit_factor": 2.9955597953343163,
-    "avg_win_usd": 172.709,
-    "avg_loss_usd": -144.1375,
-    "max_drawdown_pct": 0.17764591364121193,
-    "total_pnl_usd": 1150.54,
+    "total_trades": 21,
+    "win_rate": 71.4286,
+    "profit_factor": 3.5384,
+    "avg_win_usd": 198.14,
+    "avg_loss_usd": -100.8,
+    "max_drawdown_pct": 0.1776,
+    "total_pnl_usd": 1998.18,
     "annualised_sharpe": 0.0
   },
   "reference_metrics": {
@@ -150,7 +86,9 @@
   "live_last_date": "2026-05-22",
   "reference_first_date": null,
   "reference_last_date": null,
-  "last_heartbeat_utc": "2026-05-24T09:52:52.599724+00:00",
+  "last_heartbeat_utc": "2026-05-24T10:01:32.716893+00:00",
   "free_margin": 32961.72,
-  "peak_equity": 51998.18
+  "peak_equity": 51998.18,
+  "migration_locked_at": "2026-05-24T19:57+10:00",
+  "migration_note": "Pre-FTMO-Demo migration. Old account positions assumed closed. See OLD_FTMO_account/MIGRATION.md."
 }

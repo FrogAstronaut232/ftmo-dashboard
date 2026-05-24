@@ -175,6 +175,38 @@ body {
 .account-sep { color: var(--text-dim); opacity: 0.55; }
 .account-note { font-weight: 400; font-size: 11px; color: var(--text-dim); }
 
+/* Page-level account banner sits between the account-nav and strategy tabs.
+   Centered, readable line length, distinct tone per account. */
+.account-banner {
+  margin: 0 auto 22px;
+  max-width: 920px;
+  padding: 14px 22px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text);
+  background: rgba(120, 140, 170, 0.06);
+  border: 1px solid rgba(120, 140, 170, 0.18);
+  border-radius: 8px;
+  text-align: center;
+}
+.account-banner strong { color: var(--text); font-weight: 600; }
+.account-banner--live {
+  background: rgba(92, 184, 122, 0.06);
+  border-color: rgba(92, 184, 122, 0.22);
+}
+.account-banner[hidden] { display: none; }
+
+.summary-prose {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  max-width: 820px;
+}
+.summary-prose p { margin: 0 0 12px; }
+.summary-prose p:last-child { margin-bottom: 0; }
+.summary-prose .muted { color: var(--text-dim); font-size: 12px; font-style: italic; }
+.summary-prose strong { color: var(--text); font-weight: 600; }
+
 .stream-note {
   font-family: var(--font-mono);
   font-size: 11px;

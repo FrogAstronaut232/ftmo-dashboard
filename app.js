@@ -300,13 +300,11 @@ function renderEquity(divId, equity, initial, lineColor, currentEquity, opts = {
 function renderDailyCalendar(divId, equity, initial, todayPnl) {
   const div = $(divId);
   if (!div) return;
-  if (!equity || !equity.length) {
-    div.innerHTML = `<div class="empty">No data yet.</div>`;
-    return;
-  }
-  // Index daily_pnl by ISO date string
+  // Index daily_pnl by ISO date string (empty equity -> empty index;
+  // we still render the current month grid below so a fresh account
+  // shows the calendar with zero-cells instead of "No data yet").
   const pnlByDate = {};
-  equity.forEach(r => {
+  (equity || []).forEach(r => {
     const d = String(r.date || '').slice(0, 10);
     if (d) pnlByDate[d] = Number(r.daily_pnl) || 0;
   });
@@ -336,14 +334,17 @@ function renderDailyCalendar(divId, equity, initial, todayPnl) {
   }
 
   const dates = Object.keys(pnlByDate).sort();
+  // Fresh account fallback: still render the current month so the calendar
+  // appears immediately (with zero-cells), instead of "No data yet".
+  let firstDate, lastDate;
   if (!dates.length) {
-    div.innerHTML = `<div class="empty">No data yet.</div>`;
-    return;
+    const nowIso = new Date().toISOString().slice(0, 10);
+    firstDate = new Date(nowIso + 'T00:00:00Z');
+    lastDate  = new Date(nowIso + 'T00:00:00Z');
+  } else {
+    firstDate = new Date(dates[0] + 'T00:00:00Z');
+    lastDate  = new Date(dates[dates.length - 1] + 'T00:00:00Z');
   }
-
-  // Group by YYYY-MM, render one month-grid per month from first → last
-  const firstDate = new Date(dates[0] + 'T00:00:00Z');
-  const lastDate  = new Date(dates[dates.length - 1] + 'T00:00:00Z');
   const months = [];
   const cursor = new Date(Date.UTC(firstDate.getUTCFullYear(), firstDate.getUTCMonth(), 1));
   const end    = new Date(Date.UTC(lastDate.getUTCFullYear(),  lastDate.getUTCMonth(),  1));
@@ -569,8 +570,9 @@ function renderG10LiveSummary(state, meta) {
         pill.className = 'status-pill';
         sub.textContent = `Running since ${liveFirst}.  ${days} trading day${days === 1 ? '' : 's'} · ${n} closed trade${n === 1 ? '' : 's'}.`;
       } else {
-        pill.textContent = 'Live';
-        pill.className = 'status-pill';
+        pill.textContent = 'Awaiting first run';
+        pill.className = 'status-pill status-pill--mute';
+        sub.textContent = 'Will populate on the first scheduled daily run.';
       }
     }
   }
@@ -622,8 +624,89 @@ async function loadAll() {
 
     // G10 (10-pair) LIVE data
     await loadG10Live();
+
+    // Combined G2 + G10 summary for the active account
+    await renderSummary();
   } catch (e) {
     console.error('Dashboard load failed:', e);
+  }
+}
+
+// -- Combined Summary tab (G2 + G10 totals for the active account) ----
+async function renderSummary() {
+  try {
+    const [g2State, g10State] = await Promise.all([
+      fetchJson(`${currentAccount}/g2/state.json`).catch(() => ({})),
+      fetchJson(`${currentAccount}/g10/state.json`).catch(() => ({})),
+    ]);
+    const g2m  = (g2State.metrics  || {});
+    const g10m = (g10State.metrics || {});
+
+    // Each strategy ran on its own $50K demo account in the 50k period,
+    // and they share one $200K account in the 200k period. So combined
+    // starting capital differs per account.
+    const isArchive  = currentAccount === '50k';
+    const perAccount = isArchive ? 50000 : 200000;
+    const startCap   = isArchive ? perAccount * 2 : perAccount;
+
+    const g2Pnl  = Number(g2m.total_pnl_usd  || 0);
+    const g10Pnl = Number(g10m.total_pnl_usd || 0);
+    const totalPnl = g2Pnl + g10Pnl;
+    const finalEq  = startCap + totalPnl;
+    const maxDd    = Math.max(
+      Number(g2m.max_drawdown_pct  || 0),
+      Number(g10m.max_drawdown_pct || 0),
+    );
+
+    const accountTag = $('summary-account-tag');
+    if (accountTag) accountTag.textContent = isArchive ? '$50K (archived)' : '$200K (live)';
+    const statusPill = $('summary-status');
+    if (statusPill) {
+      statusPill.textContent = isArchive ? 'Archived' : 'Live';
+      statusPill.className = isArchive ? 'status-pill status-pill--mute' : 'status-pill';
+    }
+
+    const sumSub = $('summary-sub');
+    if (sumSub) {
+      sumSub.textContent = isArchive
+        ? 'G2 and G10 ran simultaneously on separate $50K generic-broker demo accounts (2026-05-13 to 2026-05-23). Numbers below sum their realized P&L.'
+        : 'G2 and G10 share one $200K FTMO-Demo account (login 1513489174). Numbers below sum their realized P&L since the migration on 2026-05-24.';
+    }
+
+    setValue('sum-start',     'hero-value', fmtUsd(startCap));
+    setValue('sum-period',    'hero-pct',   isArchive ? '2026-05-13 -> 2026-05-23' : '2026-05-24 -> live');
+    setValue('sum-pnl',       'hero-value', fmtUsd(totalPnl), pnlClass(totalPnl));
+    setValue('sum-pnl-pct',   'hero-pct',   startCap > 0 ? `${totalPnl >= 0 ? '+' : ''}${(totalPnl/startCap*100).toFixed(2)}%` : '—', pnlClass(totalPnl));
+    setValue('sum-final',     'hero-value', fmtUsd(finalEq));
+    setValue('sum-final-pct', 'hero-pct',   startCap > 0 ? `${(finalEq/startCap*100).toFixed(2)}% of start` : '—');
+    setValue('sum-dd',        'hero-value', maxDd ? `-${maxDd.toFixed(2)}%` : '0.00%', maxDd ? 'neg' : '');
+
+    setValue('sum-g2-trades',  'sub-value', String(g2m.total_trades  || 0));
+    setValue('sum-g2-wr',      'sub-value', g2m.total_trades  ? fmtPct(g2m.win_rate, 1)  : '—');
+    setValue('sum-g2-pnl',     'sub-value', fmtUsd(g2Pnl),  pnlClass(g2Pnl));
+    setValue('sum-g10-trades', 'sub-value', String(g10m.total_trades || 0));
+    setValue('sum-g10-wr',     'sub-value', g10m.total_trades ? fmtPct(g10m.win_rate, 1) : '—');
+    setValue('sum-g10-pnl',    'sub-value', fmtUsd(g10Pnl), pnlClass(g10Pnl));
+
+    const prose = $('summary-prose');
+    if (prose) {
+      if (isArchive) {
+        prose.innerHTML = `
+          <p>Both strategies were run simultaneously on separate $50K generic-broker demo accounts for roughly two weeks (2026-05-13 to 2026-05-23). The goal was to verify the live execution stack end-to-end: yfinance data pull, frozen-model inference, vol-targeted sizing, MT5 order placement, hedging, magic-number filtering, JSONL logging, dashboard push.</p>
+          <p><strong>Result: both strategies posted positive realized P&amp;L</strong> over the run and the execution stack ran cleanly. We are finished here.</p>
+          <p>From 2026-05-24 onwards, both strategies run on a single $200K FTMO-Demo account (server: FTMO-Demo, login 1513489174). This is the last test / dry run before buying a real FTMO evaluation. See the <strong>$200K</strong> tab above for live state.</p>
+          <p class="muted">Snapshot above is the final state from the last 50K heartbeat before the migration cutoff.</p>
+        `;
+      } else {
+        prose.innerHTML = `
+          <p>Both strategies run simultaneously on one $200K FTMO-Demo account (login 1513489174). G2 uses MT5 magic 84207, G10 uses magics 100010-100019, so the broker can attribute trades and the heartbeat can filter per strategy.</p>
+          <p>Vol sizing is calibrated to the combined Running_Both Monte Carlo fit (P1 = 14% each strategy, combined account vol ~24%, matches PropFirm_Maxxing/Running_Both/output/winners.csv).</p>
+          <p>This account is the final test before we buy a paid FTMO evaluation. If the strategy passes Phase 1 and Phase 2 here, we transition to a funded $200K account with real money.</p>
+        `;
+      }
+    }
+  } catch (e) {
+    console.error('renderSummary failed:', e);
   }
 }
 
@@ -712,7 +795,7 @@ $('refresh-btn').addEventListener('click', manualRefresh);
 let backtestLoaded = false;
 
 function activateTab(name) {
-  const tabs = ['manifoldfx', 'g10'];
+  const tabs = ['manifoldfx', 'g10', 'summary'];
   tabs.forEach(t => {
     const pane = $(`tab-${t}`);
     const btn  = $(`tab-btn-${t}`);
@@ -754,10 +837,11 @@ function activateAccount(acc) {
   document.querySelectorAll('.account-btn').forEach(b => {
     b.classList.toggle('is-active', b.dataset.account === acc);
   });
-  // Migration notes only visible on the 200k view
-  document.querySelectorAll('.stream-note').forEach(n => {
-    n.classList.toggle('hidden', acc !== '200k');
-  });
+  // Account-level banner: $50K archive notice on 50k, migration notice on 200k.
+  const b50  = $('banner-50k');
+  const b200 = $('banner-200k');
+  if (b50)  b50.hidden  = (acc !== '50k');
+  if (b200) b200.hidden = (acc !== '200k');
   // Re-fetch everything for the new account
   loadAll().catch(e => console.error('loadAll on account switch:', e));
 }
@@ -768,9 +852,13 @@ document.querySelectorAll('.account-btn').forEach(btn => {
 document.querySelectorAll('.account-btn').forEach(b => {
   b.classList.toggle('is-active', b.dataset.account === currentAccount);
 });
-document.querySelectorAll('.stream-note').forEach(n => {
-  n.classList.toggle('hidden', currentAccount !== '200k');
-});
+// Initial banner visibility for the persisted account selection
+(function initBanners() {
+  const b50  = $('banner-50k');
+  const b200 = $('banner-200k');
+  if (b50)  b50.hidden  = (currentAccount !== '50k');
+  if (b200) b200.hidden = (currentAccount !== '200k');
+})();
 
 // -- Backtest tab loader (G10 Strict-OOS reference) -------------------
 async function loadBacktest() {

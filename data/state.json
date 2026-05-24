@@ -1,13 +1,25 @@
 {
-  "as_of_utc": "2026-05-24T10:12:33.143439+00:00",
-  "balance": 200000.0,
-  "equity": 200000.0,
+  "as_of_utc": "2026-05-23T22:05:15.184642+00:00",
+  "balance": 50000.0,
+  "equity": 50000.0,
+  "drawdown_pct": 5.261043720133542,
   "today_pnl": 0.0,
   "open_positions": [],
-  "last_signals": {},
+  "last_signals": {
+    "EURUSD": {
+      "date": "2026-05-22",
+      "ensemble_avg": -0.227,
+      "signal": -1
+    },
+    "GBPJPY": {
+      "date": "2026-05-22",
+      "ensemble_avg": 0.57,
+      "signal": 1
+    }
+  },
   "phase": "p1",
   "dry_run": false,
-  "account_initial_usd": 200000.0,
+  "account_initial_usd": 50000.0,
   "max_daily_loss_pct": 0.04,
   "max_total_loss_pct": 0.08,
   "metrics": {
@@ -20,13 +32,8 @@
     "total_pnl_usd": 0.0,
     "annualised_sharpe": 0.0
   },
-  "live_first_date": null,
-  "live_last_date": null,
-  "last_heartbeat_utc": "2026-05-24T10:12:33.143453+00:00",
-  "peak_equity": 200000.0,
-  "drawdown_pct": 0.0,
-  "free_margin": 200000.0,
-  "migration_note": "Fresh FTMO-Demo account 1513489174, server FTMO-Demo. First fire: Monday 2026-05-25 08:05 AEST.",
+  "live_first_date": "2026-05-08",
+  "live_last_date": "2026-05-21",
   "reference_metrics": {
     "total_trades": 644,
     "win_rate": 51.087,
@@ -38,5 +45,10 @@
     "annualised_sharpe": 2.572
   },
   "reference_first_date": "2018-01-03",
-  "reference_last_date": "2026-04-17"
+  "reference_last_date": "2026-04-17",
+  "last_heartbeat_utc": "2026-05-24T10:18:18.375394+00:00",
+  "free_margin": 200000.0,
+  "peak_equity": 52776.6,
+  "migration_locked_at": "2026-05-24T19:57+10:00",
+  "migration_note": "Pre-FTMO-Demo migration. Old account positions assumed closed. See OLD_FTMO_account/MIGRATION.md."
 }

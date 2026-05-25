@@ -1,19 +1,28 @@
 {
-  "as_of_utc": "2026-05-24T22:06:07.688718+00:00",
-  "balance": 200000.0,
-  "equity": 200000.0,
-  "drawdown_pct": 0.0,
-  "today_pnl": 0.0,
-  "open_positions": [],
+  "as_of_utc": "2026-05-25T22:05:14.796829+00:00",
+  "balance": 201134.76995666506,
+  "equity": 201134.76995666506,
+  "drawdown_pct": 0.217517720269588,
+  "today_pnl": -438.4574890136719,
+  "open_positions": [
+    {
+      "asset": "GBPJPY",
+      "side": "LONG",
+      "lots": 2.42,
+      "entry_date": "2026-05-18",
+      "entry_price": 213.2689971923828,
+      "current_price": 214.56500244140625
+    }
+  ],
   "last_signals": {
     "EURUSD": {
-      "date": "2026-05-22",
-      "ensemble_avg": -0.227,
-      "signal": -1
+      "date": "2026-05-25",
+      "ensemble_avg": 0.074,
+      "signal": 0
     },
     "GBPJPY": {
-      "date": "2026-05-22",
-      "ensemble_avg": 0.57,
+      "date": "2026-05-25",
+      "ensemble_avg": 0.439,
       "signal": 1
     }
   },
@@ -23,17 +32,17 @@
   "max_daily_loss_pct": 0.04,
   "max_total_loss_pct": 0.08,
   "metrics": {
-    "total_trades": 0,
-    "win_rate": 0.0,
-    "profit_factor": 0.0,
-    "avg_win_usd": 0.0,
-    "avg_loss_usd": 0.0,
-    "max_drawdown_pct": 0.0,
-    "total_pnl_usd": 0.0,
-    "annualised_sharpe": 0.0
+    "total_trades": 4,
+    "win_rate": 50.0,
+    "profit_factor": 2.3700796528353405,
+    "avg_win_usd": 981.5105199813843,
+    "avg_loss_usd": -414.12554164886285,
+    "max_drawdown_pct": 0.217517720269588,
+    "total_pnl_usd": 1134.7699566650429,
+    "annualised_sharpe": 3.240776275288549
   },
   "live_first_date": "2026-05-08",
-  "live_last_date": "2026-05-22",
+  "live_last_date": "2026-05-25",
   "reference_metrics": {
     "total_trades": 139,
     "win_rate": 61.87050359712231,
@@ -45,8 +54,5 @@
     "annualised_sharpe": 3.8048576465300235
   },
   "reference_first_date": "2025-01-02",
-  "reference_last_date": "2026-05-08",
-  "last_heartbeat_utc": "2026-05-25T22:03:18.093079+00:00",
-  "free_margin": 200000.0,
-  "peak_equity": 200000.0
+  "reference_last_date": "2026-05-08"
 }

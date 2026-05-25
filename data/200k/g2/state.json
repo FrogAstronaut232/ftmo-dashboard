@@ -1,10 +1,22 @@
 {
-  "as_of_utc": "2026-05-24T10:44:21.246928+00:00",
+  "as_of_utc": "2026-05-24T22:06:07.688718+00:00",
   "balance": 200000.0,
   "equity": 200000.0,
+  "drawdown_pct": 0.0,
   "today_pnl": 0.0,
   "open_positions": [],
-  "last_signals": {},
+  "last_signals": {
+    "EURUSD": {
+      "date": "2026-05-22",
+      "ensemble_avg": -0.227,
+      "signal": -1
+    },
+    "GBPJPY": {
+      "date": "2026-05-22",
+      "ensemble_avg": 0.57,
+      "signal": 1
+    }
+  },
   "phase": "p1",
   "dry_run": false,
   "account_initial_usd": 200000.0,
@@ -20,11 +32,21 @@
     "total_pnl_usd": 0.0,
     "annualised_sharpe": 0.0
   },
-  "live_first_date": null,
-  "live_last_date": null,
-  "last_heartbeat_utc": "2026-05-24T12:03:18.111231+00:00",
-  "peak_equity": 200000.0,
-  "drawdown_pct": 0.0,
+  "live_first_date": "2026-05-08",
+  "live_last_date": "2026-05-22",
+  "reference_metrics": {
+    "total_trades": 139,
+    "win_rate": 61.87050359712231,
+    "profit_factor": 2.8684854468755696,
+    "avg_win_usd": 413.2898949125007,
+    "avg_loss_usd": -233.78934679451913,
+    "max_drawdown_pct": 0.8843537739145652,
+    "total_pnl_usd": 23152.09558236555,
+    "annualised_sharpe": 3.8048576465300235
+  },
+  "reference_first_date": "2025-01-02",
+  "reference_last_date": "2026-05-08",
+  "last_heartbeat_utc": "2026-05-25T01:48:17.528083+00:00",
   "free_margin": 200000.0,
-  "migration_note": "Fresh FTMO-Demo $200k account (1513489174). G2 strategy. First fire: Mon 2026-05-25 08:05 AEST."
+  "peak_equity": 200000.0
 }

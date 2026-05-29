@@ -3,7 +3,7 @@
   "balance": 198072.93,
   "equity": 198072.93,
   "drawdown_pct": 0.0,
-  "today_pnl": -1927.0700000000002,
+  "today_pnl": 0.0,
   "open_positions": [],
   "last_signals": {
     "EURUSD": {
@@ -46,7 +46,7 @@
   },
   "reference_first_date": "2025-01-02",
   "reference_last_date": "2026-05-22",
-  "last_heartbeat_utc": "2026-05-29T13:48:18.354097+00:00",
+  "last_heartbeat_utc": "2026-05-29T14:03:18.369690+00:00",
   "free_margin": 181438.0,
   "peak_equity": 198072.93
 }

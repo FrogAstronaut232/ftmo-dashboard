@@ -1,17 +1,17 @@
 {
   "as_of_utc": "2026-06-03T22:05:18.156433+00:00",
-  "balance": 200178.28,
-  "equity": 201009.63,
-  "drawdown_pct": 0.010053233888059529,
-  "today_pnl": 511.91999999999985,
+  "balance": 200070.97,
+  "equity": 201227.19,
+  "drawdown_pct": 0.0,
+  "today_pnl": 1156.22,
   "open_positions": [
     {
       "asset": "AUDUSD",
       "side": "SHORT",
       "lots": 0.68,
       "entry_price": 0.71278,
-      "current_price": 0.71353,
-      "floating_pnl_usd": -51.0,
+      "current_price": 0.7128,
+      "floating_pnl_usd": -1.3599999999999999,
       "ticket": 463984334
     },
     {
@@ -19,8 +19,8 @@
       "side": "SHORT",
       "lots": 1.17,
       "entry_price": 1.15959,
-      "current_price": 1.1608100000000001,
-      "floating_pnl_usd": -142.74,
+      "current_price": 1.16012,
+      "floating_pnl_usd": -62.01,
       "ticket": 463984373
     },
     {
@@ -28,8 +28,8 @@
       "side": "SHORT",
       "lots": 0.68,
       "entry_price": 0.58617,
-      "current_price": 0.58699,
-      "floating_pnl_usd": -55.76,
+      "current_price": 0.58644,
+      "floating_pnl_usd": -18.36,
       "ticket": 463984420
     },
     {
@@ -37,8 +37,8 @@
       "side": "LONG",
       "lots": 2.08,
       "entry_price": 1.38412,
-      "current_price": 1.39135,
-      "floating_pnl_usd": 1080.85,
+      "current_price": 1.39239,
+      "floating_pnl_usd": 1237.95,
       "ticket": 461989186
     }
   ],
@@ -100,13 +100,13 @@
   "max_daily_loss_pct": 0.04,
   "max_total_loss_pct": 0.08,
   "metrics": {
-    "total_trades": 14,
-    "win_rate": 50.0,
-    "profit_factor": 1.1118689800144324,
-    "avg_win_usd": 253.13285714285712,
-    "avg_loss_usd": -227.66428571428568,
-    "max_drawdown_pct": 0.2484392319512295,
-    "total_pnl_usd": 178.28000000000014,
+    "total_trades": 1,
+    "win_rate": 100.0,
+    "profit_factor": 0.0,
+    "avg_win_usd": 70.96999999999998,
+    "avg_loss_usd": 0.0,
+    "max_drawdown_pct": 0.0,
+    "total_pnl_usd": 70.96999999999998,
     "annualised_sharpe": 0.0
   },
   "reference_metrics": {
@@ -120,10 +120,10 @@
     "annualised_sharpe": 0.0
   },
   "live_first_date": "2026-05-26",
-  "live_last_date": "2026-06-04",
+  "live_last_date": "2026-05-27",
   "reference_first_date": null,
   "reference_last_date": null,
-  "last_heartbeat_utc": "2026-06-04T07:22:53.069615+00:00",
+  "last_heartbeat_utc": "2026-06-04T07:44:32.903016+00:00",
   "free_margin": 180093.15,
-  "peak_equity": 201029.84
+  "peak_equity": 201227.19
 }

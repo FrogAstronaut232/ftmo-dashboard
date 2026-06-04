@@ -1,95 +1,91 @@
 {
-  "as_of_utc": "2026-06-03T22:05:18.156433+00:00",
-  "balance": 200178.28,
-  "equity": 200765.42,
-  "drawdown_pct": 0.26683217540799525,
-  "today_pnl": 587.1400000000001,
+  "as_of_utc": "2026-06-04T22:05:18.960064+00:00",
+  "balance": 202907.86597130378,
+  "equity": 202907.86597130378,
+  "drawdown_pct": 0.0,
+  "today_pnl": 763.7953089953859,
   "open_positions": [
     {
       "asset": "AUDUSD",
       "side": "SHORT",
-      "lots": 0.68,
-      "entry_price": 0.71278,
-      "current_price": 0.71361,
-      "floating_pnl_usd": -56.44,
-      "ticket": 463984334
+      "lots": 0.7000000000000001,
+      "entry_date": "2026-06-03",
+      "entry_price": 0.7130632996559143,
+      "current_price": 0.7136231064796448
     },
     {
-      "asset": "EURUSD",
+      "asset": "EURGBP",
       "side": "SHORT",
-      "lots": 1.17,
-      "entry_price": 1.15959,
-      "current_price": 1.16161,
-      "floating_pnl_usd": -236.34,
-      "ticket": 463984373
+      "lots": 2.05,
+      "entry_date": "2026-06-04",
+      "entry_price": 0.8649100065231323,
+      "current_price": 0.8649100065231323
     },
     {
       "asset": "NZDUSD",
       "side": "SHORT",
       "lots": 0.68,
-      "entry_price": 0.58617,
-      "current_price": 0.58698,
-      "floating_pnl_usd": -55.08,
-      "ticket": 463984420
+      "entry_date": "2026-06-03",
+      "entry_price": 0.5863383412361145,
+      "current_price": 0.5868889093399048
     },
     {
-      "asset": "USDCAD",
+      "asset": "USDCHF",
       "side": "LONG",
-      "lots": 2.08,
-      "entry_price": 1.38412,
-      "current_price": 1.3903699999999999,
-      "floating_pnl_usd": 935.0,
-      "ticket": 461989186
+      "lots": 0.91,
+      "entry_date": "2026-06-04",
+      "entry_price": 0.789359986782074,
+      "current_price": 0.789359986782074
     }
   ],
   "last_signals": {
     "AUDJPY": {
-      "date": "2026-06-03",
-      "ensemble_avg": 0.0,
+      "date": "2026-06-04",
+      "ensemble_avg": 0.082,
       "signal": 0
     },
     "AUDUSD": {
-      "date": "2026-06-03",
-      "ensemble_avg": -0.4,
+      "date": "2026-06-04",
+      "ensemble_avg": -0.8,
       "signal": -1
     },
     "EURGBP": {
-      "date": "2026-06-03",
-      "ensemble_avg": -0.2,
-      "signal": 0
-    },
-    "EURUSD": {
-      "date": "2026-06-03",
+      "date": "2026-06-04",
       "ensemble_avg": -0.4,
       "signal": -1
     },
+    "EURUSD": {
+      "date": "2026-06-04",
+      "ensemble_avg": -0.2,
+      "signal": 0
+    },
     "GBPJPY": {
-      "date": "2026-06-03",
+      "date": "2026-06-04",
       "ensemble_avg": 0.0,
       "signal": 0
     },
     "GBPUSD": {
-      "date": "2026-06-03",
+      "date": "2026-06-04",
       "ensemble_avg": 0.0,
       "signal": 0
     },
     "NZDUSD": {
-      "date": "2026-06-03",
-      "ensemble_avg": -0.6,
+      "date": "2026-06-04",
+      "ensemble_avg": -0.4,
       "signal": -1
     },
     "USDCAD": {
-      "date": "2026-06-03",
-      "ensemble_avg": 0.527,
-      "signal": 1
-    },
-    "USDCHF": {
-      "date": "2026-06-03",
-      "ensemble_avg": 0.162,
+      "date": "2026-06-04",
+      "ensemble_avg": 0.327,
       "signal": 0
     },
+    "USDCHF": {
+      "date": "2026-06-04",
+      "ensemble_avg": 0.4,
+      "signal": 1
+    },
     "USDJPY": {
-      "date": "2026-06-03",
+      "date": "2026-06-04",
       "ensemble_avg": 0.0,
       "signal": 0
     }
@@ -100,14 +96,14 @@
   "max_daily_loss_pct": 0.04,
   "max_total_loss_pct": 0.08,
   "metrics": {
-    "total_trades": 14,
-    "win_rate": 50.0,
-    "profit_factor": 1.1118689800144324,
-    "avg_win_usd": 253.13285714285712,
-    "avg_loss_usd": -227.66428571428568,
-    "max_drawdown_pct": 0.2484392319512295,
-    "total_pnl_usd": 178.28000000000014,
-    "annualised_sharpe": 0.0
+    "total_trades": 33,
+    "win_rate": 66.66666666666666,
+    "profit_factor": 2.3914596006244206,
+    "avg_win_usd": 227.16642919038156,
+    "avg_loss_usd": -189.98140644405402,
+    "max_drawdown_pct": 0.17769109077624715,
+    "total_pnl_usd": 2907.865971303799,
+    "annualised_sharpe": 9.179866318229866
   },
   "reference_metrics": {
     "total_trades": 0,
@@ -119,11 +115,8 @@
     "total_pnl_usd": 0.0,
     "annualised_sharpe": 0.0
   },
-  "live_first_date": "2026-05-26",
+  "live_first_date": "2026-05-12",
   "live_last_date": "2026-06-04",
   "reference_first_date": null,
-  "reference_last_date": null,
-  "last_heartbeat_utc": "2026-06-04T21:52:53.375277+00:00",
-  "free_margin": 180093.15,
-  "peak_equity": 201302.56
+  "reference_last_date": null
 }

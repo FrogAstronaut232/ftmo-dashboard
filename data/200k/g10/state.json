@@ -1,17 +1,17 @@
 {
   "as_of_utc": "2026-06-04T22:05:18.960064+00:00",
   "balance": 200888.02,
-  "equity": 202590.69,
-  "drawdown_pct": 0.0,
-  "today_pnl": 1702.67,
+  "equity": 202583.59,
+  "drawdown_pct": 0.0035046032964327336,
+  "today_pnl": 1695.57,
   "open_positions": [
     {
       "asset": "AUDUSD",
       "side": "SHORT",
       "lots": 0.68,
       "entry_price": 0.71278,
-      "current_price": 0.70697,
-      "floating_pnl_usd": 395.08,
+      "current_price": 0.70739,
+      "floating_pnl_usd": 366.52,
       "ticket": 463984334
     },
     {
@@ -19,8 +19,8 @@
       "side": "SHORT",
       "lots": 2.05,
       "entry_price": 0.86495,
-      "current_price": 0.86346,
-      "floating_pnl_usd": 408.86,
+      "current_price": 0.86329,
+      "floating_pnl_usd": 455.51,
       "ticket": 464998954
     },
     {
@@ -28,8 +28,8 @@
       "side": "SHORT",
       "lots": 0.68,
       "entry_price": 0.58617,
-      "current_price": 0.58166,
-      "floating_pnl_usd": 306.68,
+      "current_price": 0.58193,
+      "floating_pnl_usd": 288.32,
       "ticket": 463984420
     },
     {
@@ -37,8 +37,8 @@
       "side": "LONG",
       "lots": 0.91,
       "entry_price": 0.78948,
-      "current_price": 0.79465,
-      "floating_pnl_usd": 592.05,
+      "current_price": 0.79459,
+      "floating_pnl_usd": 585.22,
       "ticket": 464998983
     }
   ],
@@ -123,7 +123,7 @@
   "live_last_date": "2026-06-05",
   "reference_first_date": null,
   "reference_last_date": null,
-  "last_heartbeat_utc": "2026-06-05T14:22:52.893583+00:00",
+  "last_heartbeat_utc": "2026-06-05T14:37:52.882425+00:00",
   "free_margin": 181290.25,
   "peak_equity": 202590.69
 }

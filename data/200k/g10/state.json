@@ -1,49 +1,54 @@
 {
   "as_of_utc": "2026-06-07T22:05:18.805444+00:00",
-  "balance": 202866.24135372718,
-  "equity": 202866.24135372718,
-  "drawdown_pct": 0.020514048273754887,
-  "today_pnl": -41.62461757659912,
+  "balance": 201588.04,
+  "equity": 203100.59,
+  "drawdown_pct": 0.0,
+  "today_pnl": 2212.5699999999997,
   "open_positions": [
     {
       "asset": "AUDJPY",
       "side": "SHORT",
       "lots": 0.75,
-      "entry_date": "2026-06-05",
-      "entry_price": 114.05799865722656,
-      "current_price": 114.05799865722656
+      "entry_price": 112.755,
+      "current_price": 112.751,
+      "floating_pnl_usd": 1.87,
+      "ticket": 466352342
     },
     {
       "asset": "AUDUSD",
       "side": "SHORT",
-      "lots": 0.71,
-      "entry_date": "2026-06-03",
-      "entry_price": 0.7130632996559143,
-      "current_price": 0.7132158875465393
+      "lots": 0.68,
+      "entry_price": 0.71278,
+      "current_price": 0.70322,
+      "floating_pnl_usd": 650.08,
+      "ticket": 463984334
     },
     {
       "asset": "GBPUSD",
       "side": "SHORT",
       "lots": 0.6,
-      "entry_date": "2026-06-05",
-      "entry_price": 1.3427000045776367,
-      "current_price": 1.3427000045776367
+      "entry_price": 1.33205,
+      "current_price": 1.3321,
+      "floating_pnl_usd": -3.0,
+      "ticket": 466352432
     },
     {
       "asset": "USDCAD",
       "side": "LONG",
       "lots": 2.08,
-      "entry_date": "2026-06-05",
-      "entry_price": 1.3905999660491943,
-      "current_price": 1.3905999660491943
+      "entry_price": 1.39455,
+      "current_price": 1.3945,
+      "floating_pnl_usd": -7.46,
+      "ticket": 466352533
     },
     {
       "asset": "USDCHF",
       "side": "LONG",
-      "lots": 0.93,
-      "entry_date": "2026-06-04",
-      "entry_price": 0.789359986782074,
-      "current_price": 0.7889000177383423
+      "lots": 0.91,
+      "entry_price": 0.78948,
+      "current_price": 0.79711,
+      "floating_pnl_usd": 871.06,
+      "ticket": 464998983
     }
   ],
   "last_signals": {
@@ -104,14 +109,14 @@
   "max_daily_loss_pct": 0.04,
   "max_total_loss_pct": 0.08,
   "metrics": {
-    "total_trades": 35,
-    "win_rate": 65.71428571428571,
-    "profit_factor": 2.3431138345716023,
-    "avg_win_usd": 217.402977296752,
-    "avg_loss_usd": -177.83559367484125,
-    "max_drawdown_pct": 0.17769109077624715,
-    "total_pnl_usd": 2866.2413537272,
-    "annualised_sharpe": 8.693552926924381
+    "total_trades": 18,
+    "win_rate": 55.55555555555556,
+    "profit_factor": 1.8792355051601188,
+    "avg_win_usd": 339.42,
+    "avg_loss_usd": -225.77,
+    "max_drawdown_pct": 0.2484392319512295,
+    "total_pnl_usd": 1588.0400000000004,
+    "annualised_sharpe": 0.0
   },
   "reference_metrics": {
     "total_trades": 0,
@@ -123,8 +128,11 @@
     "total_pnl_usd": 0.0,
     "annualised_sharpe": 0.0
   },
-  "live_first_date": "2026-05-12",
-  "live_last_date": "2026-06-05",
+  "live_first_date": "2026-05-26",
+  "live_last_date": "2026-06-08",
   "reference_first_date": null,
-  "reference_last_date": null
+  "reference_last_date": null,
+  "last_heartbeat_utc": "2026-06-07T22:05:20.923871+00:00",
+  "free_margin": 180561.63,
+  "peak_equity": 203100.59
 }

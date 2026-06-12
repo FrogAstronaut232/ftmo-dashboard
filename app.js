@@ -90,7 +90,13 @@ function renderMasthead(state, meta) {
     const ageMin = Math.round(ageMs / 60000);
     const ageEl  = $('data-age');
     let cls, label;
-    if (ageMin < 30)         { cls = 'fresh';  label = `Live data ${ageMin}m old`; }
+    if (currentAccount === '50k') {
+      // Archived demo period: data is intentionally frozen at the migration
+      // cutoff, so a "stale / desktop offline" warning is misleading here.
+      cls = 'archived';
+      label = `Archived · final state ${fmtUtc(d.toISOString()).slice(0, 10)}`;
+    }
+    else if (ageMin < 30)    { cls = 'fresh';  label = `Live data ${ageMin}m old`; }
     else if (ageMin < 180)   { cls = 'recent'; label = `Live data ${ageMin}m old`; }
     else if (ageMin < 1440)  { cls = 'stale';  label = `Stale: ${Math.round(ageMin/60)}h old (desktop may be asleep)`; }
     else                     { cls = 'frozen'; label = `Stale: ${Math.round(ageMin/1440)}d old (desktop offline?)`; }
@@ -230,12 +236,38 @@ function renderEquity(divId, equity, initial, lineColor, currentEquity, opts = {
     }
   }
   const hasBh = equity && equity.length && equity.some(r => r.bh_sp500 != null && r.bh_sp500 !== '');
+
+  // Per-asset buy & hold overlays. opts.benchmark = parsed benchmark.csv rows
+  // ([{date, EURUSD, GBPJPY, ...}]). One faint dashed line per traded pair —
+  // the account's starting capital invested in that single pair and held,
+  // so you can see the strategy's edge over each underlying.
+  const benchRows = (opts.benchmark && opts.benchmark.length) ? opts.benchmark : null;
+  const benchTraces = [];
+  if (benchRows) {
+    const cols = Object.keys(benchRows[0]).filter(k => k !== 'date');
+    const palette = ['#4a90d9', '#c69256', '#5cb87a', '#b05ad9', '#4ac6c6',
+                     '#d0894a', '#c64a6e', '#8a9bd9', '#9ac64a', '#d04a52'];
+    cols.forEach((c, i) => {
+      benchTraces.push({
+        x: benchRows.map(r => r.date),
+        y: benchRows.map(r => Number(r[c])),
+        type: 'scatter', mode: 'lines',
+        name: `${c} B&H`,
+        line: { color: palette[i % palette.length], width: 1, dash: 'dot' },
+        opacity: 0.5,
+        hovertemplate: '%{x}<br>$%{y:,.0f}<extra>' + c + ' B&H</extra>',
+        showlegend: true,
+      });
+    });
+  }
+
+  const showLegend = hasBh || benchTraces.length > 0;
   const main = {
     x, y, type: 'scatter', mode: 'lines',
     name: opts.mainLabel || 'Strategy',
-    line: { color: lineColor, width: 1.4, shape: 'linear' },
+    line: { color: lineColor, width: benchTraces.length ? 2 : 1.4, shape: 'linear' },
     hovertemplate: '%{x}<br>$%{y:,.0f}<extra>' + (opts.mainLabel || 'Strategy') + '</extra>',
-    showlegend: hasBh,
+    showlegend: showLegend,
   };
   const ref = {
     x: [x[0], x[x.length-1]], y: [initial, initial],
@@ -280,14 +312,15 @@ function renderEquity(divId, equity, initial, lineColor, currentEquity, opts = {
               family: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace',
               size: 12 },
     },
-    showlegend: hasBh,
-    legend: hasBh ? {
+    showlegend: showLegend,
+    legend: showLegend ? {
       orientation: 'h', x: 0, y: 1.08,
       bgcolor: 'rgba(0,0,0,0)',
       font: { color: '#9aa3ad', size: 10 },
     } : undefined,
   };
-  const traces = bhTrace ? [ref, bhTrace, main] : [ref, main];
+  // Draw order: baseline, faint per-asset B&H, SP500 B&H (if any), strategy on top.
+  const traces = [ref, ...benchTraces, ...(bhTrace ? [bhTrace] : []), main];
   Plotly.newPlot(div, traces, layout, { displayModeBar: false, responsive: true });
 }
 
@@ -583,23 +616,29 @@ async function loadAll() {
   try {
     // G2 (2-pair) data — account-scoped (50k archive / 200k live)
     const ab = `${currentAccount}/g2`;
-    const [state, meta, liveEq, liveTr, liveSig, refEq, refTr, refSig] = await Promise.all([
+    const [state, meta, liveEq, liveTr, liveSig, liveBench, refEq, refTr, refSig] = await Promise.all([
       fetchJson(`${ab}/state.json`).catch(() => ({})),
       fetchJson(`${ab}/meta.json`).catch(() => ({})),
       fetchCsv(`${ab}/live/equity.csv`),
       fetchCsv(`${ab}/live/trades.csv`),
       fetchCsv(`${ab}/live/signals.csv`),
+      fetchCsv(`${ab}/live/benchmark.csv`),
       fetchCsv('reference/equity.csv'),
       fetchCsv('reference/trades.csv'),
       fetchCsv('reference/signals.csv'),
     ]);
     const initial = state.account_initial_usd || meta.account_initial_usd || 50000;
 
+    // Archived 50k account is frozen at the migration cutoff. Don't extend the
+    // equity curve or calendar to "today" with the final equity — that would
+    // draw a flat line / phantom cell from 2026-05-23 to the present.
+    const isArchive = currentAccount === '50k';
+
     renderMasthead(state, meta);
     renderLiveSummary(state, meta);
     renderPositions('positions-table', state, 'No open positions.');
-    renderEquity('live-equity-chart', liveEq, initial, '#cdd2d8', state.equity);
-    renderDailyCalendar('live-calendar', liveEq, initial, state.today_pnl);
+    renderEquity('live-equity-chart', liveEq, initial, '#cdd2d8', isArchive ? null : state.equity, { benchmark: liveBench });
+    renderDailyCalendar('live-calendar', liveEq, initial, isArchive ? null : state.today_pnl);
     renderTradesTable('live-trades-table',   liveTr,  'Awaiting first closed trade.');
     renderSignalsTable('live-signals-eurusd-table', byAsset(liveSig, 'EURUSD'), 'Awaiting first scheduled run.');
     renderSignalsTable('live-signals-gbpjpy-table', byAsset(liveSig, 'GBPJPY'), 'Awaiting first scheduled run.');
@@ -714,12 +753,13 @@ async function loadG10Live() {
   try {
     // G10 data — account-scoped (50k archive / 200k live)
     const ab = `${currentAccount}/g10`;
-    const [gState, gMeta, gEq, gTr, gSig] = await Promise.all([
+    const [gState, gMeta, gEq, gTr, gSig, gBench] = await Promise.all([
       fetchJson(`${ab}/state.json`).catch(() => ({ awaiting_first_run: true })),
       fetchJson(`${ab}/meta.json`).catch(() => ({})),
       fetchCsv(`${ab}/live/equity.csv`),
       fetchCsv(`${ab}/live/trades.csv`),
       fetchCsv(`${ab}/live/signals.csv`),
+      fetchCsv(`${ab}/live/benchmark.csv`),
     ]);
     const initial = gState.account_initial_usd || gMeta.account_initial_usd || 200000;
     const awaiting = !!gState.awaiting_first_run;
@@ -730,10 +770,13 @@ async function loadG10Live() {
         ? 'Awaiting first run — fires daily at 08:05 AEST (= 22:05 UTC).'
         : 'No open positions.');
 
+    // Archived 50k account is frozen — same rule as G2: don't extend to "today".
+    const isArchive = currentAccount === '50k';
+
     // Only paint a live equity curve if we actually have data
     if (gEq.length || !awaiting) {
-      renderEquity('g-equity-chart', gEq, initial, '#cdd2d8', awaiting ? null : gState.equity);
-      renderDailyCalendar('g-calendar', gEq, initial, gState.today_pnl);
+      renderEquity('g-equity-chart', gEq, initial, '#cdd2d8', (awaiting || isArchive) ? null : gState.equity, { benchmark: gBench });
+      renderDailyCalendar('g-calendar', gEq, initial, isArchive ? null : gState.today_pnl);
       if (gEq.length) {
         $('g-equity-range').textContent = `${gEq[0].date} -> ${gEq[gEq.length-1].date}`;
       } else {

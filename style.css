@@ -107,10 +107,11 @@ body {
   font-family: var(--font-mono);
   min-height: 1.2em;
 }
-.data-age.fresh   { color: var(--pos); }
-.data-age.recent  { color: var(--text-3); }
-.data-age.stale   { color: var(--warn); }
-.data-age.frozen  { color: var(--neg); }
+.data-age.fresh    { color: var(--pos); }
+.data-age.recent   { color: var(--text-3); }
+.data-age.stale    { color: var(--warn); }
+.data-age.frozen   { color: var(--neg); }
+.data-age.archived { color: var(--text-3); }
 .tag {
   display: inline-block;
   font-size: 10.5px;

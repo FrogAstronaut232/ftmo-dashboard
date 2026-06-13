@@ -1,8 +1,8 @@
 {
-  "as_of_utc": "2026-06-12T00:36:31.744422+00:00",
+  "as_of_utc": "2026-06-13T00:11:35.855787+00:00",
   "balance": 202933.84,
   "equity": 202218.44999999998,
-  "drawdown_pct": 0.12218358031081326,
+  "drawdown_pct": 0.0,
   "today_pnl": -715.39,
   "open_positions": [
     {
@@ -44,53 +44,53 @@
   ],
   "last_signals": {
     "AUDJPY": {
-      "date": "2026-06-11",
-      "ensemble_avg": -0.4,
-      "signal": -1
+      "date": "2026-06-12",
+      "ensemble_avg": 0.489,
+      "signal": 1
     },
     "AUDUSD": {
-      "date": "2026-06-11",
-      "ensemble_avg": -0.047,
+      "date": "2026-06-12",
+      "ensemble_avg": -0.142,
       "signal": 0
     },
     "EURGBP": {
-      "date": "2026-06-11",
+      "date": "2026-06-12",
       "ensemble_avg": -0.066,
       "signal": 0
     },
     "EURUSD": {
-      "date": "2026-06-11",
-      "ensemble_avg": -0.2,
-      "signal": 0
+      "date": "2026-06-12",
+      "ensemble_avg": 0.397,
+      "signal": 1
     },
     "GBPJPY": {
-      "date": "2026-06-11",
-      "ensemble_avg": 0.4,
+      "date": "2026-06-12",
+      "ensemble_avg": 0.6,
       "signal": 1
     },
     "GBPUSD": {
-      "date": "2026-06-11",
-      "ensemble_avg": -0.4,
-      "signal": -1
+      "date": "2026-06-12",
+      "ensemble_avg": 0.08,
+      "signal": 0
     },
     "NZDUSD": {
-      "date": "2026-06-11",
-      "ensemble_avg": 0.284,
+      "date": "2026-06-12",
+      "ensemble_avg": 0.306,
       "signal": 0
     },
     "USDCAD": {
-      "date": "2026-06-11",
-      "ensemble_avg": -0.002,
+      "date": "2026-06-12",
+      "ensemble_avg": 0.2,
       "signal": 0
     },
     "USDCHF": {
-      "date": "2026-06-11",
-      "ensemble_avg": -0.388,
+      "date": "2026-06-12",
+      "ensemble_avg": -0.4,
       "signal": -1
     },
     "USDJPY": {
-      "date": "2026-06-11",
-      "ensemble_avg": -0.2,
+      "date": "2026-06-12",
+      "ensemble_avg": 0.2,
       "signal": 0
     }
   },
@@ -123,7 +123,7 @@
   "live_last_date": "2026-06-12",
   "reference_first_date": null,
   "reference_last_date": null,
-  "last_heartbeat_utc": "2026-06-13T00:11:18.813338+00:00",
+  "last_heartbeat_utc": "2026-06-13T00:11:36.239680+00:00",
   "free_margin": 152963.86,
-  "peak_equity": 202465.83
+  "peak_equity": 202218.44999999998
 }

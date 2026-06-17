@@ -1,14 +1,23 @@
 {
-  "as_of_utc": "2026-06-16T11:16:24.444551+00:00",
-  "balance": 194990.74,
-  "equity": 194990.74,
-  "drawdown_pct": 0.0,
+  "as_of_utc": "2026-06-17T05:36:33.695411+00:00",
+  "balance": 192570.9952986032,
+  "equity": 192570.9952986032,
+  "drawdown_pct": 3.7145023506983996,
   "today_pnl": 0.0,
-  "open_positions": [],
+  "open_positions": [
+    {
+      "asset": "GBPJPY",
+      "side": "LONG",
+      "lots": 2.94,
+      "entry_date": "2026-06-09",
+      "entry_price": 213.57400512695312,
+      "current_price": 214.83700561523438
+    }
+  ],
   "last_signals": {
     "EURUSD": {
-      "date": "2026-06-12",
-      "ensemble_avg": 0.181,
+      "date": "2026-06-17",
+      "ensemble_avg": 0.167,
       "signal": 0
     },
     "GBPJPY": {
@@ -23,17 +32,17 @@
   "max_daily_loss_pct": 0.04,
   "max_total_loss_pct": 0.08,
   "metrics": {
-    "total_trades": 4,
+    "total_trades": 6,
     "win_rate": 0.0,
     "profit_factor": 0.0,
     "avg_win_usd": 0.0,
-    "avg_loss_usd": -1252.315,
-    "max_drawdown_pct": 2.5046300000000046,
-    "total_pnl_usd": -5009.26,
-    "annualised_sharpe": 0.0
+    "avg_loss_usd": -1238.1674502327999,
+    "max_drawdown_pct": 3.7145023506983996,
+    "total_pnl_usd": -7429.0047013968,
+    "annualised_sharpe": -8.36820843149355
   },
-  "live_first_date": "2026-05-26",
-  "live_last_date": "2026-06-04",
+  "live_first_date": "2026-05-25",
+  "live_last_date": "2026-06-17",
   "reference_metrics": {
     "total_trades": 142,
     "win_rate": 62.676056338028175,
@@ -45,8 +54,5 @@
     "annualised_sharpe": 3.9512571792162228
   },
   "reference_first_date": "2025-01-02",
-  "reference_last_date": "2026-05-22",
-  "last_heartbeat_utc": "2026-06-16T11:48:18.262863+00:00",
-  "free_margin": 195598.12,
-  "peak_equity": 194990.74
+  "reference_last_date": "2026-05-22"
 }

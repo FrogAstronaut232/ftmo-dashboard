@@ -1,9 +1,9 @@
 {
   "as_of_utc": "2026-06-18T06:10:05.520505+00:00",
-  "balance": 192909.64412447083,
-  "equity": 192909.64412447083,
-  "drawdown_pct": 3.5451779377645867,
-  "today_pnl": 338.6488258676168,
+  "balance": 194990.74,
+  "equity": 194990.74,
+  "drawdown_pct": 0.0,
+  "today_pnl": 0.0,
   "open_positions": [],
   "last_signals": {
     "EURUSD": {
@@ -23,17 +23,17 @@
   "max_daily_loss_pct": 0.04,
   "max_total_loss_pct": 0.08,
   "metrics": {
-    "total_trades": 7,
-    "win_rate": 14.285714285714285,
-    "profit_factor": 0.045584683208498185,
-    "avg_win_usd": 338.6488258676168,
-    "avg_loss_usd": -1238.1674502327999,
-    "max_drawdown_pct": 3.7145023506983996,
-    "total_pnl_usd": -7090.355875529183,
-    "annualised_sharpe": -7.553685130427509
+    "total_trades": 4,
+    "win_rate": 0.0,
+    "profit_factor": 0.0,
+    "avg_win_usd": 0.0,
+    "avg_loss_usd": -1252.315,
+    "max_drawdown_pct": 2.5046300000000046,
+    "total_pnl_usd": -5009.26,
+    "annualised_sharpe": 0.0
   },
-  "live_first_date": "2026-05-25",
-  "live_last_date": "2026-06-18",
+  "live_first_date": "2026-05-26",
+  "live_last_date": "2026-06-04",
   "reference_metrics": {
     "total_trades": 142,
     "win_rate": 62.676056338028175,
@@ -45,5 +45,8 @@
     "annualised_sharpe": 3.9512571792162228
   },
   "reference_first_date": "2025-01-02",
-  "reference_last_date": "2026-05-22"
+  "reference_last_date": "2026-05-22",
+  "last_heartbeat_utc": "2026-06-18T06:10:08.147492+00:00",
+  "free_margin": 195598.12,
+  "peak_equity": 194990.74
 }

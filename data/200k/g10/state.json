@@ -1,85 +1,133 @@
 {
-  "as_of_utc": "2026-06-22T06:25:59.226029+00:00",
-  "balance": 206434.59948602246,
-  "equity": 206434.59948602246,
-  "drawdown_pct": 0.15381735121842377,
+  "as_of_utc": "2026-06-22T22:05:18.497143+00:00",
+  "balance": 50000.0,
+  "equity": 50000.0,
+  "drawdown_pct": 0.0,
   "today_pnl": 0.0,
   "open_positions": [
     {
-      "asset": "USDCHF",
+      "asset": "AUDUSD",
       "side": "SHORT",
-      "lots": 0.81,
-      "entry_date": "2026-06-11",
-      "entry_price": 0.7999500036239624,
-      "current_price": 0.7950500249862671
+      "lots": 0.56,
+      "entry_date": "2026-06-22",
+      "entry_price": 0.7003291845321655,
+      "current_price": 0.7003291845321655
+    },
+    {
+      "asset": "EURGBP",
+      "side": "SHORT",
+      "lots": 2.5100000000000002,
+      "entry_date": "2026-06-22",
+      "entry_price": 0.8623999953269958,
+      "current_price": 0.8623999953269958
+    },
+    {
+      "asset": "GBPJPY",
+      "side": "LONG",
+      "lots": 0.49,
+      "entry_date": "2026-06-22",
+      "entry_price": 214.0469970703125,
+      "current_price": 214.0469970703125
+    },
+    {
+      "asset": "GBPUSD",
+      "side": "SHORT",
+      "lots": 0.54,
+      "entry_date": "2026-06-22",
+      "entry_price": 1.3253810405731201,
+      "current_price": 1.3253810405731201
+    },
+    {
+      "asset": "USDCAD",
+      "side": "LONG",
+      "lots": 1.4000000000000001,
+      "entry_date": "2026-06-18",
+      "entry_price": 1.409980058670044,
+      "current_price": 1.41743004322052
+    },
+    {
+      "asset": "USDCHF",
+      "side": "LONG",
+      "lots": 0.55,
+      "entry_date": "2026-06-18",
+      "entry_price": 0.7994099855422974,
+      "current_price": 0.8079699873924255
+    },
+    {
+      "asset": "USDJPY",
+      "side": "LONG",
+      "lots": 1.26,
+      "entry_date": "2026-06-18",
+      "entry_price": 160.60000610351562,
+      "current_price": 161.56199645996094
     }
   ],
   "last_signals": {
     "AUDJPY": {
-      "date": "2026-06-19",
+      "date": "2026-06-22",
       "ensemble_avg": 0.2,
       "signal": 0
     },
     "AUDUSD": {
-      "date": "2026-06-17",
-      "ensemble_avg": 0.2,
-      "signal": 0
+      "date": "2026-06-22",
+      "ensemble_avg": -0.648,
+      "signal": -1
     },
     "EURGBP": {
-      "date": "2026-06-18",
-      "ensemble_avg": 0.0,
-      "signal": 0
-    },
-    "EURUSD": {
-      "date": "2026-06-18",
-      "ensemble_avg": 0.0,
-      "signal": 0
-    },
-    "GBPJPY": {
-      "date": "2026-06-19",
-      "ensemble_avg": 0.0,
-      "signal": 0
-    },
-    "GBPUSD": {
-      "date": "2026-06-19",
-      "ensemble_avg": 0.0,
-      "signal": 0
-    },
-    "NZDUSD": {
-      "date": "2026-06-19",
-      "ensemble_avg": 0.0,
-      "signal": 0
-    },
-    "USDCAD": {
-      "date": "2026-06-16",
-      "ensemble_avg": 0.2,
-      "signal": 0
-    },
-    "USDCHF": {
-      "date": "2026-06-12",
+      "date": "2026-06-22",
       "ensemble_avg": -0.4,
       "signal": -1
     },
-    "USDJPY": {
-      "date": "2026-06-16",
-      "ensemble_avg": 0.0,
+    "EURUSD": {
+      "date": "2026-06-22",
+      "ensemble_avg": -0.326,
       "signal": 0
+    },
+    "GBPJPY": {
+      "date": "2026-06-22",
+      "ensemble_avg": 0.6,
+      "signal": 1
+    },
+    "GBPUSD": {
+      "date": "2026-06-22",
+      "ensemble_avg": -0.4,
+      "signal": -1
+    },
+    "NZDUSD": {
+      "date": "2026-06-22",
+      "ensemble_avg": 0.2,
+      "signal": 0
+    },
+    "USDCAD": {
+      "date": "2026-06-22",
+      "ensemble_avg": 0.465,
+      "signal": 1
+    },
+    "USDCHF": {
+      "date": "2026-06-22",
+      "ensemble_avg": 0.762,
+      "signal": 1
+    },
+    "USDJPY": {
+      "date": "2026-06-22",
+      "ensemble_avg": 0.406,
+      "signal": 1
     }
   },
   "phase": "p1",
   "dry_run": false,
-  "account_initial_usd": 200000.0,
+  "account_initial_usd": 50000.0,
   "max_daily_loss_pct": 0.04,
   "max_total_loss_pct": 0.08,
   "metrics": {
-    "total_trades": 47,
-    "win_rate": 68.08510638297872,
-    "profit_factor": 3.2692617891633398,
-    "avg_win_usd": 289.69209183853116,
-    "avg_loss_usd": -189.0364968540372,
-    "max_drawdown_pct": 0.17769109077624715,
-    "total_pnl_usd": 6434.599486022438,
-    "annualised_sharpe": 8.130045822805705
+    "total_trades": 0,
+    "win_rate": 0.0,
+    "profit_factor": 0.0,
+    "avg_win_usd": 0.0,
+    "avg_loss_usd": 0.0,
+    "max_drawdown_pct": 0.0,
+    "total_pnl_usd": 0.0,
+    "annualised_sharpe": 0.0
   },
   "reference_metrics": {
     "total_trades": 0,
@@ -91,8 +139,8 @@
     "total_pnl_usd": 0.0,
     "annualised_sharpe": 0.0
   },
-  "live_first_date": "2026-05-12",
-  "live_last_date": "2026-06-19",
+  "live_first_date": "2026-06-18",
+  "live_last_date": "2026-06-22",
   "reference_first_date": null,
   "reference_last_date": null
 }

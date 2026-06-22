@@ -13,13 +13,13 @@
     "USDJPY"
   ],
   "n_pairs": 10,
-  "account_initial_usd": 200000.0,
+  "account_initial_usd": 50000.0,
   "max_daily_loss_pct": 0.04,
   "max_total_loss_pct": 0.08,
   "phases": {
-    "p1": 0.14,
-    "p2": 0.13,
-    "funded": 0.16,
+    "p1": 0.24,
+    "p2": 0.18,
+    "funded": 0.22,
     "demo": 0.1
   },
   "frozen_hps": {
@@ -30,5 +30,5 @@
     "lam_risk": 0.5293661964364217,
     "tau": 0.6849549260809971
   },
-  "last_updated_utc": "2026-06-22T06:25:59.226180+00:00"
+  "last_updated_utc": "2026-06-22T22:05:18.497285+00:00"
 }

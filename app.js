@@ -11,9 +11,11 @@
 
 const DATA_BASE  = 'data';
 const REFRESH_MS = 60_000;
-// Account selector: '50k' (archived initial demo) or '200k' (FTMO-Demo live).
-// Persisted via localStorage so it sticks across reloads.
-let currentAccount = (typeof localStorage !== 'undefined' && localStorage.getItem('account')) || '50k';
+// Account selector (internal storage keys — both accounts are $50K):
+//   '200k' = live $50K FTMO Free Trial (G10 only; engine pushes to data/200k/g10)
+//   '50k'  = archived $50K generic-broker demo (G2 + G10, frozen)
+// Default to the live FTMO Free Trial. Persisted via localStorage across reloads.
+let currentAccount = (typeof localStorage !== 'undefined' && localStorage.getItem('account')) || '200k';
 const accountBase = () => `${DATA_BASE}/${currentAccount}`;
 
 const $ = id => document.getElementById(id);
@@ -104,12 +106,12 @@ function renderMasthead(state, meta) {
     ageEl.className   = `data-age ${cls}`;
   }
 
-  const initial = state.account_initial_usd || meta.account_initial_usd || 50000;
-  // Brand subtitle: this dashboard hosts TWO strategies on one demo account.
-  // Hardcoded label (not driven by per-strategy meta) since both tabs share it.
-  $('meta-line').textContent =
-    `Dry run  ·  G2 (2-pair) + G10 (10-pair)  ·  FTMO 2-step swing  ·  `
-    + `$${initial.toLocaleString()} demo account`;
+  // Brand subtitle is account-aware. The live FTMO Free Trial runs G10 only;
+  // the archived demo ran G2 + G10. (Don't read the stale G2 state's initial
+  // here — it still carries the old $200K figure on the live key.)
+  $('meta-line').textContent = (currentAccount === '200k')
+    ? `Live forward test  ·  G10 (10-pair)  ·  FTMO 2-step swing  ·  $50,000 FTMO Free Trial`
+    : `Archived demo  ·  G2 (2-pair) + G10 (10-pair)  ·  FTMO 2-step swing  ·  $50,000 generic-broker demo`;
 
   $('foot-meta').textContent =
     'Daily-close swing strategies. Strategy logic, model parameters, and per-trade '
@@ -681,11 +683,11 @@ async function renderSummary() {
     const g2m  = (g2State.metrics  || {});
     const g10m = (g10State.metrics || {});
 
-    // Both strategies are presented as if running on one shared account in
-    // both periods ($50K for the archive, $200K for the live FTMO-Demo). So
-    // combined return = sum of each strategy's USD P&L on the shared base.
+    // Both accounts are $50K. The Summary tab is only shown for the archived
+    // demo (where G2 + G10 ran together); the live FTMO Free Trial is G10-only
+    // and hides this tab. Combined return = sum of each strategy's USD P&L.
     const isArchive = currentAccount === '50k';
-    const startCap  = isArchive ? 50000 : 200000;
+    const startCap  = 50000;
 
     const g2Pnl  = Number(g2m.total_pnl_usd  || 0);
     const g10Pnl = Number(g10m.total_pnl_usd || 0);
@@ -697,7 +699,7 @@ async function renderSummary() {
     );
 
     const accountTag = $('summary-account-tag');
-    if (accountTag) accountTag.textContent = isArchive ? '$50K (archived)' : '$200K (live)';
+    if (accountTag) accountTag.textContent = isArchive ? '$50K (archived demo)' : '$50K FTMO Free Trial (live)';
     const statusPill = $('summary-status');
     if (statusPill) {
       statusPill.textContent = isArchive ? 'Archived' : 'Live';
@@ -708,7 +710,7 @@ async function renderSummary() {
     if (sumSub) {
       sumSub.textContent = isArchive
         ? 'G2 and G10 ran simultaneously on one shared $50K generic-broker demo account (2026-05-13 to 2026-05-23). Numbers below sum their realized P&L on the shared $50K base.'
-        : 'G2 and G10 share one $200K FTMO-Demo account (login 1513489174). Numbers below sum their realized P&L since the migration on 2026-05-24.';
+        : 'The live $50K FTMO Free Trial runs G10 only. See the G10 tab for live detail.';
     }
 
     setValue('sum-start',     'hero-value', fmtUsd(startCap));
@@ -732,14 +734,12 @@ async function renderSummary() {
         prose.innerHTML = `
           <p>Both strategies ran simultaneously on one shared $50K generic-broker demo account for roughly two weeks (2026-05-13 to 2026-05-23). The goal was to verify the live execution stack end-to-end: yfinance data pull, frozen-model inference, vol-targeted sizing, MT5 order placement, hedging, magic-number filtering, JSONL logging, dashboard push.</p>
           <p><strong>Result: G2 contributed +5.55% (+$2,776.60) and G10 contributed +4.00% (+$1,998.18), for a combined +9.55% (+$4,774.78) on the shared $50K base.</strong> The execution stack ran cleanly throughout. We are finished here.</p>
-          <p>From 2026-05-24 onwards, both strategies run on a single $200K FTMO-Demo account (server: FTMO-Demo, login 1513489174). This is the last test / dry run before buying a real FTMO evaluation. See the <strong>$200K</strong> tab above for live state.</p>
+          <p>We have since moved on to the live <strong>$50K FTMO Free Trial</strong> account, running <strong>G10 only</strong>. See the FTMO Free Trial view (top toggle) for live state.</p>
           <p class="muted">Snapshot above is the final state from the last 50K heartbeat before the migration cutoff.</p>
         `;
       } else {
         prose.innerHTML = `
-          <p>Both strategies run simultaneously on one $200K FTMO-Demo account (login 1513489174). G2 uses MT5 magic 84207, G10 uses magics 100010-100019, so the broker can attribute trades and the heartbeat can filter per strategy.</p>
-          <p>Vol sizing is calibrated to the combined Running_Both Monte Carlo fit (P1 = 14% each strategy, combined account vol ~24%, matches PropFirm_Maxxing/Running_Both/output/winners.csv).</p>
-          <p>This account is the final test before we buy a paid FTMO evaluation. If the strategy passes Phase 1 and Phase 2 here, we transition to a funded $200K account with real money.</p>
+          <p>The live $50K FTMO Free Trial runs the <strong>G10 10-pair strategy only</strong>. See the G10 tab for live detail.</p>
         `;
       }
     }
@@ -761,7 +761,7 @@ async function loadG10Live() {
       fetchCsv(`${ab}/live/signals.csv`),
       fetchCsv(`${ab}/live/benchmark.csv`),
     ]);
-    const initial = gState.account_initial_usd || gMeta.account_initial_usd || 200000;
+    const initial = gState.account_initial_usd || gMeta.account_initial_usd || 50000;
     const awaiting = !!gState.awaiting_first_run;
 
     renderG10LiveSummary(gState, gMeta);
@@ -871,7 +871,21 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => activateTab(btn.dataset.tab));
 });
 
-// Account toggle (50k archive / 200k live) — reroutes data fetches and reloads
+// The live $50K FTMO Free Trial ('200k' key) runs G10 only — hide the G2 and
+// Summary sub-tabs there and force G10 active. The archived demo ('50k') ran
+// both strategies, so all three sub-tabs are shown.
+function applyAccountChrome(acc) {
+  const g10Only = (acc === '200k');
+  const g2btn  = $('tab-btn-manifoldfx');
+  const sumbtn = $('tab-btn-summary');
+  if (g2btn)  g2btn.hidden  = g10Only;
+  if (sumbtn) sumbtn.hidden = g10Only;
+  if (g10Only) {
+    activateTab('g10');
+  }
+}
+
+// Account toggle — reroutes data fetches and reloads.
 function activateAccount(acc) {
   if (acc !== '50k' && acc !== '200k') return;
   currentAccount = acc;
@@ -879,11 +893,12 @@ function activateAccount(acc) {
   document.querySelectorAll('.account-btn').forEach(b => {
     b.classList.toggle('is-active', b.dataset.account === acc);
   });
-  // Account-level banner: $50K archive notice on 50k, migration notice on 200k.
+  // Account-level banner: live FTMO Free Trial notice on 200k, archive notice on 50k.
   const b50  = $('banner-50k');
   const b200 = $('banner-200k');
   if (b50)  b50.hidden  = (acc !== '50k');
   if (b200) b200.hidden = (acc !== '200k');
+  applyAccountChrome(acc);
   // Re-fetch everything for the new account
   loadAll().catch(e => console.error('loadAll on account switch:', e));
 }
@@ -901,6 +916,8 @@ document.querySelectorAll('.account-btn').forEach(b => {
   if (b50)  b50.hidden  = (currentAccount !== '50k');
   if (b200) b200.hidden = (currentAccount !== '200k');
 })();
+// Initial sub-tab visibility (hide G2 + Summary on the G10-only live account)
+applyAccountChrome(currentAccount);
 
 // -- Backtest tab loader (G10 Strict-OOS reference) -------------------
 async function loadBacktest() {

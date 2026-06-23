@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FTMO Dry Run · G2 + G10</title>
-<link rel="stylesheet" href="style.css?v=20260527-broker-stmt">
+<title>FTMO Free Trial · G10 (live)</title>
+<link rel="stylesheet" href="style.css?v=20260623-50k-freetrial">
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
@@ -30,26 +30,29 @@
     </div>
   </header>
 
-  <!-- ═══ ACCOUNT TOGGLE (top-level: 50K archive / 200K live) ════ -->
+  <!-- ═══ ACCOUNT TOGGLE (top-level: live $50K FTMO Free Trial / archived $50K demo) ════ -->
+  <!-- NOTE: data-account values stay "200k"/"50k" as internal storage keys only —
+       the live engine pushes to data/200k/g10 and the archive lives in data/50k.
+       Both accounts are $50K; the labels below distinguish them for visitors. -->
   <nav class="account-nav" role="tablist" aria-label="Account views">
-    <button class="account-btn is-active" type="button" data-account="50k">
+    <button class="account-btn is-active" type="button" data-account="200k">
       <span class="account-size">$50K</span>
       <span class="account-sep">·</span>
-      <span class="account-note">archived (initial demo period)</span>
+      <span class="account-note">FTMO Free Trial (live)</span>
     </button>
-    <button class="account-btn" type="button" data-account="200k">
-      <span class="account-size">$200K</span>
+    <button class="account-btn" type="button" data-account="50k">
+      <span class="account-size">$50K</span>
       <span class="account-sep">·</span>
-      <span class="account-note">FTMO-Demo (live)</span>
+      <span class="account-note">archived demo (old broker)</span>
     </button>
   </nav>
 
-  <!-- Account-level banner (50K archive notice + 200K migration notice) -->
-  <div class="account-banner" id="banner-50k">
-    <strong>$50K archive.</strong> Both G2 and G10 ran simultaneously on this shared $50K generic-broker demo from 2026-05-13 to 2026-05-23. We are finished here and have moved on to the $200K FTMO-Demo account, which simulates as closely as possible to what a paid FTMO evaluation will look like. Click the Summary sub-tab below for combined results, or G2 / G10 for per-strategy detail.
+  <!-- Account-level banner (live FTMO Free Trial notice + archived demo notice) -->
+  <div class="account-banner account-banner--live" id="banner-200k">
+    <strong>$50K FTMO Free Trial.</strong> Live forward test of the <strong>G10 10-pair FX swing strategy</strong> on a $50,000 FTMO Free Trial account (FTMO-Demo server), running autonomously through MetaTrader 5. Currently in <strong>Phase 1 (evaluation)</strong> vol sizing. The strategy fires once per weekday at 08:05 AEST (= 22:05 UTC) on the daily close. This free trial mirrors a paid FTMO evaluation as closely as possible — same rules (10% profit target, 5% daily / 10% max loss), spreads, fills and swap rates — and is the last dry run before buying a real evaluation. The archived $50K tab shows an earlier two-week demo on a generic broker.
   </div>
-  <div class="account-banner account-banner--live" id="banner-200k" hidden>
-    <strong>$200K FTMO-Demo.</strong> Free trial account 1513489174 on FTMO-Demo server. We switched here on 2026-05-24 to surface FTMO-specific quirks (spreads, fills, swap rates, margin behaviour) before paying for a real evaluation. <strong>This is the last test / dry run before we buy an actual FTMO account. First live trade: 2026-05-26 at 08:05 AEST.</strong> The $50K archive tab shows the initial demo period (2026-05-13 to 2026-05-23) on a generic broker.
+  <div class="account-banner" id="banner-50k" hidden>
+    <strong>$50K archived demo.</strong> Both G2 and G10 ran simultaneously on a shared $50K generic-broker demo from 2026-05-13 to 2026-05-23, purely to verify the end-to-end live execution stack. That phase is finished; we have moved on to the $50K FTMO Free Trial account (G10 only). Click the Summary sub-tab below for combined results, or G2 / G10 for per-strategy detail.
   </div>
 
   <!-- ═══ STRATEGY TABS (inner: G2 / G10 / Summary) ═════════════ -->
@@ -303,8 +306,8 @@
         <h2 class="stream-title">Live forward test: G10 (10-pair)</h2>
         <p class="stream-sub" id="g10-live-sub">
           10-pair G10 FX swing portfolio: AUDJPY, AUDUSD, EURGBP, EURUSD, GBPJPY,
-          GBPUSD, NZDUSD, USDCAD, USDCHF, USDJPY. Magic 100010&ndash;100019. Distinct
-          strategy from G2 on the same MT5 account.
+          GBPUSD, NZDUSD, USDCAD, USDCHF, USDJPY. Magic 100010&ndash;100019.
+          Daily-close swing, vol-targeted, Phase&nbsp;1 evaluation sizing.
         </p>
       </div>
       <div class="stream-status">
@@ -569,7 +572,7 @@
       <div class="panel-body">
         <div class="summary-prose" id="broker-statement-prose">
           <p>The official MT5 broker statement will be uploaded here after the 14-day FTMO free trial period is complete.</p>
-          <p class="muted">This will be the broker-generated HTML report exported from MetaTrader 5 (Toolbox > History > Save as Detailed Report), which serves as the canonical audit trail for all trades placed on account 1513489174 during the trial.</p>
+          <p class="muted">This will be the broker-generated HTML report exported from MetaTrader 5 (Toolbox > History > Save as Detailed Report), which serves as the canonical audit trail for all trades placed on the $50K FTMO Free Trial account (1513776495) during the trial.</p>
         </div>
       </div>
     </section>
@@ -578,6 +581,6 @@
   <footer class="page-foot" id="foot-meta">&mdash;</footer>
 
 </div>
-<script src="app.js?v=20260527-broker-stmt"></script>
+<script src="app.js?v=20260623-50k-freetrial"></script>
 </body>
 </html>

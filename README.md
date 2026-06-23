@@ -7,7 +7,7 @@ challenges.
 
 ## What I'm actually doing here
 
-The goal is simple and I'm not going to dress it up: I want to make money trading prop firms.
+The goal is simple: I want to make money trading prop firms.
 FTMO (and firms like it) give you a funded account if you can pass an evaluation, hit a profit
 target without breaching a daily or total loss limit, and then they let you keep most of the
 upside. So the game is to build trading strategies that are genuinely good, prove to myself they

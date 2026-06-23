@@ -269,6 +269,9 @@ body {
 }
 
 .tab-pane[hidden] { display: none; }
+/* .tab-btn sets display:inline-flex, which would otherwise override the UA
+   [hidden] rule and leave a "hidden" tab button visible. Force it. */
+.tab-btn[hidden] { display: none !important; }
 
 /* ─── Validation callout (backtest tab) ────────────────── */
 .panel--validation {

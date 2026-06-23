@@ -893,8 +893,11 @@ function applyAccountChrome(acc) {
   const g10Only = (acc === 'trial');
   const g2btn  = $('tab-btn-manifoldfx');
   const sumbtn = $('tab-btn-summary');
-  if (g2btn)  g2btn.hidden  = g10Only;
-  if (sumbtn) sumbtn.hidden = g10Only;
+  // Hide via BOTH the hidden attribute and inline display. .tab-btn sets
+  // display:inline-flex in CSS, which overrides the [hidden] attribute — so
+  // setting .hidden alone leaves the button visible. Inline style always wins.
+  if (g2btn)  { g2btn.hidden  = g10Only; g2btn.style.display  = g10Only ? 'none' : ''; }
+  if (sumbtn) { sumbtn.hidden = g10Only; sumbtn.style.display = g10Only ? 'none' : ''; }
   if (g10Only) {
     activateTab('g10');
   }

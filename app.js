@@ -788,12 +788,29 @@ async function loadG10Live() {
     // Archived 50k account is frozen — same rule as G2: don't extend to "today".
     const isArchive = currentAccount === '50k';
 
-    // Only paint a live equity curve if we actually have data
-    if (gEq.length || !awaiting) {
-      renderEquity('g-equity-chart', gEq, initial, '#cdd2d8', (awaiting || isArchive) ? null : gState.equity, { benchmark: gBench });
-      renderDailyCalendar('g-calendar', gEq, initial, isArchive ? null : gState.today_pnl);
-      if (gEq.length) {
-        $('g-equity-range').textContent = `${gEq[0].date} -> ${gEq[gEq.length-1].date}`;
+    // Build the equity series to plot. When live/equity.csv has no rows yet
+    // (e.g. day 1, no closed trades), synthesise a series anchored to the real
+    // live start date so the x-axis begins on the first live day — NOT 30 days
+    // back, which is what renderEquity's generic empty-data fallback would draw.
+    let gEqEff = gEq;
+    if (!gEqEff.length && !awaiting && gState.live_first_date) {
+      const today = new Date().toISOString().slice(0, 10);
+      const cur = (gState.equity != null && !isNaN(gState.equity)) ? gState.equity : initial;
+      gEqEff = (today > gState.live_first_date)
+        ? [{ date: gState.live_first_date, balance: initial, equity: initial },
+           { date: today, balance: cur, equity: cur, daily_pnl: gState.today_pnl }]
+        : [{ date: gState.live_first_date, balance: cur, equity: cur, daily_pnl: gState.today_pnl }];
+    }
+
+    if (gEqEff.length || !awaiting) {
+      // currentEquity is already baked into the synthesised series, so only
+      // pass it when we're extending a real equity.csv (gEq.length > 0).
+      renderEquity('g-equity-chart', gEqEff, initial, '#cdd2d8',
+                   (awaiting || isArchive) ? null : (gEq.length ? gState.equity : null),
+                   { benchmark: gBench });
+      renderDailyCalendar('g-calendar', gEqEff, initial, isArchive ? null : gState.today_pnl);
+      if (gEqEff.length) {
+        $('g-equity-range').textContent = `${gEqEff[0].date} -> ${gEqEff[gEqEff.length-1].date}`;
       } else {
         $('g-equity-range').textContent = '— (no data yet)';
       }

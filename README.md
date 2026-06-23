@@ -48,58 +48,43 @@ The dashboard has a toggle between two $50,000 accounts:
    evaluation, and it mirrors a paid FTMO challenge as closely as I can get (same rules, spreads,
    fills and swap rates). It fires once per weekday at 08:05 AEST.
 
-## "Okay but is it just overfit?"
+## Is it overfit? Robustness results
 
-Fair question, and it's the one I cared about most, because a backtest that looks amazing and
-then loses money live is the default outcome in this space. So before trusting any of it I threw
-a large adversarial robustness suite at both strategies, plus a separate independent review whose
-explicit job was to find evidence the results were fake. Here is what came back. The full
-write-ups are in the research folders (not in this repo, but here's the gist).
+Raw results from the robustness suites and the independent forensic review. Full write-ups live
+in the research folders (not in this repo).
 
 ### G10 (strict out-of-sample 10-pair portfolio)
 
-The design is strict: train on 2004 to 2015, do all hyperparameter search on 2016 to 2017 only,
-and leave 2018 to 2026 completely untouched until the very end. Headline out-of-sample Sharpe is
-about 4.49, and it reproduces bit-for-bit from a cold run. More importantly, 20-plus independent
-checks tried to break it and couldn't:
+Design: train 2004-2015, hyperparameter search on 2016-2017 only, test 2018-2026 untouched.
 
-- **No leak.** Feeding the macro inputs from the future degrades performance smoothly the further
-  forward you shift them. A real future-data leak would do the opposite (it would get better). It
-  doesn't.
-- **Not noise.** Replacing prices with white noise or random walks gives a Sharpe around -0.55.
-  The real result sits about 16 standard deviations above that null. Sign-permutation and block
-  permutation nulls both reject at p < 1/5000.
-- **Not one lucky pair or one lucky day.** Drop the single biggest contributor (USDCHF) and it's
-  still 4.00. Drop any 3 pairs and the worst case is 3.28. The top trading day is under 1% of
-  total profit.
-- **Not fragile to the setup.** Shift the out-of-sample start date by plus or minus 18 months and
-  Sharpe stays between 4.43 and 4.86. Swap to entirely different FX universes and it still earns
-  (1.6 to 2.8). Pull the macro data from a totally different source (FRED instead of yfinance) and
-  it reproduces at 3.90.
-- **Honest caveat I'm not hiding:** the 2018 to 2026 window flatters the strategy. Replayed on
-  2010 to 2015 the Sharpe is closer to 1.3. So my real forward expectation is Sharpe 1.5 to 2.5,
-  not 4.5, and I size to the conservative number on purpose.
+- OOS Sharpe: +4.487 (cold reproduction bit-identical; re-verified from scratch +4.494)
+- White-noise null (random prices, 15 seeds): mean Sharpe -0.55, observed +15.9 sigma above
+- Sign-permutation null (5000 perms): p < 1/5000
+- Macro shift gradient: -1d -0.56, k=0 +4.49, +1d +4.04, +2d +3.61, +3d +2.68 (future shifts degrade, no leak signature)
+- FRED-sourced macro (vs yfinance): +3.90
+- Universe robustness (frozen HPs): alt majors-crosses +1.62, alt USD-vs-EM +2.82
+- Drop-3 worst-case (120 combos): +3.28
+- Drop USDCHF (biggest contributor): +4.00; equal-weight instead of inverse-vol: +4.48
+- OOS start-date sensitivity (7 starts, 2017-01 to 2020-01): range [+4.43, +4.86], std 0.148
+- Refit cadence Jan-1 to Jul-1: +4.456 vs +4.486
+- Feature shuffle (OOS / train randomised): mean -0.62 / -0.64
+- Top day = 0.79% of net P&L, top 10 days = 8.3%
+- Pre-2018 replay (2010-2015, frozen HPs): Sharpe ~+1.26 (regime-flattering; honest forward 1.5-2.5)
 
 ### G2 (2-pair manifold-state ensemble)
 
-8.3 years out-of-sample (2018 to 2026), annualised Sharpe 2.57, CAGR about 16%, max drawdown
-about 6%. The overfitting-specific tests are the ones that matter here:
+OOS 2018-2026, T = 2084 obs (8.29 years).
 
-- **Deflated Sharpe Ratio** at the actual production search budget (800 real trials) is 0.98,
-  above the 0.95 bar. This is the metric that directly penalises you for how much searching you
-  did.
-- **Probability of Backtest Overfitting** (PBO via combinatorially-symmetric cross-validation) is
-  essentially zero (0.00 to 0.001).
-- **Permutation null:** p(sign) = 0.000000 over 100,000 permutations.
-- **Cost stress:** it survives an extra 5.4 pips per day of trading cost before Sharpe drops below
-  0.5, and it's still at 2.0 with an extra 1.5 pips. Real fills won't be anywhere near that bad.
-- **Regime stable:** roughly the same Sharpe across low, mid and high VIX, and it stayed positive
-  through COVID, the 2022 UK gilt crisis, the BoJ FX interventions and the 2024 yen-carry unwind.
-- Bootstrap 95% confidence interval on the Sharpe is about [1.86, 3.29].
-
-None of this makes either strategy a sure thing. Live is always harder than backtest. But "is it
-just overfit" has a real answer here, and the answer is no, the edge is there, just smaller than
-the headline.
+- Annualised Sharpe: 2.573 (re-verified from scratch 2.560); CAGR 16.42%; Max DD -6.24%
+- Sortino 3.66; Calmar 2.63
+- Sharpe 95% CI (stationary bootstrap, B=50000): [1.860, 3.294]
+- Deflated Sharpe Ratio @ N=800 production trials: 0.9816 (passes > 0.95)
+- PBO via CSCV: S=8 = 0.0000, S=16 = 0.0012
+- Permutation null: p_sign(SR) = 0.000000 (100,000 perms)
+- SPA vs zero: p = 0.0000 (B=10000); Haircut Sharpe (Harvey-Liu) single-test p = 1.4e-13
+- Cost stress: +1.0 pips SR 2.186, +1.5 pips SR 1.992, survives ~5.4 pips/day before SR < 0.5
+- Regime (VIX terciles): low 2.86, mid 2.80, high 2.87
+- Shock windows: COVID Feb-Apr 2020 +6.8%, UK gilt Sep 2022 -2.9%, yen carry Aug 2024 +3.3%
 
 ## The bigger plan (and a paper)
 

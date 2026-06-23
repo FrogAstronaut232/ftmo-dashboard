@@ -31,11 +31,11 @@
   </header>
 
   <!-- ═══ ACCOUNT TOGGLE (top-level: live $50K FTMO Free Trial / archived $50K demo) ════ -->
-  <!-- NOTE: data-account values stay "200k"/"50k" as internal storage keys only —
-       the live engine pushes to data/200k/g10 and the archive lives in data/50k.
+  <!-- NOTE: data-account values ("trial"/"50k") are internal storage keys —
+       the live engine pushes to data/trial/g10 and the archive lives in data/50k.
        Both accounts are $50K; the labels below distinguish them for visitors. -->
   <nav class="account-nav" role="tablist" aria-label="Account views">
-    <button class="account-btn is-active" type="button" data-account="200k">
+    <button class="account-btn is-active" type="button" data-account="trial">
       <span class="account-size">$50K</span>
       <span class="account-sep">·</span>
       <span class="account-note">FTMO Free Trial (live)</span>
@@ -48,7 +48,7 @@
   </nav>
 
   <!-- Account-level banner (live FTMO Free Trial notice + archived demo notice) -->
-  <div class="account-banner account-banner--live" id="banner-200k">
+  <div class="account-banner account-banner--live" id="banner-trial">
     <strong>$50K FTMO Free Trial.</strong> Live forward test of the <strong>G10 10-pair FX swing strategy</strong> on a $50,000 FTMO Free Trial account (FTMO-Demo server), running autonomously through MetaTrader 5. Currently in <strong>Phase 1 (evaluation)</strong> vol sizing. The strategy fires once per weekday at 08:05 AEST (= 22:05 UTC) on the daily close. This free trial mirrors a paid FTMO evaluation as closely as possible — same rules (10% profit target, 5% daily / 10% max loss), spreads, fills and swap rates — and is the last dry run before buying a real evaluation. The archived $50K tab shows an earlier two-week demo on a generic broker.
   </div>
   <div class="account-banner" id="banner-50k" hidden>

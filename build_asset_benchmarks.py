@@ -34,14 +34,15 @@ PAIRS = {
             "GBPUSD", "NZDUSD", "USDCAD", "USDCHF", "USDJPY"],
 }
 
-INITIAL = {"50k": 50_000.0, "200k": 200_000.0}
+INITIAL = {"50k": 50_000.0, "trial": 50_000.0}
 
 # 50k is the archived demo period: its equity curve is frozen at the migration
-# cutoff (2026-05-23), so the benchmark must stop there too. 200k is live and
-# the chart extends the strategy line to "today", so the benchmark does too.
+# cutoff (2026-05-23), so the benchmark must stop there too. "trial" is the live
+# $50k FTMO Free Trial (G10 only); its chart extends the strategy line to
+# "today", so the benchmark does too.
 ARCHIVED = {"50k"}
 
-ACCOUNTS = ["50k", "200k"]
+ACCOUNTS = ["50k", "trial"]
 STRATS = ["g2", "g10"]
 
 

@@ -34,16 +34,15 @@ PAIRS = {
             "GBPUSD", "NZDUSD", "USDCAD", "USDCHF", "USDJPY"],
 }
 
-INITIAL = {"50k": 50_000.0, "trial": 50_000.0}
+INITIAL = {"trial": 50_000.0}
 
-# 50k is the archived demo period: its equity curve is frozen at the migration
-# cutoff (2026-05-23), so the benchmark must stop there too. "trial" is the live
-# $50k FTMO Free Trial (G10 only); its chart extends the strategy line to
-# "today", so the benchmark does too.
-ARCHIVED = {"50k"}
+# Single live account: the $50k FTMO Free Trial running G10 only. Its chart
+# extends the strategy line to "today", so the benchmark does too (nothing is
+# archived/frozen anymore).
+ARCHIVED = set()
 
-ACCOUNTS = ["50k", "trial"]
-STRATS = ["g2", "g10"]
+ACCOUNTS = ["trial"]
+STRATS = ["g10"]
 
 
 def _fetch_close(pair: str, start: str, end: str) -> pd.Series | None:

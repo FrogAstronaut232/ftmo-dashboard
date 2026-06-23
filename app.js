@@ -325,6 +325,9 @@ function renderEquity(divId, equity, initial, lineColor, currentEquity, opts = {
       font: { color: '#9aa3ad', size: 10 },
     } : undefined,
   };
+  // Optional explicit x-axis range (e.g. pin a single live day to the full
+  // day instead of letting Plotly auto-zoom to a near-zero-width window).
+  if (opts.xRange) layout.xaxis.range = opts.xRange;
   // Draw order: baseline, faint per-asset B&H, SP500 B&H (if any), strategy on top.
   const traces = [ref, ...benchTraces, ...(bhTrace ? [bhTrace] : []), main];
   Plotly.newPlot(div, traces, layout, { displayModeBar: false, responsive: true });
@@ -792,14 +795,29 @@ async function loadG10Live() {
     // (e.g. day 1, no closed trades), synthesise a series anchored to the real
     // live start date so the x-axis begins on the first live day — NOT 30 days
     // back, which is what renderEquity's generic empty-data fallback would draw.
-    let gEqEff = gEq;
-    if (!gEqEff.length && !awaiting && gState.live_first_date) {
-      const today = new Date().toISOString().slice(0, 10);
+    let gEqEff = gEq;        // series for the equity chart
+    let gEqCal = gEq;        // series for the daily calendar (date-only)
+    let eqXRange = null;     // explicit x-axis range (single-day case only)
+    if (!gEq.length && !awaiting && gState.live_first_date) {
+      const lfd      = gState.live_first_date;
+      const todayUtc = new Date().toISOString().slice(0, 10);
       const cur = (gState.equity != null && !isNaN(gState.equity)) ? gState.equity : initial;
-      gEqEff = (today > gState.live_first_date)
-        ? [{ date: gState.live_first_date, balance: initial, equity: initial },
-           { date: today, balance: cur, equity: cur, daily_pnl: gState.today_pnl }]
-        : [{ date: gState.live_first_date, balance: cur, equity: cur, daily_pnl: gState.today_pnl }];
+      if (todayUtc > lfd) {
+        // Multiple live days: a simple daily two-point line (distinct dates).
+        gEqEff = [{ date: lfd,      balance: initial, equity: initial },
+                  { date: todayUtc, balance: cur, equity: cur, daily_pnl: gState.today_pnl }];
+        gEqCal = gEqEff;
+      } else {
+        // Day 1: start and "now" share the same calendar date. Plot two
+        // INTRADAY points (00:00 at the $50k open -> now at current equity) so
+        // a line actually renders, and pin the x-axis to the whole day so the
+        // axis isn't auto-zoomed to a ~1ms sliver around midnight.
+        const aestNow = new Date(Date.now() + 10 * 3600 * 1000).toISOString().slice(11, 19);
+        gEqEff = [{ date: `${lfd}T00:00:00`,     balance: initial, equity: initial },
+                  { date: `${lfd}T${aestNow}`,   balance: cur,     equity: cur }];
+        eqXRange = [`${lfd}T00:00:00`, `${lfd}T23:59:59`];
+        gEqCal = [{ date: lfd, balance: cur, equity: cur, daily_pnl: gState.today_pnl }];
+      }
     }
 
     if (gEqEff.length || !awaiting) {
@@ -807,10 +825,12 @@ async function loadG10Live() {
       // pass it when we're extending a real equity.csv (gEq.length > 0).
       renderEquity('g-equity-chart', gEqEff, initial, '#cdd2d8',
                    (awaiting || isArchive) ? null : (gEq.length ? gState.equity : null),
-                   { benchmark: gBench });
-      renderDailyCalendar('g-calendar', gEqEff, initial, isArchive ? null : gState.today_pnl);
+                   { benchmark: gBench, xRange: eqXRange });
+      renderDailyCalendar('g-calendar', gEqCal, initial, isArchive ? null : gState.today_pnl);
       if (gEqEff.length) {
-        $('g-equity-range').textContent = `${gEqEff[0].date} -> ${gEqEff[gEqEff.length-1].date}`;
+        const d0 = String(gEqEff[0].date).slice(0, 10);
+        const d1 = String(gEqEff[gEqEff.length - 1].date).slice(0, 10);
+        $('g-equity-range').textContent = `${d0} -> ${d1}`;
       } else {
         $('g-equity-range').textContent = '— (no data yet)';
       }

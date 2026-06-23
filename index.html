@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FTMO Free Trial · G10 (live)</title>
-<link rel="stylesheet" href="style.css?v=20260623c-g10only">
+<link rel="stylesheet" href="style.css?v=20260623-50k-freetrial">
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
@@ -30,25 +30,275 @@
     </div>
   </header>
 
-  <!-- Single G10-only view. Running G2 + G10 together on one account
-       (cointegrating the two strategies into a single combined book) proved
-       problematic in testing, so for now we forward-test G10 ALONE. There is
-       deliberately NO account toggle, NO G2 strategy, and NO combined summary. -->
-  <div class="account-banner account-banner--live">
-    <strong>$50K FTMO Free Trial &middot; G10 only.</strong> Live forward test of the
-    <strong>G10 10-pair FX swing strategy</strong> on a $50,000 FTMO Free Trial account
-    (FTMO-Demo server), running autonomously through MetaTrader&nbsp;5, currently in
-    <strong>Phase&nbsp;1 (evaluation)</strong> sizing. Fires once per weekday at 08:05 AEST
-    (= 22:05 UTC) on the daily close.
-    <strong>Note:</strong> running the G2 and G10 strategies together on one account
-    &mdash; cointegrating them into a single combined book &mdash; proved problematic in
-    earlier testing, so for now we are testing the <strong>G10 strategy on its own</strong>.
-    This free trial mirrors a paid FTMO evaluation as closely as possible (same rules,
-    spreads, fills and swap rates) and is the last dry run before buying a real evaluation.
+  <!-- ═══ ACCOUNT TOGGLE (top-level: live $50K FTMO Free Trial / archived $50K demo) ════ -->
+  <!-- NOTE: data-account values ("trial"/"50k") are internal storage keys —
+       the live engine pushes to data/trial/g10 and the archive lives in data/50k.
+       Both accounts are $50K; the labels below distinguish them for visitors. -->
+  <nav class="account-nav" role="tablist" aria-label="Account views">
+    <button class="account-btn is-active" type="button" data-account="trial">
+      <span class="account-size">$50K</span>
+      <span class="account-sep">·</span>
+      <span class="account-note">FTMO Free Trial (live)</span>
+    </button>
+    <button class="account-btn" type="button" data-account="50k">
+      <span class="account-size">$50K</span>
+      <span class="account-sep">·</span>
+      <span class="account-note">archived demo (old broker)</span>
+    </button>
+  </nav>
+
+  <!-- Account-level banner (live FTMO Free Trial notice + archived demo notice) -->
+  <div class="account-banner account-banner--live" id="banner-trial">
+    <strong>$50K FTMO Free Trial.</strong> Live forward test of the <strong>G10 10-pair FX swing strategy</strong> on a $50,000 FTMO Free Trial account (FTMO-Demo server), running autonomously through MetaTrader 5. Currently in <strong>Phase 1 (evaluation)</strong> vol sizing. The strategy fires once per weekday at 08:05 AEST (= 22:05 UTC) on the daily close. This free trial mirrors a paid FTMO evaluation as closely as possible — same rules (10% profit target, 5% daily / 10% max loss), spreads, fills and swap rates — and is the last dry run before buying a real evaluation. The archived $50K tab shows an earlier two-week demo on a generic broker.
+  </div>
+  <div class="account-banner" id="banner-50k" hidden>
+    <strong>$50K archived demo.</strong> Both G2 and G10 ran simultaneously on a shared $50K generic-broker demo from 2026-05-13 to 2026-05-23, purely to verify the end-to-end live execution stack. That phase is finished; we have moved on to the $50K FTMO Free Trial account (G10 only). Click the Summary sub-tab below for combined results, or G2 / G10 for per-strategy detail.
   </div>
 
-  <!-- ═══ G10 (10-pair, live + Strict-OOS reference backtest) — the only view ═══ -->
-  <section id="tab-g10">
+  <!-- ═══ STRATEGY TABS (inner: G2 / G10 / Summary) ═════════════ -->
+  <nav class="tab-nav" role="tablist" aria-label="Strategy views">
+    <button class="tab-btn is-active" id="tab-btn-manifoldfx" type="button" role="tab" aria-selected="true" aria-controls="tab-manifoldfx" data-tab="manifoldfx">
+      <span class="tab-label">G2</span>
+      <span class="tab-sep">·</span>
+      <span class="tab-strategy">2-pair</span>
+    </button>
+    <button class="tab-btn" id="tab-btn-g10" type="button" role="tab" aria-selected="false" aria-controls="tab-g10" data-tab="g10">
+      <span class="tab-label">G10</span>
+      <span class="tab-sep">·</span>
+      <span class="tab-strategy">10-pair</span>
+    </button>
+    <button class="tab-btn" id="tab-btn-summary" type="button" role="tab" aria-selected="false" aria-controls="tab-summary" data-tab="summary">
+      <span class="tab-label">Summary</span>
+      <span class="tab-sep">·</span>
+      <span class="tab-strategy">combined</span>
+    </button>
+  </nav>
+
+  <!-- ═══ TAB: MANIFOLDFX (2-pair, live + reference) ═════════════ -->
+  <section id="tab-manifoldfx" class="tab-pane" role="tabpanel" aria-labelledby="tab-btn-manifoldfx">
+
+  <!-- ═══ LIVE ═══════════════════════════════════════════════════ -->
+  <div class="stream-header">
+    <div>
+      <h2 class="stream-title">Live forward test: G2 (2-pair)</h2>
+      <p class="stream-sub" id="live-sub">Running autonomously since first scheduled run.</p>
+    </div>
+    <div class="stream-status">
+      <span class="status-pill" id="live-status">Awaiting first run</span>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="hero-stat">
+      <div class="hero-label">Equity</div>
+      <div class="hero-value" id="m-equity">&mdash;</div>
+      <div class="hero-pct"   id="m-equity-pct">&mdash;</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-label">Total P&amp;L<span class="hero-label-sub">realized + floating</span></div>
+      <div class="hero-value" id="m-total">&mdash;</div>
+      <div class="hero-pct"   id="m-total-pct">&mdash;</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-label">Floating<span class="hero-label-sub">current open MTM</span></div>
+      <div class="hero-value" id="m-today">&mdash;</div>
+      <div class="hero-pct"   id="m-today-pct">&mdash;</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-label">Drawdown</div>
+      <div class="hero-value" id="m-dd">&mdash;</div>
+      <div class="hero-pct"   id="m-dd-pct">&nbsp;</div>
+    </div>
+  </section>
+
+  <section class="submetrics">
+    <div class="sub-stat"><div class="sub-label">Win rate</div><div class="sub-value" id="m-wr">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Trades</div><div class="sub-value" id="m-trades">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Sharpe (ann.)</div><div class="sub-value" id="m-sharpe">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Profit factor</div><div class="sub-value" id="m-pf">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Avg win</div><div class="sub-value" id="m-avgwin">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Avg loss</div><div class="sub-value" id="m-avgloss">&mdash;</div></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Open positions</h2>
+    </div>
+    <div class="panel-body">
+      <table class="data-table" id="positions-table">
+        <thead>
+          <tr>
+            <th>Asset</th>
+            <th>Side</th>
+            <th class="num">Lots</th>
+            <th>Since</th>
+            <th class="num">Entry</th>
+            <th class="num">Current</th>
+            <th class="num">Floating P&amp;L</th>
+          </tr>
+        </thead>
+        <tbody><tr><td colspan="7" class="empty">No open positions.</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Equity curve</h2>
+      <div class="panel-meta" id="live-equity-range">&mdash;</div>
+    </div>
+    <div class="panel-body panel-body--flush">
+      <div id="live-equity-chart" class="chart"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Daily P&amp;L calendar</h2></div>
+    <div class="panel-body">
+      <div id="live-calendar" class="calendar"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Recent trades</h2></div>
+    <div class="panel-body">
+      <table class="data-table" id="live-trades-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Asset</th>
+            <th>Side</th>
+            <th class="num">Lots</th>
+            <th class="num">P&amp;L</th>
+            <th class="num">Days</th>
+          </tr>
+        </thead>
+        <tbody><tr><td colspan="6" class="empty">Awaiting first closed trade.</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="cols">
+    <section class="panel">
+      <div class="panel-head"><h2>Signals: EURUSD</h2></div>
+      <div class="panel-body">
+        <table class="data-table" id="live-signals-eurusd-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th class="num">Conviction</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="3" class="empty">Awaiting first scheduled run.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Signals: GBPJPY</h2></div>
+      <div class="panel-body">
+        <table class="data-table" id="live-signals-gbpjpy-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th class="num">Conviction</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="3" class="empty">Awaiting first scheduled run.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══ REFERENCE ══════════════════════════════════════════════ -->
+  <div class="stream-header stream-header--secondary">
+    <div>
+      <h2 class="stream-title">Reference: full backtest history</h2>
+      <p class="stream-sub" id="ref-sub">Full 2018-2026 backtest of the G2 strategy. Static baseline; not live.</p>
+    </div>
+    <div class="stream-status">
+      <span class="status-pill status-pill--mute" id="ref-status">&mdash;</span>
+    </div>
+  </div>
+
+  <section class="submetrics submetrics--ref">
+    <div class="sub-stat"><div class="sub-label">Trades</div><div class="sub-value" id="r-trades">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Win rate</div><div class="sub-value" id="r-wr">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Total P&amp;L</div><div class="sub-value" id="r-total">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Max DD</div><div class="sub-value" id="r-dd">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Profit factor</div><div class="sub-value" id="r-pf">&mdash;</div></div>
+    <div class="sub-stat"><div class="sub-label">Sharpe (ann.)</div><div class="sub-value" id="r-sharpe">&mdash;</div></div>
+  </section>
+
+  <section class="panel panel--ref">
+    <div class="panel-head">
+      <h2>Equity curve</h2>
+      <div class="panel-meta" id="ref-equity-range">&mdash;</div>
+    </div>
+    <div class="panel-body panel-body--flush">
+      <div id="ref-equity-chart" class="chart"></div>
+    </div>
+  </section>
+
+  <section class="panel panel--ref">
+    <div class="panel-head"><h2>Trades</h2></div>
+    <div class="panel-body">
+      <table class="data-table" id="ref-trades-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Asset</th>
+            <th>Side</th>
+            <th class="num">Lots</th>
+            <th class="num">P&amp;L</th>
+            <th class="num">Days</th>
+          </tr>
+        </thead>
+        <tbody><tr><td colspan="6" class="empty">&mdash;</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="cols">
+    <section class="panel panel--ref">
+      <div class="panel-head"><h2>Signals: EURUSD</h2></div>
+      <div class="panel-body">
+        <table class="data-table" id="ref-signals-eurusd-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th class="num">Conviction</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="3" class="empty">&mdash;</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel panel--ref">
+      <div class="panel-head"><h2>Signals: GBPJPY</h2></div>
+      <div class="panel-body">
+        <table class="data-table" id="ref-signals-gbpjpy-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th class="num">Conviction</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="3" class="empty">&mdash;</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  </section><!-- /#tab-manifoldfx -->
+
+  <!-- ═══ TAB: G10 (10-pair, live + Strict-OOS reference backtest) ═══ -->
+  <section id="tab-g10" class="tab-pane" role="tabpanel" aria-labelledby="tab-btn-g10" hidden>
 
     <!-- ═══ G10 LIVE ═════════════════════════════════════════════ -->
     <div class="stream-header">
@@ -264,20 +514,73 @@
 
   </section><!-- /#tab-g10 -->
 
-  <!-- ═══ MT5 broker statement (G10 only) ════════════════════════ -->
-  <section class="panel" id="broker-statement-panel">
-    <div class="panel-head"><h2>MT5 Broker Statement</h2></div>
-    <div class="panel-body">
-      <div class="summary-prose" id="broker-statement-prose">
-        <p>The official MT5 broker statement will be uploaded here after the 14-day FTMO free trial period is complete.</p>
-        <p class="muted">This will be the broker-generated HTML report exported from MetaTrader 5 (Toolbox > History > Save as Detailed Report), which serves as the canonical audit trail for all G10 trades placed on the $50K FTMO Free Trial account (1513776495) during the trial.</p>
+  <!-- ═══ TAB: SUMMARY (combined G2 + G10 stats for the active account) ═══ -->
+  <section id="tab-summary" class="tab-pane" role="tabpanel" aria-labelledby="tab-btn-summary" hidden>
+    <div class="stream-header">
+      <div>
+        <h2 class="stream-title">Combined summary <span id="summary-account-tag">$50K</span></h2>
+        <p class="stream-sub" id="summary-sub">G2 + G10 ran simultaneously on a shared MT5 account. Numbers below sum their realized P&amp;L contributions over the active period.</p>
+      </div>
+      <div class="stream-status">
+        <span class="status-pill" id="summary-status">Archived</span>
       </div>
     </div>
-  </section>
+
+    <section class="hero">
+      <div class="hero-stat">
+        <div class="hero-label">Starting capital</div>
+        <div class="hero-value" id="sum-start">&mdash;</div>
+        <div class="hero-pct"   id="sum-period">&mdash;</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-label">Total realized P&amp;L<span class="hero-label-sub">G2 + G10 combined</span></div>
+        <div class="hero-value" id="sum-pnl">&mdash;</div>
+        <div class="hero-pct"   id="sum-pnl-pct">&mdash;</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-label">Final equity<span class="hero-label-sub">at migration cutoff</span></div>
+        <div class="hero-value" id="sum-final">&mdash;</div>
+        <div class="hero-pct"   id="sum-final-pct">&mdash;</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-label">Max drawdown<span class="hero-label-sub">worst of either</span></div>
+        <div class="hero-value" id="sum-dd">&mdash;</div>
+        <div class="hero-pct">&nbsp;</div>
+      </div>
+    </section>
+
+    <section class="submetrics">
+      <div class="sub-stat"><div class="sub-label">G2 trades</div><div class="sub-value" id="sum-g2-trades">&mdash;</div></div>
+      <div class="sub-stat"><div class="sub-label">G2 win rate</div><div class="sub-value" id="sum-g2-wr">&mdash;</div></div>
+      <div class="sub-stat"><div class="sub-label">G2 realized</div><div class="sub-value" id="sum-g2-pnl">&mdash;</div></div>
+      <div class="sub-stat"><div class="sub-label">G10 trades</div><div class="sub-value" id="sum-g10-trades">&mdash;</div></div>
+      <div class="sub-stat"><div class="sub-label">G10 win rate</div><div class="sub-value" id="sum-g10-wr">&mdash;</div></div>
+      <div class="sub-stat"><div class="sub-label">G10 realized</div><div class="sub-value" id="sum-g10-pnl">&mdash;</div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>What happened on this account</h2></div>
+      <div class="panel-body">
+        <div class="summary-prose" id="summary-prose">
+          <!-- populated by app.js based on currentAccount -->
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="broker-statement-panel">
+      <div class="panel-head"><h2>MT5 Broker Statement</h2></div>
+      <div class="panel-body">
+        <div class="summary-prose" id="broker-statement-prose">
+          <p>The official MT5 broker statement will be uploaded here after the 14-day FTMO free trial period is complete.</p>
+          <p class="muted">This will be the broker-generated HTML report exported from MetaTrader 5 (Toolbox > History > Save as Detailed Report), which serves as the canonical audit trail for all trades placed on the $50K FTMO Free Trial account (1513776495) during the trial.</p>
+        </div>
+      </div>
+    </section>
+  </section><!-- /#tab-summary -->
 
   <footer class="page-foot" id="foot-meta">&mdash;</footer>
 
 </div>
-<script src="app.js?v=20260623c-g10only"></script>
+<script src="app.js?v=20260623-50k-freetrial"></script>
 </body>
 </html>

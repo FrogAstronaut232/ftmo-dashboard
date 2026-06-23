@@ -1,0 +1,54 @@
+{
+  "as_of_utc": "2026-05-23T22:05:15.184642+00:00",
+  "balance": 52776.6,
+  "equity": 52776.6,
+  "drawdown_pct": 0.0,
+  "today_pnl": 692.01,
+  "open_positions": [],
+  "last_signals": {
+    "EURUSD": {
+      "date": "2026-05-22",
+      "ensemble_avg": -0.227,
+      "signal": -1
+    },
+    "GBPJPY": {
+      "date": "2026-05-22",
+      "ensemble_avg": 0.57,
+      "signal": 1
+    }
+  },
+  "phase": "p1",
+  "dry_run": false,
+  "account_initial_usd": 50000.0,
+  "max_daily_loss_pct": 0.04,
+  "max_total_loss_pct": 0.08,
+  "metrics": {
+    "total_trades": 6,
+    "win_rate": 83.3333,
+    "profit_factor": 13.2062,
+    "avg_win_usd": 401.17,
+    "avg_loss_usd": -121.51,
+    "max_drawdown_pct": 0.0,
+    "total_pnl_usd": 2776.6,
+    "annualised_sharpe": 0.0
+  },
+  "live_first_date": "2026-05-08",
+  "live_last_date": "2026-05-21",
+  "reference_metrics": {
+    "total_trades": 644,
+    "win_rate": 51.087,
+    "profit_factor": 2.8027,
+    "avg_win_usd": 481.61,
+    "avg_loss_usd": -207.09,
+    "max_drawdown_pct": 6.2896,
+    "total_pnl_usd": 123653.72,
+    "annualised_sharpe": 2.572
+  },
+  "reference_first_date": "2018-01-03",
+  "reference_last_date": "2026-04-17",
+  "last_heartbeat_utc": "2026-05-24T10:01:32.698983+00:00",
+  "free_margin": 32961.72,
+  "peak_equity": 52776.6,
+  "migration_locked_at": "2026-05-24T19:57+10:00",
+  "migration_note": "Pre-FTMO-Demo migration. Old account positions assumed closed. See OLD_FTMO_account/MIGRATION.md."
+}

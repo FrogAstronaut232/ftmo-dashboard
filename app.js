@@ -11,9 +11,16 @@
 
 const DATA_BASE  = 'data';
 const REFRESH_MS = 60_000;
-// Single view: the live $50K FTMO Free Trial running G10 ONLY.
-// There is no account toggle and no G2 — data lives at data/trial/g10.
-const currentAccount = 'trial';
+// Account selector (internal storage keys — both accounts are $50K):
+//   'trial' = live $50K FTMO Free Trial (G10 only; engine pushes to data/trial/g10)
+//   '50k'   = archived $50K generic-broker demo (G2 + G10, frozen)
+// Default to the live FTMO Free Trial. Persisted via localStorage across reloads.
+let currentAccount = (typeof localStorage !== 'undefined' && localStorage.getItem('account')) || 'trial';
+// Migrate the old '200k' key (retired $200K FTMO-Demo account) to the live trial.
+if (currentAccount === '200k') {
+  currentAccount = 'trial';
+  try { localStorage.setItem('account', 'trial'); } catch (e) {}
+}
 const accountBase = () => `${DATA_BASE}/${currentAccount}`;
 
 const $ = id => document.getElementById(id);
@@ -611,14 +618,71 @@ function renderG10LiveSummary(state, meta) {
 }
 
 // -- Main loop ---------------------------------------------------------
-// Single G10-only view. The live $50K FTMO Free Trial runs G10 alone, so we
-// fetch only the G10 state + live stream. No G2, no reference, no summary.
 async function loadAll() {
   try {
-    const gState = await fetchJson('trial/g10/state.json').catch(() => ({}));
-    const gMeta  = await fetchJson('trial/g10/meta.json').catch(() => ({}));
-    renderMasthead(gState, gMeta);
+    // The live $50K FTMO Free Trial ('trial') runs G10 only — there is no G2
+    // data on it, so don't fetch or render any G2 / reference / summary here.
+    // Only the archived $50K demo ('50k') had G2 + G10 running together.
+    if (currentAccount !== '50k') {
+      const gState = await fetchJson('trial/g10/state.json').catch(() => ({}));
+      const gMeta  = await fetchJson('trial/g10/meta.json').catch(() => ({}));
+      renderMasthead(gState, gMeta);   // masthead driven by G10 on the trial account
+      await loadG10Live();
+      return;
+    }
+
+    // --- Archived $50K demo: full G2 + reference + G10 + combined summary ---
+    const ab = `${currentAccount}/g2`;
+    const [state, meta, liveEq, liveTr, liveSig, liveBench, refEq, refTr, refSig] = await Promise.all([
+      fetchJson(`${ab}/state.json`).catch(() => ({})),
+      fetchJson(`${ab}/meta.json`).catch(() => ({})),
+      fetchCsv(`${ab}/live/equity.csv`),
+      fetchCsv(`${ab}/live/trades.csv`),
+      fetchCsv(`${ab}/live/signals.csv`),
+      fetchCsv(`${ab}/live/benchmark.csv`),
+      fetchCsv('reference/equity.csv'),
+      fetchCsv('reference/trades.csv'),
+      fetchCsv('reference/signals.csv'),
+    ]);
+    const initial = state.account_initial_usd || meta.account_initial_usd || 50000;
+
+    // Archived 50k account is frozen at the migration cutoff. Don't extend the
+    // equity curve or calendar to "today" with the final equity — that would
+    // draw a flat line / phantom cell from 2026-05-23 to the present.
+    const isArchive = true;
+
+    renderMasthead(state, meta);
+    renderLiveSummary(state, meta);
+    renderPositions('positions-table', state, 'No open positions.');
+    renderEquity('live-equity-chart', liveEq, initial, '#cdd2d8', isArchive ? null : state.equity, { benchmark: liveBench });
+    renderDailyCalendar('live-calendar', liveEq, initial, isArchive ? null : state.today_pnl);
+    renderTradesTable('live-trades-table',   liveTr,  'Awaiting first closed trade.');
+    renderSignalsTable('live-signals-eurusd-table', byAsset(liveSig, 'EURUSD'), 'Awaiting first scheduled run.');
+    renderSignalsTable('live-signals-gbpjpy-table', byAsset(liveSig, 'GBPJPY'), 'Awaiting first scheduled run.');
+
+    if (liveEq.length) {
+      $('live-equity-range').textContent = `${liveEq[0].date} -> ${liveEq[liveEq.length-1].date}`;
+    } else {
+      $('live-equity-range').textContent = '— (no data yet)';
+    }
+
+    renderRefSummary(state);
+    renderEquity('ref-equity-chart', refEq, initial, '#7c8794');
+    renderTradesTable('ref-trades-table',   refTr,  '—');
+    renderSignalsTable('ref-signals-eurusd-table', byAsset(refSig, 'EURUSD'), '—');
+    renderSignalsTable('ref-signals-gbpjpy-table', byAsset(refSig, 'GBPJPY'), '—');
+
+    if (refEq.length) {
+      $('ref-equity-range').textContent = `${refEq[0].date} -> ${refEq[refEq.length-1].date}`;
+    } else {
+      $('ref-equity-range').textContent = '—';
+    }
+
+    // G10 (10-pair) LIVE data
     await loadG10Live();
+
+    // Combined G2 + G10 summary for the archived account
+    await renderSummary();
   } catch (e) {
     console.error('Dashboard load failed:', e);
   }
@@ -781,11 +845,94 @@ async function manualRefresh() {
 }
 $('refresh-btn').addEventListener('click', manualRefresh);
 
-// -- Backtest section -------------------------------------------------
-// There is a single G10 view (no tabs, no account toggle). The G10 live
-// section is always visible; the Strict-OOS reference backtest below it is
-// fetched once at startup (see the bootstrap call at the end of this file).
+// -- Tab switching -----------------------------------------------------
+// Two top-level tabs: G2 (2-pair live) and G10 (10-pair live +
+// Strict-OOS reference backtest).
+// G10's backtest section is fetched lazily on first tab activation.
 let backtestLoaded = false;
+
+function activateTab(name) {
+  const tabs = ['manifoldfx', 'g10', 'summary'];
+  tabs.forEach(t => {
+    const pane = $(`tab-${t}`);
+    const btn  = $(`tab-btn-${t}`);
+    if (!pane || !btn) return;
+    const active = (t === name);
+    pane.hidden = !active;
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-selected', active ? 'true' : 'false');
+  });
+  if (name === 'g10' && !backtestLoaded) {
+    backtestLoaded = true;
+    loadBacktest().catch(e => {
+      console.error('Backtest load failed:', e);
+      backtestLoaded = false;
+    });
+  }
+  // Plotly charts can mis-size when drawn while their container is hidden.
+  setTimeout(() => {
+    if (name === 'manifoldfx') {
+      const live = $('live-equity-chart'); if (live && live._fullLayout) Plotly.Plots.resize(live);
+      const ref  = $('ref-equity-chart');  if (ref  && ref._fullLayout)  Plotly.Plots.resize(ref);
+    } else if (name === 'g10') {
+      const gl = $('g-equity-chart');      if (gl && gl._fullLayout) Plotly.Plots.resize(gl);
+      const eq = $('bt-equity-chart');     if (eq && eq._fullLayout) Plotly.Plots.resize(eq);
+      const yr = $('bt-yearbar-chart');    if (yr && yr._fullLayout) Plotly.Plots.resize(yr);
+      const mc = $('bt-macro-shift-chart');if (mc && mc._fullLayout) Plotly.Plots.resize(mc);
+    }
+  }, 30);
+}
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+});
+
+// The live $50K FTMO Free Trial ('trial' key) runs G10 only — hide the G2 and
+// Summary sub-tabs there and force G10 active. The archived demo ('50k') ran
+// both strategies, so all three sub-tabs are shown.
+function applyAccountChrome(acc) {
+  const g10Only = (acc === 'trial');
+  const g2btn  = $('tab-btn-manifoldfx');
+  const sumbtn = $('tab-btn-summary');
+  if (g2btn)  g2btn.hidden  = g10Only;
+  if (sumbtn) sumbtn.hidden = g10Only;
+  if (g10Only) {
+    activateTab('g10');
+  }
+}
+
+// Account toggle — reroutes data fetches and reloads.
+function activateAccount(acc) {
+  if (acc !== '50k' && acc !== 'trial') return;
+  currentAccount = acc;
+  try { localStorage.setItem('account', acc); } catch (e) {}
+  document.querySelectorAll('.account-btn').forEach(b => {
+    b.classList.toggle('is-active', b.dataset.account === acc);
+  });
+  // Account-level banner: live FTMO Free Trial notice on trial, archive notice on 50k.
+  const b50    = $('banner-50k');
+  const btrial = $('banner-trial');
+  if (b50)    b50.hidden    = (acc !== '50k');
+  if (btrial) btrial.hidden = (acc !== 'trial');
+  applyAccountChrome(acc);
+  // Re-fetch everything for the new account
+  loadAll().catch(e => console.error('loadAll on account switch:', e));
+}
+document.querySelectorAll('.account-btn').forEach(btn => {
+  btn.addEventListener('click', () => activateAccount(btn.dataset.account));
+});
+// Initial UI state for persisted selection
+document.querySelectorAll('.account-btn').forEach(b => {
+  b.classList.toggle('is-active', b.dataset.account === currentAccount);
+});
+// Initial banner visibility for the persisted account selection
+(function initBanners() {
+  const b50    = $('banner-50k');
+  const btrial = $('banner-trial');
+  if (b50)    b50.hidden    = (currentAccount !== '50k');
+  if (btrial) btrial.hidden = (currentAccount !== 'trial');
+})();
+// Initial sub-tab visibility (hide G2 + Summary on the G10-only live account)
+applyAccountChrome(currentAccount);
 
 // -- Backtest tab loader (G10 Strict-OOS reference) -------------------
 async function loadBacktest() {
@@ -1447,13 +1594,4 @@ function renderMonteCarlo(mc) {
 }
 
 loadAll();
-// Single view: load the G10 Strict-OOS reference backtest once at startup
-// (no tab to trigger it lazily anymore).
-if (!backtestLoaded) {
-  backtestLoaded = true;
-  loadBacktest().catch(e => {
-    console.error('Backtest load failed:', e);
-    backtestLoaded = false;
-  });
-}
 setInterval(loadAll, REFRESH_MS);

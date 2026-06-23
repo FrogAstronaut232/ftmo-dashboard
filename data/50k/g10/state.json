@@ -1,0 +1,94 @@
+{
+  "as_of_utc": "2026-05-23T22:05:18.015675+00:00",
+  "balance": 51998.18,
+  "equity": 51998.18,
+  "drawdown_pct": 0.0,
+  "today_pnl": 847.64,
+  "open_positions": [],
+  "last_signals": {
+    "AUDJPY": {
+      "date": "2026-05-22",
+      "ensemble_avg": 0.4,
+      "signal": 1
+    },
+    "AUDUSD": {
+      "date": "2026-05-22",
+      "ensemble_avg": -0.323,
+      "signal": 0
+    },
+    "EURGBP": {
+      "date": "2026-05-22",
+      "ensemble_avg": -0.8,
+      "signal": -1
+    },
+    "EURUSD": {
+      "date": "2026-05-22",
+      "ensemble_avg": 0.0,
+      "signal": 0
+    },
+    "GBPJPY": {
+      "date": "2026-05-22",
+      "ensemble_avg": 0.4,
+      "signal": 1
+    },
+    "GBPUSD": {
+      "date": "2026-05-21",
+      "ensemble_avg": -0.8,
+      "signal": -1
+    },
+    "NZDUSD": {
+      "date": "2026-05-22",
+      "ensemble_avg": 0.143,
+      "signal": 0
+    },
+    "USDCAD": {
+      "date": "2026-05-21",
+      "ensemble_avg": 0.6,
+      "signal": 1
+    },
+    "USDCHF": {
+      "date": "2026-05-21",
+      "ensemble_avg": 0.4,
+      "signal": 1
+    },
+    "USDJPY": {
+      "date": "2026-05-22",
+      "ensemble_avg": 0.8,
+      "signal": 1
+    }
+  },
+  "phase": "p1",
+  "dry_run": false,
+  "account_initial_usd": 50000.0,
+  "max_daily_loss_pct": 0.04,
+  "max_total_loss_pct": 0.08,
+  "metrics": {
+    "total_trades": 21,
+    "win_rate": 71.4286,
+    "profit_factor": 3.5384,
+    "avg_win_usd": 198.14,
+    "avg_loss_usd": -100.8,
+    "max_drawdown_pct": 0.1776,
+    "total_pnl_usd": 1998.18,
+    "annualised_sharpe": 0.0
+  },
+  "reference_metrics": {
+    "total_trades": 0,
+    "win_rate": 0.0,
+    "profit_factor": 0.0,
+    "avg_win_usd": 0.0,
+    "avg_loss_usd": 0.0,
+    "max_drawdown_pct": 0.0,
+    "total_pnl_usd": 0.0,
+    "annualised_sharpe": 0.0
+  },
+  "live_first_date": "2026-05-13",
+  "live_last_date": "2026-05-22",
+  "reference_first_date": null,
+  "reference_last_date": null,
+  "last_heartbeat_utc": "2026-05-24T10:01:32.716893+00:00",
+  "free_margin": 32961.72,
+  "peak_equity": 51998.18,
+  "migration_locked_at": "2026-05-24T19:57+10:00",
+  "migration_note": "Pre-FTMO-Demo migration. Old account positions assumed closed. See OLD_FTMO_account/MIGRATION.md."
+}

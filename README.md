@@ -5,14 +5,15 @@ challenges.
 
 **Live site:** https://frogastronaut232.github.io/ftmo-dashboard/
 
-## What I'm actually doing here
+## The Goal
 
-The goal is simple: I want to make money trading prop firms.
-FTMO (and firms like it) give you a funded account if you can pass an evaluation, hit a profit
-target without breaching a daily or total loss limit, and then they let you keep most of the
-upside. So the game is to build trading strategies that are genuinely good, prove to myself they
-aren't just curve-fit nonsense, size them so they pass the evaluation more often than not, and
-run them on autopilot.
+The objective is to generate consistent, risk-controlled returns through FTMO prop-firm
+evaluations and funded accounts. The approach is statistical rather than discretionary: identify
+a genuine, measurable edge in the FX markets, validate that edge under rigorous out-of-sample and
+anti-overfitting testing, and then engineer each strategy specifically around FTMO's evaluation
+constraints (the profit target, the daily loss limit, and the maximum loss limit) so the
+probability of passing, and of staying funded, is maximised. The end product is not a generic
+backtest but a real edge purpose-built for the FTMO ruleset.
 
 This repo is just the public dashboard. The strategy code, model weights, feature recipes and
 per-trade reasoning stay private on the machine that trades. What you can see here is the live
@@ -48,7 +49,7 @@ The dashboard has a toggle between two $50,000 accounts:
    evaluation, and it mirrors a paid FTMO challenge as closely as I can get (same rules, spreads,
    fills and swap rates). It fires once per weekday at 08:05 AEST.
 
-## Is it overfit? Robustness results
+## Robustness results
 
 Raw results from the robustness suites and the independent forensic review. Full write-ups live
 in the research folders (not in this repo).

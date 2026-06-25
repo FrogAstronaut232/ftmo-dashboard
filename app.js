@@ -11,17 +11,24 @@
 
 const DATA_BASE  = 'data';
 const REFRESH_MS = 60_000;
-// Account selector (internal storage keys — both accounts are $50K):
-//   'trial' = live $50K FTMO Free Trial (G10 only; engine pushes to data/trial/g10)
-//   '50k'   = archived $50K generic-broker demo (G2 + G10, frozen)
-// Default to the live FTMO Free Trial. Persisted via localStorage across reloads.
-let currentAccount = (typeof localStorage !== 'undefined' && localStorage.getItem('account')) || 'trial';
-// Migrate the old '200k' key (retired $200K FTMO-Demo account) to the live trial.
-if (currentAccount === '200k') {
-  currentAccount = 'trial';
-  try { localStorage.setItem('account', 'trial'); } catch (e) {}
+// Account selector (internal storage keys):
+//   'real100k' = REAL $100K FTMO account (G10 only; engine pushes to data/real100k/g10) — PRIMARY
+//   'trial'    = $50K FTMO Free Trial (G10 only; data/trial/g10)
+//   '50k'      = archived $50K generic-broker demo (G2 + G10, frozen)
+// G10-only accounts = everything except '50k'. Default to the real $100K account.
+const VALID_ACCOUNTS = ['real100k', 'trial', '50k'];
+let currentAccount = (typeof localStorage !== 'undefined' && localStorage.getItem('account')) || 'real100k';
+// Migrate retired keys ('200k' = old $200K FTMO-Demo) to the real account.
+if (!VALID_ACCOUNTS.includes(currentAccount)) {
+  currentAccount = 'real100k';
+  try { localStorage.setItem('account', 'real100k'); } catch (e) {}
 }
-const accountBase = () => `${DATA_BASE}/${currentAccount}`;
+// Show only the banner matching the active account (ids: banner-<acc>).
+function showAccountBanner(acc) {
+  document.querySelectorAll('.account-banner').forEach(b => {
+    b.hidden = (b.id !== `banner-${acc}`);
+  });
+}
 
 const $ = id => document.getElementById(id);
 
@@ -111,11 +118,12 @@ function renderMasthead(state, meta) {
     ageEl.className   = `data-age ${cls}`;
   }
 
-  // Brand subtitle is account-aware. The live FTMO Free Trial runs G10 only;
-  // the archived demo ran G2 + G10.
-  $('meta-line').textContent = (currentAccount === 'trial')
-    ? `Live forward test  ·  G10 (10-pair)  ·  FTMO 2-step swing  ·  $50,000 FTMO Free Trial`
-    : `Archived demo  ·  G2 (2-pair) + G10 (10-pair)  ·  FTMO 2-step swing  ·  $50,000 generic-broker demo`;
+  // Brand subtitle is account-aware. The real $100K and the $50K free trial
+  // run G10 only; the archived demo ran G2 + G10.
+  $('meta-line').textContent =
+      currentAccount === 'real100k' ? `Live  ·  G10 (10-pair)  ·  FTMO 2-step swing  ·  $100,000 REAL account`
+    : currentAccount === 'trial'    ? `Live forward test  ·  G10 (10-pair)  ·  FTMO 2-step swing  ·  $50,000 FTMO Free Trial`
+    :                                 `Archived demo  ·  G2 (2-pair) + G10 (10-pair)  ·  FTMO 2-step swing  ·  $50,000 generic-broker demo`;
 
   $('foot-meta').textContent =
     'Daily-close swing strategies. Strategy logic, model parameters, and per-trade '
@@ -623,13 +631,13 @@ function renderG10LiveSummary(state, meta) {
 // -- Main loop ---------------------------------------------------------
 async function loadAll() {
   try {
-    // The live $50K FTMO Free Trial ('trial') runs G10 only — there is no G2
-    // data on it, so don't fetch or render any G2 / reference / summary here.
+    // The G10-only accounts (real $100K and the $50K trial) have no G2 data —
+    // fetch only the active account's G10 state; no G2 / reference / summary.
     // Only the archived $50K demo ('50k') had G2 + G10 running together.
     if (currentAccount !== '50k') {
-      const gState = await fetchJson('trial/g10/state.json').catch(() => ({}));
-      const gMeta  = await fetchJson('trial/g10/meta.json').catch(() => ({}));
-      renderMasthead(gState, gMeta);   // masthead driven by G10 on the trial account
+      const gState = await fetchJson(`${currentAccount}/g10/state.json`).catch(() => ({}));
+      const gMeta  = await fetchJson(`${currentAccount}/g10/meta.json`).catch(() => ({}));
+      renderMasthead(gState, gMeta);   // masthead driven by G10 on this account
       await loadG10Live();
       return;
     }
@@ -923,11 +931,11 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => activateTab(btn.dataset.tab));
 });
 
-// The live $50K FTMO Free Trial ('trial' key) runs G10 only — hide the G2 and
-// Summary sub-tabs there and force G10 active. The archived demo ('50k') ran
-// both strategies, so all three sub-tabs are shown.
+// The live accounts (real $100K and the $50K trial) run G10 only — hide the G2
+// and Summary sub-tabs there and force G10 active. Only the archived demo
+// ('50k') ran both strategies, so it shows all three sub-tabs.
 function applyAccountChrome(acc) {
-  const g10Only = (acc === 'trial');
+  const g10Only = (acc !== '50k');
   const g2btn  = $('tab-btn-manifoldfx');
   const sumbtn = $('tab-btn-summary');
   // Hide via BOTH the hidden attribute and inline display. .tab-btn sets
@@ -942,17 +950,13 @@ function applyAccountChrome(acc) {
 
 // Account toggle — reroutes data fetches and reloads.
 function activateAccount(acc) {
-  if (acc !== '50k' && acc !== 'trial') return;
+  if (!VALID_ACCOUNTS.includes(acc)) return;
   currentAccount = acc;
   try { localStorage.setItem('account', acc); } catch (e) {}
   document.querySelectorAll('.account-btn').forEach(b => {
     b.classList.toggle('is-active', b.dataset.account === acc);
   });
-  // Account-level banner: live FTMO Free Trial notice on trial, archive notice on 50k.
-  const b50    = $('banner-50k');
-  const btrial = $('banner-trial');
-  if (b50)    b50.hidden    = (acc !== '50k');
-  if (btrial) btrial.hidden = (acc !== 'trial');
+  showAccountBanner(acc);
   applyAccountChrome(acc);
   // Re-fetch everything for the new account
   loadAll().catch(e => console.error('loadAll on account switch:', e));
@@ -960,18 +964,12 @@ function activateAccount(acc) {
 document.querySelectorAll('.account-btn').forEach(btn => {
   btn.addEventListener('click', () => activateAccount(btn.dataset.account));
 });
-// Initial UI state for persisted selection
+// Initial UI state for the persisted/default account selection
 document.querySelectorAll('.account-btn').forEach(b => {
   b.classList.toggle('is-active', b.dataset.account === currentAccount);
 });
-// Initial banner visibility for the persisted account selection
-(function initBanners() {
-  const b50    = $('banner-50k');
-  const btrial = $('banner-trial');
-  if (b50)    b50.hidden    = (currentAccount !== '50k');
-  if (btrial) btrial.hidden = (currentAccount !== 'trial');
-})();
-// Initial sub-tab visibility (hide G2 + Summary on the G10-only live account)
+showAccountBanner(currentAccount);
+// Initial sub-tab visibility (hide G2 + Summary on the G10-only live accounts)
 applyAccountChrome(currentAccount);
 
 // -- Backtest tab loader (G10 Strict-OOS reference) -------------------

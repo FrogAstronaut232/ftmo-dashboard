@@ -1,0 +1,17 @@
+{
+  "strategy_name": "ManifoldFX10",
+  "assets": [
+    "AUDJPY", "AUDUSD", "EURGBP", "EURUSD", "GBPJPY",
+    "GBPUSD", "NZDUSD", "USDCAD", "USDCHF", "USDJPY"
+  ],
+  "n_pairs": 10,
+  "account_initial_usd": 100000.0,
+  "max_daily_loss_pct": 0.04,
+  "max_total_loss_pct": 0.08,
+  "phases": {
+    "p1": 0.24,
+    "p2": 0.18,
+    "funded": 0.22,
+    "demo": 0.1
+  }
+}

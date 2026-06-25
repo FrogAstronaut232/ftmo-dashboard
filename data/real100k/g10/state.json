@@ -1,0 +1,26 @@
+{
+  "awaiting_first_run": true,
+  "account_initial_usd": 100000.0,
+  "phase": "p1",
+  "dry_run": false,
+  "balance": 100000.0,
+  "equity": 100000.0,
+  "drawdown_pct": 0.0,
+  "today_pnl": 0.0,
+  "open_positions": [],
+  "last_signals": {},
+  "max_daily_loss_pct": 0.04,
+  "max_total_loss_pct": 0.08,
+  "metrics": {
+    "total_trades": 0,
+    "win_rate": 0.0,
+    "profit_factor": 0.0,
+    "avg_win_usd": 0.0,
+    "avg_loss_usd": 0.0,
+    "max_drawdown_pct": 0.0,
+    "total_pnl_usd": 0.0,
+    "annualised_sharpe": 0.0
+  },
+  "live_first_date": null,
+  "live_last_date": null
+}

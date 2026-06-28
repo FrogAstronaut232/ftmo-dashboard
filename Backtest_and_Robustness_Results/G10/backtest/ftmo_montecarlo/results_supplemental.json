@@ -1,0 +1,371 @@
+{
+  "_meta": {
+    "purpose": "Supplemental MC at sweep-optimal scale + 90d window",
+    "optimal_scale": 5.0,
+    "conservative_factor": 0.44570567075426937,
+    "input_sharpe_ann": 4.487266219017121,
+    "input_daily_mean": 0.000586974138364601,
+    "input_daily_std": 0.0020765261346307826
+  },
+  "scenarios": {
+    "1step_60d_scale3.5": {
+      "spec": "1step_60d_scale3.5",
+      "n_sims": 10000,
+      "pass_rate": 0.67,
+      "pass_rate_95_ci": [
+        0.6607838307307212,
+        0.6792161692692789
+      ],
+      "failure_breakdown": {
+        "PASS": 0.67,
+        "TIMEOUT": 0.33
+      },
+      "days_to_pass_median": 38.0,
+      "days_to_pass_p25": 29.0,
+      "days_to_pass_p75": 48.0,
+      "raw_counts": {
+        "PASS": 6700,
+        "TIMEOUT": 3300
+      }
+    },
+    "1step_90d_scale3.5": {
+      "spec": "1step_90d_scale3.5",
+      "n_sims": 10000,
+      "pass_rate": 0.8969,
+      "pass_rate_95_ci": [
+        0.8909398468960605,
+        0.9028601531039395
+      ],
+      "failure_breakdown": {
+        "PASS": 0.8969,
+        "TIMEOUT": 0.1031
+      },
+      "days_to_pass_median": 45.0,
+      "days_to_pass_p25": 32.0,
+      "days_to_pass_p75": 60.0,
+      "raw_counts": {
+        "PASS": 8969,
+        "TIMEOUT": 1031
+      }
+    },
+    "2step_p1_scale3.5": {
+      "spec": "2step_p1_scale3.5",
+      "n_sims": 10000,
+      "pass_rate": 0.7912,
+      "pass_rate_95_ci": [
+        0.783233556913553,
+        0.799166443086447
+      ],
+      "failure_breakdown": {
+        "PASS": 0.7912,
+        "TIMEOUT": 0.2088
+      },
+      "days_to_pass_median": 33.0,
+      "days_to_pass_p25": 23.0,
+      "days_to_pass_p75": 43.0,
+      "raw_counts": {
+        "PASS": 7912,
+        "TIMEOUT": 2088
+      }
+    },
+    "1step_60d_scale4.0": {
+      "spec": "1step_60d_scale4.0",
+      "n_sims": 10000,
+      "pass_rate": 0.7383,
+      "pass_rate_95_ci": [
+        0.7296846214048598,
+        0.7469153785951401
+      ],
+      "failure_breakdown": {
+        "PASS": 0.7383,
+        "TIMEOUT": 0.2544,
+        "FAIL_MDL": 0.0073
+      },
+      "days_to_pass_median": 35.0,
+      "days_to_pass_p25": 25.0,
+      "days_to_pass_p75": 46.0,
+      "raw_counts": {
+        "PASS": 7383,
+        "TIMEOUT": 2544,
+        "FAIL_MDL": 73
+      }
+    },
+    "1step_90d_scale4.0": {
+      "spec": "1step_90d_scale4.0",
+      "n_sims": 10000,
+      "pass_rate": 0.9168,
+      "pass_rate_95_ci": [
+        0.9113867879884859,
+        0.922213212011514
+      ],
+      "failure_breakdown": {
+        "PASS": 0.9168,
+        "TIMEOUT": 0.0741,
+        "FAIL_MDL": 0.0091
+      },
+      "days_to_pass_median": 40.0,
+      "days_to_pass_p25": 27.0,
+      "days_to_pass_p75": 55.0,
+      "raw_counts": {
+        "PASS": 9168,
+        "TIMEOUT": 741,
+        "FAIL_MDL": 91
+      }
+    },
+    "2step_p1_scale4.0": {
+      "spec": "2step_p1_scale4.0",
+      "n_sims": 10000,
+      "pass_rate": 0.8365,
+      "pass_rate_95_ci": [
+        0.8292515036842115,
+        0.8437484963157885
+      ],
+      "failure_breakdown": {
+        "PASS": 0.8365,
+        "TIMEOUT": 0.1635
+      },
+      "days_to_pass_median": 29.0,
+      "days_to_pass_p25": 20.0,
+      "days_to_pass_p75": 40.0,
+      "raw_counts": {
+        "PASS": 8365,
+        "TIMEOUT": 1635
+      }
+    },
+    "1step_60d_scale5.0": {
+      "spec": "1step_60d_scale5.0",
+      "n_sims": 10000,
+      "pass_rate": 0.7977,
+      "pass_rate_95_ci": [
+        0.7898263916408295,
+        0.8055736083591705
+      ],
+      "failure_breakdown": {
+        "PASS": 0.7977,
+        "TIMEOUT": 0.1585,
+        "FAIL_MDL": 0.0438
+      },
+      "days_to_pass_median": 29.0,
+      "days_to_pass_p25": 20.0,
+      "days_to_pass_p75": 40.0,
+      "raw_counts": {
+        "PASS": 7977,
+        "TIMEOUT": 1585,
+        "FAIL_MDL": 438
+      }
+    },
+    "1step_90d_scale5.0": {
+      "spec": "1step_90d_scale5.0",
+      "n_sims": 10000,
+      "pass_rate": 0.9082,
+      "pass_rate_95_ci": [
+        0.902540629056017,
+        0.9138593709439831
+      ],
+      "failure_breakdown": {
+        "PASS": 0.9082,
+        "FAIL_MDL": 0.0487,
+        "TIMEOUT": 0.0431
+      },
+      "days_to_pass_median": 32.0,
+      "days_to_pass_p25": 21.0,
+      "days_to_pass_p75": 46.0,
+      "raw_counts": {
+        "PASS": 9082,
+        "FAIL_MDL": 487,
+        "TIMEOUT": 431
+      }
+    },
+    "2step_p1_scale5.0": {
+      "spec": "2step_p1_scale5.0",
+      "n_sims": 10000,
+      "pass_rate": 0.89,
+      "pass_rate_95_ci": [
+        0.8838673607639125,
+        0.8961326392360875
+      ],
+      "failure_breakdown": {
+        "PASS": 0.89,
+        "TIMEOUT": 0.11
+      },
+      "days_to_pass_median": 24.0,
+      "days_to_pass_p25": 16.0,
+      "days_to_pass_p75": 35.0,
+      "raw_counts": {
+        "PASS": 8900,
+        "TIMEOUT": 1100
+      }
+    },
+    "1step_60d_scale6.0": {
+      "spec": "1step_60d_scale6.0",
+      "n_sims": 10000,
+      "pass_rate": 0.7828,
+      "pass_rate_95_ci": [
+        0.774718138747442,
+        0.7908818612525581
+      ],
+      "failure_breakdown": {
+        "PASS": 0.7828,
+        "FAIL_MDL": 0.1295,
+        "TIMEOUT": 0.0877
+      },
+      "days_to_pass_median": 24.0,
+      "days_to_pass_p25": 16.0,
+      "days_to_pass_p75": 35.0,
+      "raw_counts": {
+        "PASS": 7828,
+        "FAIL_MDL": 1295,
+        "TIMEOUT": 877
+      }
+    },
+    "1step_90d_scale6.0": {
+      "spec": "1step_90d_scale6.0",
+      "n_sims": 10000,
+      "pass_rate": 0.8364,
+      "pass_rate_95_ci": [
+        0.8291497207663153,
+        0.8436502792336847
+      ],
+      "failure_breakdown": {
+        "PASS": 0.8364,
+        "FAIL_MDL": 0.1414,
+        "TIMEOUT": 0.0222
+      },
+      "days_to_pass_median": 25.0,
+      "days_to_pass_p25": 16.0,
+      "days_to_pass_p75": 38.0,
+      "raw_counts": {
+        "PASS": 8364,
+        "FAIL_MDL": 1414,
+        "TIMEOUT": 222
+      }
+    },
+    "2step_p1_scale6.0": {
+      "spec": "2step_p1_scale6.0",
+      "n_sims": 10000,
+      "pass_rate": 0.9148,
+      "pass_rate_95_ci": [
+        0.9093280899867048,
+        0.9202719100132951
+      ],
+      "failure_breakdown": {
+        "PASS": 0.9148,
+        "TIMEOUT": 0.0852
+      },
+      "days_to_pass_median": 20.0,
+      "days_to_pass_p25": 13.0,
+      "days_to_pass_p75": 31.0,
+      "raw_counts": {
+        "PASS": 9148,
+        "TIMEOUT": 852
+      }
+    },
+    "2step_chained_scale5.0": {
+      "n_sims": 10000,
+      "overall_pass_rate": 0.853,
+      "overall_pass_rate_95_ci": [
+        0.846059524039376,
+        0.859940475960624
+      ],
+      "phase1_pass_rate": 0.8908,
+      "phase2_pass_rate_given_phase1": 0.9575662325999101,
+      "outcome_breakdown": {
+        "PASS": 0.853,
+        "FAIL_PHASE1_TIMEOUT": 0.1092,
+        "FAIL_PHASE2_TIMEOUT": 0.0378
+      },
+      "phase1_days_median": 24.0,
+      "phase2_days_median": 15.0,
+      "total_days_median": 43.0
+    },
+    "1step_60d_conservative_at_opt": {
+      "spec": "1step_60d_conservative_at_optimal_lot_size",
+      "n_sims": 10000,
+      "pass_rate": 0.299,
+      "pass_rate_95_ci": [
+        0.2900267312622434,
+        0.3079732687377566
+      ],
+      "failure_breakdown": {
+        "PASS": 0.299,
+        "TIMEOUT": 0.701
+      },
+      "days_to_pass_median": 48.0,
+      "days_to_pass_p25": 40.0,
+      "days_to_pass_p75": 54.0,
+      "raw_counts": {
+        "PASS": 2990,
+        "TIMEOUT": 7010
+      }
+    },
+    "1step_90d_conservative_at_opt": {
+      "spec": "1step_90d_conservative_at_optimal_lot_size",
+      "n_sims": 10000,
+      "pass_rate": 0.6802,
+      "pass_rate_95_ci": [
+        0.6710585810120311,
+        0.689341418987969
+      ],
+      "failure_breakdown": {
+        "PASS": 0.6802,
+        "TIMEOUT": 0.3198
+      },
+      "days_to_pass_median": 62.0,
+      "days_to_pass_p25": 50.0,
+      "days_to_pass_p75": 75.0,
+      "raw_counts": {
+        "PASS": 6802,
+        "TIMEOUT": 3198
+      }
+    },
+    "2step_p1_conservative_at_opt": {
+      "spec": "2step_p1_conservative_at_optimal_lot_size",
+      "n_sims": 10000,
+      "pass_rate": 0.5078,
+      "pass_rate_95_ci": [
+        0.4980011925365584,
+        0.5175988074634417
+      ],
+      "failure_breakdown": {
+        "PASS": 0.5078,
+        "TIMEOUT": 0.4922
+      },
+      "days_to_pass_median": 44.0,
+      "days_to_pass_p25": 35.0,
+      "days_to_pass_p75": 51.0,
+      "raw_counts": {
+        "PASS": 5078,
+        "TIMEOUT": 4922
+      }
+    },
+    "2step_chained_conservative_at_opt": {
+      "n_sims": 10000,
+      "overall_pass_rate": 0.4166,
+      "overall_pass_rate_95_ci": [
+        0.40693729064545564,
+        0.4262627093545444
+      ],
+      "phase1_pass_rate": 0.5122,
+      "phase2_pass_rate_given_phase1": 0.8133541585318235,
+      "outcome_breakdown": {
+        "FAIL_PHASE1_TIMEOUT": 0.4878,
+        "PASS": 0.4166,
+        "FAIL_PHASE2_TIMEOUT": 0.0956
+      },
+      "phase1_days_median": 43.0,
+      "phase2_days_median": 32.0,
+      "total_days_median": 74.0
+    }
+  },
+  "scaling_guidance": {
+    "current_deployment_scale": 1.0,
+    "current_daily_vol_dollars_on_200k": 415.30522692615654,
+    "current_daily_vol_dollars_on_50k": 103.82630673153913,
+    "optimal_scale_for_1step_60d": 5.0,
+    "optimal_daily_vol_dollars_on_200k": 2076.5261346307825,
+    "ratio_optimal_dailyvol_to_MDL_200k": 0.34608768910513044,
+    "ratio_optimal_dailyvol_to_MDL_50k_2step": 0.20765261346307826,
+    "recommended_lot_multiplier": "Scale up Ballsack notional by approximately 4-5x (~0.4-0.5 lots/signal across 10 pairs) for the FTMO 1-Step $200k Swing. The strategy is dramatically under-leveraged for FTMO timelines as currently sized.",
+    "tradeoff": "Pass rate peaks at ~5x (80%). Going to 8x trades off pass rate for speed (faster pass but 22% MDL breach risk)."
+  }
+}

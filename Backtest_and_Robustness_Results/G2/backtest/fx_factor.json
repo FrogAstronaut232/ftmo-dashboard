@@ -1,0 +1,46 @@
+{
+  "factors": [
+    "EURUSD",
+    "GBPJPY",
+    "DXY",
+    "USDJPY",
+    "GBPUSD",
+    "VIX_chg"
+  ],
+  "newey_west_lags": 7,
+  "newey_west_lag_rule": "Andrews 1991: floor(4*(T/100)^(2/9))",
+  "T": 2084,
+  "coefficients": {
+    "alpha": 0.0005904211391909399,
+    "EURUSD": 0.21491198461871314,
+    "GBPJPY": -0.13577866574217087,
+    "DXY": 0.007592438711897685,
+    "USDJPY": 0.231724839047912,
+    "GBPUSD": 0.17033617278927038,
+    "VIX_chg": -2.5035187576004845e-06
+  },
+  "t_stats_HAC": {
+    "alpha": 7.4144497421034155,
+    "EURUSD": 4.691625645561028,
+    "GBPJPY": -0.7208560334921674,
+    "DXY": 0.35298305739527536,
+    "USDJPY": 1.23362703118084,
+    "GBPUSD": 0.904869598486855,
+    "VIX_chg": -0.04722479470749202
+  },
+  "p_values_HAC": {
+    "alpha": 1.2213081100237513e-13,
+    "EURUSD": 2.7104273488535733e-06,
+    "GBPJPY": 0.470998096036117,
+    "DXY": 0.7241011422699869,
+    "USDJPY": 0.21734191559189286,
+    "GBPUSD": 0.3655344746633946,
+    "VIX_chg": 0.9623340662456678
+  },
+  "r_squared": 0.07167457662478482,
+  "adjusted_r_squared": 0.0689928469472445,
+  "alpha_daily": 0.0005904211391909399,
+  "alpha_annualised": 0.14878612707611685,
+  "n_obs": 2084,
+  "interpretation": "Strategy LOG-returns regressed on EURUSD, GBPJPY, DXY, USDJPY, GBPUSD LOG-returns and VIX changes with Newey-West (lag=7, Andrews rule). Significant alpha (t > 2) and low R^2 means strategy is not a simple linear combination of FX factors."
+}

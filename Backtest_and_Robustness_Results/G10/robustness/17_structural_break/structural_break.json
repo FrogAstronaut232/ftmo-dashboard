@@ -1,0 +1,60 @@
+{
+  "n_obs": 2102,
+  "start_date": "2018-01-02",
+  "end_date": "2026-05-12",
+  "trimming_pi": 0.15,
+  "full_sample_sharpe_annualised": 4.486198711872476,
+  "andrews_supF": {
+    "stat": 8.362532711984617,
+    "break_index": 390,
+    "break_date": "2019-07-23",
+    "critical_value_5pct": 8.85,
+    "significant_at_5pct": false,
+    "split_stats": {
+      "break_date": "2019-07-23",
+      "n_left": 390,
+      "n_right": 1712,
+      "sharpe_left": 2.6400047726265723,
+      "sharpe_right": 4.875276361658932,
+      "mean_left_bps": 3.129724442929476,
+      "mean_right_bps": 6.49392748579522,
+      "se_left": 0.8093758478459007,
+      "se_right": 0.39260405475383986
+    }
+  },
+  "sharpe_break_supZ": {
+    "stat": 2.4848207227370542,
+    "break_index": 390,
+    "break_date": "2019-07-23",
+    "sharpe_left": 2.6400047726265727,
+    "sharpe_right": 4.875276361658943,
+    "critical_value_pointwise_5pct": 1.96,
+    "critical_value_sup_wald_5pct": 2.9748949561287032,
+    "significant_pointwise": true,
+    "significant_sup_wald": false,
+    "split_stats": {
+      "break_date": "2019-07-23",
+      "n_left": 390,
+      "n_right": 1712,
+      "sharpe_left": 2.6400047726265723,
+      "sharpe_right": 4.875276361658932,
+      "mean_left_bps": 3.129724442929476,
+      "mean_right_bps": 6.49392748579522,
+      "se_left": 0.8093758478459007,
+      "se_right": 0.39260405475383986
+    }
+  },
+  "rolling_sharpe": {
+    "window": 252,
+    "min": 1.7046331464886126,
+    "max": 7.053122454859674,
+    "median": 4.907464918065774,
+    "pct_positive": 0.8805899143672693
+  },
+  "verdict": {
+    "mean_break_pass": true,
+    "sharpe_break_pass_sup_wald": true,
+    "overall_pass": true,
+    "comment": "supF below the 5 % Andrews critical value indicates no significant shift in mean returns. A large sup|Z| with SR_right > SR_left indicates the strategy improved post-break, which is informative but does not invalidate the OOS result."
+  }
+}

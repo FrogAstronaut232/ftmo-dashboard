@@ -1,0 +1,59 @@
+{
+  "data": {
+    "portfolio_csv": "C:\\Users\\sadar\\Downloads\\Execution_FTMO\\Ballsack\\output\\portfolio.csv",
+    "n_obs": 2102,
+    "periods_per_year": 252,
+    "years_oos": 8.341269841269842
+  },
+  "bootstrap": {
+    "scheme": "Politis & Romano (1994) stationary bootstrap",
+    "B": 10000,
+    "seed": 20260513,
+    "block_length_floor": 5.0,
+    "politis_white": {
+      "L_star": 1.067031846942021,
+      "M": 1,
+      "M_used": 2,
+      "G_hat": -0.023476450655863294,
+      "D_hat_sb": 1.907196484847341,
+      "rho1": -0.011738225327931647,
+      "rho5": -0.003751016530126201
+    },
+    "L_used": 5.0
+  },
+  "final_equity": {
+    "percentiles": {
+      "p5": 2.9282755636322353,
+      "p25": 3.2033695908869806,
+      "p50": 3.4074597485206897,
+      "p75": 3.635823872574713,
+      "p95": 3.989216978935559,
+      "mean": 3.428692777138311,
+      "realised": 3.4175935950491407
+    },
+    "annualized_cagr": {
+      "p5": 0.1374705384979633,
+      "p25": 0.14978097204995255,
+      "p50": 0.15832624559345687,
+      "p75": 0.167369473735006,
+      "p95": 0.1804236756594686,
+      "mean": 0.1591892083352333,
+      "realised": 0.15873869874185886
+    },
+    "realised_final_equity": 3.4175935950491407,
+    "realised_cagr": 0.15873869874185886
+  },
+  "tail_probabilities": {
+    "p_final_below_one": 0.0,
+    "p_max_drawdown_gt_5pct": 0.0,
+    "p_max_drawdown_gt_10pct": 0.0
+  },
+  "max_drawdown_distribution": {
+    "p50": 0.01609784932654701,
+    "p75": 0.018512224920655657,
+    "p95": 0.02325405601843847,
+    "mean": 0.016697707245614483,
+    "max": 0.04284211388361192,
+    "realised": 0.01609784932654723
+  }
+}

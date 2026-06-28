@@ -1,0 +1,91 @@
+{
+  "inputs": {
+    "T_days": 2102,
+    "mean_daily": 0.000586974138364601,
+    "std_daily": 0.002077020251505029,
+    "sharpe_daily": 0.2826039553245924,
+    "sharpe_annualized": 4.486198711872476,
+    "skewness": 0.898443008913109,
+    "excess_kurtosis": 3.347039120086988,
+    "lo2002_t_stat": 12.705507495822605,
+    "p_value_single_one_sided": 2.75553735404927e-37
+  },
+  "method_notes": {
+    "bonferroni": "p_adj = min(1, N * p)",
+    "holm_1979": "for the most significant test (rank i=1), Holm = Bonferroni",
+    "bhy_2001": "p_adj = min(1, N * p * H_N / i); reported here at i=1 with H_N = sum_{k=1}^N 1/k",
+    "haircut_sr_inversion": "p_adj = 1 - Phi(SR*sqrt(T)/sqrt(1+SR^2/2));  SR_d = z/sqrt(T - z^2/2)"
+  },
+  "by_N": [
+    {
+      "N": 50,
+      "H_N": 4.499205338329424,
+      "p_bonferroni": 1.377768677024635e-35,
+      "p_holm": 1.377768677024635e-35,
+      "p_bhy": 6.198864186652306e-35,
+      "sr_haircut_bonferroni_annual": 4.3726233155018495,
+      "sr_haircut_holm_annual": 4.3726233155018495,
+      "sr_haircut_bhy_annual": 4.328296759652253,
+      "haircut_pct_bonferroni": 2.53166218585138,
+      "haircut_pct_holm": 2.53166218585138,
+      "haircut_pct_bhy": 3.5197271088849624
+    },
+    {
+      "N": 200,
+      "H_N": 5.878030948121444,
+      "p_bonferroni": 5.51107470809854e-35,
+      "p_holm": 5.51107470809854e-35,
+      "p_bhy": 3.2394267691612573e-34,
+      "sr_haircut_bonferroni_annual": 4.33177691810686,
+      "sr_haircut_holm_annual": 4.33177691810686,
+      "sr_haircut_bhy_annual": 4.279110733976959,
+      "haircut_pct_bonferroni": 3.4421523361626294,
+      "haircut_pct_holm": 3.4421523361626294,
+      "haircut_pct_bhy": 4.616112463932332
+    },
+    {
+      "N": 1500,
+      "H_N": 7.890769348288132,
+      "p_bonferroni": 4.133306031073905e-34,
+      "p_holm": 4.133306031073905e-34,
+      "p_bhy": 3.261496453709244e-33,
+      "sr_haircut_bonferroni_annual": 4.271822062558808,
+      "sr_haircut_holm_annual": 4.271822062558808,
+      "sr_haircut_bhy_annual": 4.209606287706768,
+      "haircut_pct_bonferroni": 4.778581223928679,
+      "haircut_pct_holm": 4.778581223928679,
+      "haircut_pct_bhy": 6.1654073287864435
+    },
+    {
+      "N": 12000,
+      "H_N": 9.969919259759632,
+      "p_bonferroni": 3.306644824859124e-33,
+      "p_holm": 3.306644824859124e-33,
+      "p_bhy": 3.296698192454749e-32,
+      "sr_haircut_bonferroni_annual": 4.209189604154307,
+      "sr_haircut_holm_annual": 4.209189604154307,
+      "sr_haircut_bhy_annual": 4.138989804963859,
+      "haircut_pct_bonferroni": 6.174695449514522,
+      "haircut_pct_holm": 6.174695449514522,
+      "haircut_pct_bhy": 7.739490138716965
+    },
+    {
+      "N": 20000,
+      "H_N": 10.480728217229327,
+      "p_bonferroni": 5.51107470809854e-33,
+      "p_holm": 5.51107470809854e-33,
+      "p_bhy": 5.776007620042724e-32,
+      "sr_haircut_bonferroni_annual": 4.1936820731273015,
+      "sr_haircut_holm_annual": 4.1936820731273015,
+      "sr_haircut_bhy_annual": 4.12171567233146,
+      "haircut_pct_bonferroni": 6.520367409741478,
+      "haircut_pct_holm": 6.520367409741478,
+      "haircut_pct_bhy": 8.12454068466545
+    }
+  ],
+  "verdict": {
+    "rule": "Pass if BHY adjusted p < 0.05 at N=200 (production-realistic)",
+    "p_bhy_at_N200": 3.2394267691612573e-34,
+    "pass": true
+  }
+}

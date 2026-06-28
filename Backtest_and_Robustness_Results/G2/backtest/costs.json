@@ -1,0 +1,196 @@
+{
+  "RETURNS_CONVENTION": "LOG returns; CAGR = exp(mean*252)-1; equity = exp(cumsum)",
+  "PRIMARY_pip_stress_sweep": [
+    {
+      "extra_pips_per_asset_EURUSD_equiv": 0.0,
+      "extra_cost_bps_per_day_per_asset": 0.0,
+      "extra_cost_bps_annualised_per_asset": 0.0,
+      "sharpe_annualised": 2.572587532236035,
+      "CAGR": 0.16418780352678164,
+      "max_drawdown": -0.06236211461528829
+    },
+    {
+      "extra_pips_per_asset_EURUSD_equiv": 0.1,
+      "extra_cost_bps_per_day_per_asset": 0.09090909090909091,
+      "extra_cost_bps_annualised_per_asset": 22.90909090909091,
+      "sharpe_annualised": 2.533902607716044,
+      "CAGR": 0.16152946939973045,
+      "max_drawdown": -0.06310340775643541
+    },
+    {
+      "extra_pips_per_asset_EURUSD_equiv": 0.2,
+      "extra_cost_bps_per_day_per_asset": 0.18181818181818182,
+      "extra_cost_bps_annualised_per_asset": 45.81818181818182,
+      "sharpe_annualised": 2.495217683196053,
+      "CAGR": 0.15887720537606786,
+      "max_drawdown": -0.06384411483389019
+    },
+    {
+      "extra_pips_per_asset_EURUSD_equiv": 0.5,
+      "extra_cost_bps_per_day_per_asset": 0.45454545454545453,
+      "extra_cost_bps_annualised_per_asset": 114.54545454545455,
+      "sharpe_annualised": 2.37916290963608,
+      "CAGR": 0.15095669547740198,
+      "max_drawdown": -0.06606272431566862
+    },
+    {
+      "extra_pips_per_asset_EURUSD_equiv": 1.0,
+      "extra_cost_bps_per_day_per_asset": 0.9090909090909091,
+      "extra_cost_bps_annualised_per_asset": 229.0909090909091,
+      "sharpe_annualised": 2.185738287036125,
+      "CAGR": 0.13787596026278703,
+      "max_drawdown": -0.06974872868453663
+    },
+    {
+      "extra_pips_per_asset_EURUSD_equiv": 1.5,
+      "extra_cost_bps_per_day_per_asset": 1.3636363636363635,
+      "extra_cost_bps_annualised_per_asset": 343.6363636363636,
+      "sharpe_annualised": 1.99231366443617,
+      "CAGR": 0.12494388888098773,
+      "max_drawdown": -0.07342018536528794
+    },
+    {
+      "extra_pips_per_asset_EURUSD_equiv": 2.0,
+      "extra_cost_bps_per_day_per_asset": 1.8181818181818181,
+      "extra_cost_bps_annualised_per_asset": 458.1818181818182,
+      "sharpe_annualised": 1.7988890418362147,
+      "CAGR": 0.11215879175303023,
+      "max_drawdown": -0.07707715177381469
+    },
+    {
+      "extra_pips_per_asset_EURUSD_equiv": 3.0,
+      "extra_cost_bps_per_day_per_asset": 2.727272727272727,
+      "extra_cost_bps_annualised_per_asset": 687.2727272727273,
+      "sharpe_annualised": 1.4120397966363043,
+      "CAGR": 0.08702285773565732,
+      "max_drawdown": -0.08855078100858871
+    },
+    {
+      "extra_pips_per_asset_EURUSD_equiv": 5.0,
+      "extra_cost_bps_per_day_per_asset": 4.545454545454545,
+      "extra_cost_bps_annualised_per_asset": 1145.4545454545453,
+      "sharpe_annualised": 0.6383413062364834,
+      "CAGR": 0.038442444084068716,
+      "max_drawdown": -0.14349370397288397
+    },
+    {
+      "extra_pips_per_asset_EURUSD_equiv": 8.0,
+      "extra_cost_bps_per_day_per_asset": 7.2727272727272725,
+      "extra_cost_bps_annualised_per_asset": 1832.7272727272727,
+      "sharpe_annualised": -0.522206429363248,
+      "CAGR": -0.03038782081150937,
+      "max_drawdown": -0.27728928304900013
+    },
+    {
+      "extra_pips_per_asset_EURUSD_equiv": 12.0,
+      "extra_cost_bps_per_day_per_asset": 10.909090909090908,
+      "extra_cost_bps_annualised_per_asset": 2749.090909090909,
+      "sharpe_annualised": -2.069603410162889,
+      "CAGR": -0.11511757315125914,
+      "max_drawdown": -0.6450619373540506
+    },
+    {
+      "extra_pips_per_asset_EURUSD_equiv": 16.0,
+      "extra_cost_bps_per_day_per_asset": 14.545454545454545,
+      "extra_cost_bps_annualised_per_asset": 3665.4545454545455,
+      "sharpe_annualised": -3.6170003909625312,
+      "CAGR": -0.19244319929947973,
+      "max_drawdown": -0.8328565553479205
+    },
+    {
+      "extra_pips_per_asset_EURUSD_equiv": 20.0,
+      "extra_cost_bps_per_day_per_asset": 18.18181818181818,
+      "extra_cost_bps_annualised_per_asset": 4581.818181818181,
+      "sharpe_annualised": -5.164397371762171,
+      "CAGR": -0.26301171029003134,
+      "max_drawdown": -0.9213157348790628
+    }
+  ],
+  "critical_extra_pips_per_asset_to_break_below_SR_0.5": 5.4,
+  "SECONDARY_v2_minus_v1_multiplier_sweep": [
+    {
+      "multiplier_of_v2_minus_v1_delta": 0.0,
+      "sharpe_daily": 0.16205778181528355,
+      "sharpe_annualised": 2.572587532236035,
+      "CAGR": 0.16418780352678164,
+      "max_drawdown": -0.06236211461528829,
+      "annual_extra_cost_bps": 0.0
+    },
+    {
+      "multiplier_of_v2_minus_v1_delta": 0.5,
+      "sharpe_daily": 0.1656856141721399,
+      "sharpe_annualised": 2.6301775855228864,
+      "CAGR": 0.16118347678839173,
+      "max_drawdown": -0.04481290172441443,
+      "annual_extra_cost_bps": 25.89465435898072
+    },
+    {
+      "multiplier_of_v2_minus_v1_delta": 1.0,
+      "sharpe_daily": 0.15727337925264548,
+      "sharpe_annualised": 2.4966374961194724,
+      "CAGR": 0.1581869030767249,
+      "max_drawdown": -0.05605725276238349,
+      "annual_extra_cost_bps": 51.78930871796144
+    },
+    {
+      "multiplier_of_v2_minus_v1_delta": 1.5,
+      "sharpe_daily": 0.14044740925765303,
+      "sharpe_annualised": 2.229533503074364,
+      "CAGR": 0.155198062384162,
+      "max_drawdown": -0.0698286951272109,
+      "annual_extra_cost_bps": 77.68396307694216
+    },
+    {
+      "multiplier_of_v2_minus_v1_delta": 2.0,
+      "sharpe_daily": 0.12134541405919494,
+      "sharpe_annualised": 1.9262987300327439,
+      "CAGR": 0.15221693475471687,
+      "max_drawdown": -0.09724743383407108,
+      "annual_extra_cost_bps": 103.57861743592288
+    },
+    {
+      "multiplier_of_v2_minus_v1_delta": 3.0,
+      "sharpe_daily": 0.08897205348245962,
+      "sharpe_annualised": 1.4123875628959586,
+      "CAGR": 0.14627773911859476,
+      "max_drawdown": -0.156237015148475,
+      "annual_extra_cost_bps": 155.36792615388433
+    },
+    {
+      "multiplier_of_v2_minus_v1_delta": 5.0,
+      "sharpe_daily": 0.05223681871849624,
+      "sharpe_annualised": 0.8292337896618287,
+      "CAGR": 0.13449103224041026,
+      "max_drawdown": -0.26290418609385247,
+      "annual_extra_cost_bps": 258.9465435898072
+    },
+    {
+      "multiplier_of_v2_minus_v1_delta": 8.0,
+      "sharpe_daily": 0.028766974227434305,
+      "sharpe_annualised": 0.4566615586655736,
+      "CAGR": 0.11703782804398899,
+      "max_drawdown": -0.42526231552353555,
+      "annual_extra_cost_bps": 414.3144697436915
+    },
+    {
+      "multiplier_of_v2_minus_v1_delta": 12.0,
+      "sharpe_daily": 0.015492465724711621,
+      "sharpe_annualised": 0.24593526901667404,
+      "CAGR": 0.09418384478593933,
+      "max_drawdown": -0.6221433244828314,
+      "annual_extra_cost_bps": 621.4717046155373
+    }
+  ],
+  "delta_v2_minus_v1_avg_daily_bps": 0.20551312983318032,
+  "delta_v2_minus_v1_avg_annual_bps": 51.78930871796144,
+  "v2costs_sharpe_LW_bootstrap": {
+    "B": 50000,
+    "sharpe_annualised": 2.4966374961194724,
+    "ci95_annualised": [
+      1.7959619146299897,
+      3.208615786923817
+    ],
+    "block_length": 2.07545285522261
+  },
+  "interpretation": "Primary cost-stress is absolute pip cost subtracted per-day per-asset. Strategy survives ~5.40 extra pips before SR drops below 0.5 (Harvey-Liu survival threshold).  v1->v2 multiplier sweep is retained only as a sanity check of relative cost sensitivity."
+}

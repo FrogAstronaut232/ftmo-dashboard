@@ -1,0 +1,20 @@
+{
+  "EURCHF": {
+    "replacement_pair_sharpe": 0.7824747722265812,
+    "replacement_pair_cagr_pct": 4.962327300394853,
+    "replacement_pair_mdd_pct": -11.487205327512129,
+    "replacement_pair_n_days": 2102,
+    "portfolio_sharpe": 3.9986880236776194,
+    "portfolio_cagr_pct": 13.394013950556861,
+    "portfolio_mdd_pct": -1.535291930953997
+  },
+  "USDSEK": {
+    "replacement_pair_sharpe": 2.2824425589723742,
+    "replacement_pair_cagr_pct": 15.915745452852882,
+    "replacement_pair_mdd_pct": -5.1776392501689195,
+    "replacement_pair_n_days": 2101,
+    "portfolio_sharpe": 4.166946591734492,
+    "portfolio_cagr_pct": 14.65156332468509,
+    "portfolio_mdd_pct": -1.5055837738511268
+  }
+}

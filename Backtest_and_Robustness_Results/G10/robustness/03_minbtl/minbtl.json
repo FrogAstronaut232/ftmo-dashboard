@@ -1,0 +1,60 @@
+{
+  "inputs": {
+    "SR_observed": 4.487,
+    "T_task_years": 8.29,
+    "T_actual_years": 8.341269841269842,
+    "Z_alpha": 1.96
+  },
+  "minbtl_table": [
+    {
+      "N_trials": 1,
+      "minbtl_years": 0.19080950445506117,
+      "minbtl_days_252": 48.08399512267542,
+      "passes_at_T_task": true,
+      "passes_at_T_actual": true
+    },
+    {
+      "N_trials": 50,
+      "minbtl_years": 1.1240392673006183,
+      "minbtl_days_252": 283.2578953597558,
+      "passes_at_T_task": true,
+      "passes_at_T_actual": true
+    },
+    {
+      "N_trials": 200,
+      "minbtl_years": 1.3509450001602286,
+      "minbtl_days_252": 340.4381400403776,
+      "passes_at_T_task": true,
+      "passes_at_T_actual": true
+    },
+    {
+      "N_trials": 1500,
+      "minbtl_years": 1.6619289564885853,
+      "minbtl_days_252": 418.8060970351235,
+      "passes_at_T_task": true,
+      "passes_at_T_actual": true
+    },
+    {
+      "N_trials": 12000,
+      "minbtl_years": 1.9677480147956414,
+      "minbtl_days_252": 495.8724997285016,
+      "passes_at_T_task": true,
+      "passes_at_T_actual": true
+    }
+  ],
+  "inverse_max_N": {
+    "at_T_task_8.29yr": 1.202105273765486e+26,
+    "at_T_actual_8.341yr": 1.8626614963027958e+26
+  },
+  "sr_threshold_at_N200_minbtl_exceeds_T": {
+    "T_task_8.29yr": 1.8113302430669134,
+    "T_actual_8.341yr": 1.8057549674876625
+  },
+  "verdict": {
+    "minbtl_at_50_trials_yr": 1.1240392673006183,
+    "T_task_yr": 8.29,
+    "pass_at_N_searched_50": true,
+    "pass_at_N_1500_paper_default": true,
+    "pass_at_N_12000_paper_stress": true
+  }
+}

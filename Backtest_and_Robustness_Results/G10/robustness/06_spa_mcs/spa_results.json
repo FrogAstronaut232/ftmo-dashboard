@@ -1,0 +1,254 @@
+{
+  "config": {
+    "B_reps": 10000,
+    "block": 13,
+    "fwer_alpha": 0.05,
+    "mcs_alpha": 0.1,
+    "n_obs": 2102,
+    "seed": 20260513,
+    "ann_factor": 252.0
+  },
+  "sharpes": {
+    "STRATEGY": 4.486198711872476,
+    "ZERO": 0.0,
+    "BH_EW": 0.22872477609678152,
+    "BH_AUDJPY": 0.2777392779899634,
+    "BH_AUDUSD": -0.08864650446805503,
+    "BH_GBPJPY": 0.3965878499889999,
+    "BH_GBPUSD": 0.006645819459418288,
+    "BH_EURGBP": 0.14198914180178795,
+    "BH_EURUSD": 0.06024200926407853,
+    "BH_NZDUSD": -0.2326769269039274,
+    "BH_USDCAD": 0.2921925272639907,
+    "BH_USDCHF": -0.36078733978390093,
+    "BH_USDJPY": 0.46934248302759835,
+    "RAND_1": -0.5209844449386909,
+    "RAND_2": 0.1642234791549907,
+    "RAND_3": -0.02398031688614455,
+    "RAND_4": -0.0701903533329613
+  },
+  "benchmarks": [
+    "ZERO",
+    "BH_EW",
+    "BH_AUDJPY",
+    "BH_AUDUSD",
+    "BH_GBPJPY",
+    "BH_GBPUSD",
+    "BH_EURGBP",
+    "BH_EURUSD",
+    "BH_NZDUSD",
+    "BH_USDCAD",
+    "BH_USDCHF",
+    "BH_USDJPY",
+    "RAND_1",
+    "RAND_2",
+    "RAND_3",
+    "RAND_4"
+  ],
+  "spa": {
+    "orientation": "Custom Hansen SPA, H0: max_k E[r_strat - r_bench_k] <= 0 -> strategy beats no benchmark. PASS if consistent p < 0.05.",
+    "all_benchmarks": {
+      "T_SPA": 12.956705625962531,
+      "p_lower": 0.0,
+      "p_consistent": 0.0,
+      "p_upper": 0.0,
+      "t_per_benchmark": {
+        "ZERO": 12.956705625962531,
+        "BH_EW": 7.774679744238923,
+        "BH_AUDJPY": 2.8376365630239193,
+        "BH_AUDUSD": 4.175447961718583,
+        "BH_GBPJPY": 3.014143251575963,
+        "BH_GBPUSD": 4.555421354514375,
+        "BH_EURGBP": 4.562403331734234,
+        "BH_EURUSD": 5.382174651037821,
+        "BH_NZDUSD": 4.6194716691221105,
+        "BH_USDCAD": 5.246327478608262,
+        "BH_USDCHF": 5.919182879944018,
+        "BH_USDJPY": 3.249402954900799,
+        "RAND_1": 11.626137076421854,
+        "RAND_2": 9.862500112797637,
+        "RAND_3": 10.552863985254406,
+        "RAND_4": 10.393565932233033
+      },
+      "mean_diff": {
+        "ZERO": 0.000586974138364601,
+        "BH_EW": 0.0005525948721493274,
+        "BH_AUDJPY": 0.0004645917910207892,
+        "BH_AUDUSD": 0.0006227052229771109,
+        "BH_GBPJPY": 0.00043412067673077707,
+        "BH_GBPUSD": 0.0005846782418229167,
+        "BH_EURGBP": 0.0005399285940445673,
+        "BH_EURUSD": 0.0005697430550260304,
+        "BH_NZDUSD": 0.0006801246871349153,
+        "BH_USDCAD": 0.0005109295273961943,
+        "BH_USDCHF": 0.0006942053851973782,
+        "BH_USDJPY": 0.00042492154014259345,
+        "RAND_1": 0.0006363983725712506,
+        "RAND_2": 0.0005714412328346979,
+        "RAND_3": 0.0005892555516259138,
+        "RAND_4": 0.0005938631935351312
+      }
+    },
+    "subsets": {
+      "ZERO_only": {
+        "k": 1,
+        "T_SPA": 12.956705625962531,
+        "p_lower": 0.0,
+        "p_consistent": 0.0,
+        "p_upper": 0.0
+      },
+      "BH_EW_only": {
+        "k": 1,
+        "T_SPA": 7.774679744238923,
+        "p_lower": 0.0,
+        "p_consistent": 0.0,
+        "p_upper": 0.0
+      },
+      "BH_perpair": {
+        "k": 10,
+        "T_SPA": 5.919182879944018,
+        "p_lower": 0.0,
+        "p_consistent": 0.0,
+        "p_upper": 0.0
+      },
+      "RAND_only": {
+        "k": 4,
+        "T_SPA": 11.626137076421854,
+        "p_lower": 0.0,
+        "p_consistent": 0.0,
+        "p_upper": 0.0
+      }
+    },
+    "arch_inverse_crosscheck": {
+      "lower": 0.7474,
+      "consistent": 0.7474,
+      "upper": 1.0,
+      "note": "H0 = 'no benchmark beats strategy'; high p means cannot reject, i.e. consistent with strategy >= all benchmarks."
+    }
+  },
+  "romano_wolf_stepm": {
+    "names": [
+      "ZERO",
+      "BH_EW",
+      "BH_AUDJPY",
+      "BH_AUDUSD",
+      "BH_GBPJPY",
+      "BH_GBPUSD",
+      "BH_EURGBP",
+      "BH_EURUSD",
+      "BH_NZDUSD",
+      "BH_USDCAD",
+      "BH_USDCHF",
+      "BH_USDJPY",
+      "RAND_1",
+      "RAND_2",
+      "RAND_3",
+      "RAND_4"
+    ],
+    "t_obs": {
+      "ZERO": 12.956705625962531,
+      "BH_EW": 7.774679744238923,
+      "BH_AUDJPY": 2.8376365630239193,
+      "BH_AUDUSD": 4.175447961718583,
+      "BH_GBPJPY": 3.014143251575963,
+      "BH_GBPUSD": 4.555421354514375,
+      "BH_EURGBP": 4.562403331734234,
+      "BH_EURUSD": 5.382174651037821,
+      "BH_NZDUSD": 4.6194716691221105,
+      "BH_USDCAD": 5.246327478608262,
+      "BH_USDCHF": 5.919182879944018,
+      "BH_USDJPY": 3.249402954900799,
+      "RAND_1": 11.626137076421854,
+      "RAND_2": 9.862500112797637,
+      "RAND_3": 10.552863985254406,
+      "RAND_4": 10.393565932233033
+    },
+    "rejected": [
+      "ZERO",
+      "BH_EW",
+      "BH_AUDJPY",
+      "BH_AUDUSD",
+      "BH_GBPJPY",
+      "BH_GBPUSD",
+      "BH_EURGBP",
+      "BH_EURUSD",
+      "BH_NZDUSD",
+      "BH_USDCAD",
+      "BH_USDCHF",
+      "BH_USDJPY",
+      "RAND_1",
+      "RAND_2",
+      "RAND_3",
+      "RAND_4"
+    ],
+    "not_rejected": [],
+    "p_adj": {
+      "ZERO": 0.0,
+      "BH_EW": 0.0,
+      "BH_AUDJPY": 0.0137,
+      "BH_AUDUSD": 0.0,
+      "BH_GBPJPY": 0.0089,
+      "BH_GBPUSD": 0.0,
+      "BH_EURGBP": 0.0,
+      "BH_EURUSD": 0.0,
+      "BH_NZDUSD": 0.0,
+      "BH_USDCAD": 0.0,
+      "BH_USDCHF": 0.0,
+      "BH_USDJPY": 0.0035,
+      "RAND_1": 0.0,
+      "RAND_2": 0.0,
+      "RAND_3": 0.0,
+      "RAND_4": 0.0
+    },
+    "n_steps": 1,
+    "crit_history": [
+      2.4317473794602953
+    ],
+    "alpha": 0.05,
+    "reps": 10000,
+    "block": 13
+  },
+  "mcs": {
+    "alpha": 0.1,
+    "method": "R",
+    "included": [
+      "USDCHF"
+    ],
+    "excluded": [
+      "AUDJPY",
+      "AUDUSD",
+      "GBPJPY",
+      "GBPUSD",
+      "EURGBP",
+      "EURUSD",
+      "NZDUSD",
+      "USDCAD",
+      "USDJPY",
+      "PORTFOLIO"
+    ],
+    "pvalues": {
+      "EURGBP": 0.0,
+      "USDCAD": 0.0,
+      "PORTFOLIO": 0.0,
+      "GBPUSD": 0.0119,
+      "AUDJPY": 0.0218,
+      "NZDUSD": 0.0218,
+      "GBPJPY": 0.0392,
+      "EURUSD": 0.0855,
+      "AUDUSD": 0.0855,
+      "USDJPY": 0.0855,
+      "USDCHF": 1.0
+    }
+  },
+  "verdict": {
+    "spa_full_pass": true,
+    "spa_zero_pass": true,
+    "spa_bhew_pass": true,
+    "spa_perpair_pass": true,
+    "spa_rand_pass": true,
+    "rw_rejects_all": true,
+    "overall_pass": true,
+    "spa_pass_rule": "consistent p < 0.05 (low p = strategy beats every benchmark in set)"
+  },
+  "runtime_s": 30.98956298828125
+}

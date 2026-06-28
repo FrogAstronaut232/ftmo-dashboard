@@ -1,0 +1,116 @@
+{
+  "data": {
+    "portfolio_csv": "C:\\Users\\sadar\\Downloads\\Execution_FTMO\\Ballsack\\output\\portfolio.csv",
+    "n_daily_obs": 2102,
+    "start_date": "2018-01-02",
+    "end_date": "2026-05-12"
+  },
+  "rolling_252d": {
+    "n_windows": 1851,
+    "slope_per_day": 0.0009187962730325265,
+    "slope_per_year": 0.2315366608041967,
+    "t_stat_newey_west": 7.271033201488683,
+    "stats": {
+      "min": 1.7046331464886126,
+      "p10": 2.371044194411464,
+      "p25": 3.6094814919877356,
+      "median": 4.907464918065774,
+      "p75": 5.574074162780724,
+      "p90": 5.904513995615351,
+      "max": 7.053122454859674,
+      "mean": 4.539063957806758
+    },
+    "pct_gt_1": 100.0,
+    "pct_gt_2": 97.29875742841708,
+    "pct_gt_3": 82.06374932468935,
+    "pct_gt_4": 68.23338735818476,
+    "pct_positive": 100.0,
+    "first_half_mean": 4.432817897001879,
+    "second_half_mean": 4.645195282044892,
+    "second_minus_first_half": 0.21237738504301262,
+    "longest_negative_run_days": 0,
+    "longest_negative_run_start": null,
+    "longest_negative_run_end": null
+  },
+  "rolling_126d": {
+    "slope_per_day": 0.0011220369255913064,
+    "slope_per_year": 0.2827533052490092,
+    "t_stat_newey_west": 7.114818917327353
+  },
+  "rolling_63d": {
+    "slope_per_day": 0.0010455181577175858,
+    "slope_per_year": 0.2634705757448316,
+    "t_stat_newey_west": 5.260321858508324,
+    "longest_negative_run_days": 10,
+    "longest_negative_run_start": "2023-02-14",
+    "longest_negative_run_end": "2023-02-28"
+  },
+  "per_year": [
+    {
+      "year": 2018,
+      "n_days": 251,
+      "ann_ret_pct": 9.92937220347169,
+      "sharpe": 3.150386248877601,
+      "mdd_pct": -1.2904012643908502
+    },
+    {
+      "year": 2019,
+      "n_days": 252,
+      "ann_ret_pct": 11.212019984031867,
+      "sharpe": 3.522540721103882,
+      "mdd_pct": -1.112779594801827
+    },
+    {
+      "year": 2020,
+      "n_days": 253,
+      "ann_ret_pct": 19.417337060093065,
+      "sharpe": 5.298237399720997,
+      "mdd_pct": -0.83934104698421
+    },
+    {
+      "year": 2021,
+      "n_days": 252,
+      "ann_ret_pct": 17.415994044778543,
+      "sharpe": 5.0471522418589645,
+      "mdd_pct": -0.9609380943014668
+    },
+    {
+      "year": 2022,
+      "n_days": 251,
+      "ann_ret_pct": 13.836746286583407,
+      "sharpe": 4.4088798747240086,
+      "mdd_pct": -1.1658283811682768
+    },
+    {
+      "year": 2023,
+      "n_days": 250,
+      "ann_ret_pct": 7.138730182767791,
+      "sharpe": 2.6166454652889195,
+      "mdd_pct": -1.0217233656863445
+    },
+    {
+      "year": 2024,
+      "n_days": 252,
+      "ann_ret_pct": 21.56004799958931,
+      "sharpe": 5.938800262744251,
+      "mdd_pct": -1.0512956762819825
+    },
+    {
+      "year": 2025,
+      "n_days": 251,
+      "ann_ret_pct": 19.110825637903197,
+      "sharpe": 6.097667823181837,
+      "mdd_pct": -0.7143025121978175
+    },
+    {
+      "year": 2026,
+      "n_days": 90,
+      "ann_ret_pct": 3.760890485022536,
+      "sharpe": 2.9870696372590984,
+      "mdd_pct": -0.8914179529726618
+    }
+  ],
+  "verdict": "IMPROVING",
+  "verdict_detail": "IMPROVING_HIGH",
+  "verdict_rule": "DECAY if t<=-2 and slope<0; IMPROVING if t>=+2 and slope>0; otherwise STABLE. HIGH suffix when >=75% of 252d windows have Sharpe > 2."
+}

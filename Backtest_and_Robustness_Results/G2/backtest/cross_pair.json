@@ -1,0 +1,36 @@
+{
+  "status": "RUN_WITH_PER_ASSET_CACHE",
+  "per_asset_stats": {
+    "EURUSD": {
+      "T": 2084,
+      "sharpe_annualised": 0.7441640472551262,
+      "mean_daily": 0.00022493170399292902,
+      "max_drawdown": -0.15082870146223293
+    },
+    "GBPJPY": {
+      "T": 2084,
+      "sharpe_annualised": 0.8735154174898905,
+      "mean_daily": 0.00029036260216142105,
+      "max_drawdown": -0.19293487700415624
+    }
+  },
+  "full_sample_correlation_matrix": {
+    "EURUSD": {
+      "EURUSD": 1.0,
+      "GBPJPY": 0.05232268842032791
+    },
+    "GBPJPY": {
+      "EURUSD": 0.05232268842032791,
+      "GBPJPY": 1.0
+    }
+  },
+  "rolling_60d_corr_summary": {
+    "EURUSD_vs_GBPJPY_60d": {
+      "mean": 0.03621369502616042,
+      "std": 0.13675258805789411,
+      "min": -0.2893101134932506,
+      "max": 0.4472191954899492
+    }
+  },
+  "config_documented_corr_EURUSD_vs_GBPJPY_strategy_returns": 0.116
+}

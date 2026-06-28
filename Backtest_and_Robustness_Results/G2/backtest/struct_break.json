@@ -1,0 +1,12 @@
+{
+  "supF": 8.741333224676376,
+  "break_index": 412,
+  "break_date_estimate": "2019-08-23",
+  "critical_value_5pct": 8.85,
+  "critical_value_1pct": 12.35,
+  "rejects_no_break_at_5pct": false,
+  "rejects_no_break_at_1pct": false,
+  "T": 2084,
+  "pi_min": 0.15,
+  "test_type": "Andrews (1993) supF / Quandt-Andrews on the mean"
+}

@@ -1,0 +1,477 @@
+{
+  "_meta": {
+    "n_sims": 10000,
+    "block_size": 5,
+    "max_days_1step": 60,
+    "max_days_2step_phase": 60,
+    "input_n_days": 2102,
+    "input_daily_mean": 0.000586974138364601,
+    "input_daily_std": 0.0020765261346307826,
+    "input_sharpe_ann": 4.487266219017121,
+    "headline_scale": 1.0,
+    "conservative_scale": 0.44570567075426937
+  },
+  "headline_1step": {
+    "spec": "1Step_200k_headline",
+    "n_sims": 10000,
+    "pass_rate": 0.0004,
+    "pass_rate_95_ci": [
+      8.078407841568419e-06,
+      0.0007919215921584316
+    ],
+    "failure_breakdown": {
+      "TIMEOUT": 0.9996,
+      "PASS": 0.0004
+    },
+    "days_to_pass_median": 57.5,
+    "days_to_pass_p25": 57.0,
+    "days_to_pass_p75": 58.0,
+    "raw_counts": {
+      "TIMEOUT": 9996,
+      "PASS": 4
+    }
+  },
+  "headline_2step_p1": {
+    "spec": "2Step_P1_50k_headline",
+    "n_sims": 10000,
+    "pass_rate": 0.0088,
+    "pass_rate_95_ci": [
+      0.006969464928060651,
+      0.01063053507193935
+    ],
+    "failure_breakdown": {
+      "TIMEOUT": 0.9912,
+      "PASS": 0.0088
+    },
+    "days_to_pass_median": 55.0,
+    "days_to_pass_p25": 51.0,
+    "days_to_pass_p75": 58.0,
+    "raw_counts": {
+      "TIMEOUT": 9912,
+      "PASS": 88
+    }
+  },
+  "headline_chained": {
+    "n_sims": 10000,
+    "overall_pass_rate": 0.0016,
+    "overall_pass_rate_95_ci": [
+      0.0008166274510809049,
+      0.002383372548919095
+    ],
+    "phase1_pass_rate": 0.009,
+    "phase2_pass_rate_given_phase1": 0.17777777777777778,
+    "outcome_breakdown": {
+      "FAIL_PHASE1_TIMEOUT": 0.991,
+      "FAIL_PHASE2_TIMEOUT": 0.0074,
+      "PASS": 0.0016
+    },
+    "phase1_days_median": 55.0,
+    "phase2_days_median": 55.0,
+    "total_days_median": 105.5
+  },
+  "conservative_1step": {
+    "spec": "1Step_200k_conservative",
+    "n_sims": 10000,
+    "pass_rate": 0.0,
+    "pass_rate_95_ci": [
+      0.0,
+      0.0
+    ],
+    "failure_breakdown": {
+      "TIMEOUT": 1.0
+    },
+    "days_to_pass_median": null,
+    "days_to_pass_p25": null,
+    "days_to_pass_p75": null,
+    "raw_counts": {
+      "TIMEOUT": 10000
+    }
+  },
+  "conservative_2step_p1": {
+    "spec": "2Step_P1_50k_conservative",
+    "n_sims": 10000,
+    "pass_rate": 0.0,
+    "pass_rate_95_ci": [
+      0.0,
+      0.0
+    ],
+    "failure_breakdown": {
+      "TIMEOUT": 1.0
+    },
+    "days_to_pass_median": null,
+    "days_to_pass_p25": null,
+    "days_to_pass_p75": null,
+    "raw_counts": {
+      "TIMEOUT": 10000
+    }
+  },
+  "conservative_chained": {
+    "n_sims": 10000,
+    "overall_pass_rate": 0.0,
+    "overall_pass_rate_95_ci": [
+      0.0,
+      0.0
+    ],
+    "phase1_pass_rate": 0.0,
+    "phase2_pass_rate_given_phase1": 0.0,
+    "outcome_breakdown": {
+      "FAIL_PHASE1_TIMEOUT": 1.0
+    },
+    "phase1_days_median": null,
+    "phase2_days_median": null,
+    "total_days_median": null
+  },
+  "headline_1step_252d": {
+    "spec": "1Step_200k_headline_252d",
+    "n_sims": 10000,
+    "pass_rate": 0.9521,
+    "pass_rate_95_ci": [
+      0.9479143287928458,
+      0.9562856712071541
+    ],
+    "failure_breakdown": {
+      "PASS": 0.9521,
+      "TIMEOUT": 0.0479
+    },
+    "days_to_pass_median": 162.0,
+    "days_to_pass_p25": 135.0,
+    "days_to_pass_p75": 190.0,
+    "raw_counts": {
+      "PASS": 9521,
+      "TIMEOUT": 479
+    }
+  },
+  "conservative_1step_252d": {
+    "spec": "1Step_200k_conservative_252d",
+    "n_sims": 10000,
+    "pass_rate": 0.0253,
+    "pass_rate_95_ci": [
+      0.02222211906896969,
+      0.02837788093103031
+    ],
+    "failure_breakdown": {
+      "TIMEOUT": 0.9747,
+      "PASS": 0.0253
+    },
+    "days_to_pass_median": 240.0,
+    "days_to_pass_p25": 229.0,
+    "days_to_pass_p75": 246.0,
+    "raw_counts": {
+      "TIMEOUT": 9747,
+      "PASS": 253
+    }
+  },
+  "sweep_1step": [
+    {
+      "scale": 0.5,
+      "spec": "1Step_200k_scale_0.50",
+      "n_sims": 2500,
+      "pass_rate": 0.0,
+      "pass_rate_95_ci": [
+        0.0,
+        0.0
+      ],
+      "failure_breakdown": {
+        "TIMEOUT": 1.0
+      },
+      "days_to_pass_median": null,
+      "days_to_pass_p25": null,
+      "days_to_pass_p75": null,
+      "raw_counts": {
+        "TIMEOUT": 2500
+      }
+    },
+    {
+      "scale": 1.0,
+      "spec": "1Step_200k_scale_1.00",
+      "n_sims": 2500,
+      "pass_rate": 0.0004,
+      "pass_rate_95_ci": [
+        0.0,
+        0.0011838431843168632
+      ],
+      "failure_breakdown": {
+        "TIMEOUT": 0.9996,
+        "PASS": 0.0004
+      },
+      "days_to_pass_median": 58.0,
+      "days_to_pass_p25": 58.0,
+      "days_to_pass_p75": 58.0,
+      "raw_counts": {
+        "TIMEOUT": 2499,
+        "PASS": 1
+      }
+    },
+    {
+      "scale": 1.5,
+      "spec": "1Step_200k_scale_1.50",
+      "n_sims": 2500,
+      "pass_rate": 0.0368,
+      "pass_rate_95_ci": [
+        0.0294197986039404,
+        0.0441802013960596
+      ],
+      "failure_breakdown": {
+        "TIMEOUT": 0.9632,
+        "PASS": 0.0368
+      },
+      "days_to_pass_median": 52.5,
+      "days_to_pass_p25": 48.0,
+      "days_to_pass_p75": 57.0,
+      "raw_counts": {
+        "TIMEOUT": 2408,
+        "PASS": 92
+      }
+    },
+    {
+      "scale": 2.0,
+      "spec": "1Step_200k_scale_2.00",
+      "n_sims": 2500,
+      "pass_rate": 0.2072,
+      "pass_rate_95_ci": [
+        0.19131223661485355,
+        0.22308776338514644
+      ],
+      "failure_breakdown": {
+        "PASS": 0.2072,
+        "TIMEOUT": 0.7928
+      },
+      "days_to_pass_median": 50.0,
+      "days_to_pass_p25": 43.0,
+      "days_to_pass_p75": 55.0,
+      "raw_counts": {
+        "PASS": 518,
+        "TIMEOUT": 1982
+      }
+    },
+    {
+      "scale": 2.5,
+      "spec": "1Step_200k_scale_2.50",
+      "n_sims": 2500,
+      "pass_rate": 0.4088,
+      "pass_rate_95_ci": [
+        0.3895288015681847,
+        0.4280711984318153
+      ],
+      "failure_breakdown": {
+        "PASS": 0.4088,
+        "TIMEOUT": 0.5912
+      },
+      "days_to_pass_median": 45.5,
+      "days_to_pass_p25": 38.0,
+      "days_to_pass_p75": 53.0,
+      "raw_counts": {
+        "PASS": 1022,
+        "TIMEOUT": 1478
+      }
+    },
+    {
+      "scale": 3.0,
+      "spec": "1Step_200k_scale_3.00",
+      "n_sims": 2500,
+      "pass_rate": 0.5576,
+      "pass_rate_95_ci": [
+        0.5381304905743981,
+        0.5770695094256019
+      ],
+      "failure_breakdown": {
+        "PASS": 0.5576,
+        "TIMEOUT": 0.4424
+      },
+      "days_to_pass_median": 42.0,
+      "days_to_pass_p25": 33.0,
+      "days_to_pass_p75": 50.0,
+      "raw_counts": {
+        "PASS": 1394,
+        "TIMEOUT": 1106
+      }
+    },
+    {
+      "scale": 3.5,
+      "spec": "1Step_200k_scale_3.50",
+      "n_sims": 2500,
+      "pass_rate": 0.6724,
+      "pass_rate_95_ci": [
+        0.6540019469857922,
+        0.6907980530142078
+      ],
+      "failure_breakdown": {
+        "PASS": 0.6724,
+        "TIMEOUT": 0.3276
+      },
+      "days_to_pass_median": 38.0,
+      "days_to_pass_p25": 29.0,
+      "days_to_pass_p75": 48.0,
+      "raw_counts": {
+        "PASS": 1681,
+        "TIMEOUT": 819
+      }
+    },
+    {
+      "scale": 4.0,
+      "spec": "1Step_200k_scale_4.00",
+      "n_sims": 2500,
+      "pass_rate": 0.7444,
+      "pass_rate_95_ci": [
+        0.7273010408805214,
+        0.7614989591194785
+      ],
+      "failure_breakdown": {
+        "PASS": 0.7444,
+        "TIMEOUT": 0.2504,
+        "FAIL_MDL": 0.0052
+      },
+      "days_to_pass_median": 35.0,
+      "days_to_pass_p25": 25.0,
+      "days_to_pass_p75": 46.0,
+      "raw_counts": {
+        "PASS": 1861,
+        "TIMEOUT": 626,
+        "FAIL_MDL": 13
+      }
+    },
+    {
+      "scale": 5.0,
+      "spec": "1Step_200k_scale_5.00",
+      "n_sims": 2500,
+      "pass_rate": 0.7968,
+      "pass_rate_95_ci": [
+        0.7810266993433079,
+        0.812573300656692
+      ],
+      "failure_breakdown": {
+        "PASS": 0.7968,
+        "TIMEOUT": 0.1648,
+        "FAIL_MDL": 0.0384
+      },
+      "days_to_pass_median": 29.0,
+      "days_to_pass_p25": 20.0,
+      "days_to_pass_p75": 40.0,
+      "raw_counts": {
+        "PASS": 1992,
+        "TIMEOUT": 412,
+        "FAIL_MDL": 96
+      }
+    },
+    {
+      "scale": 6.0,
+      "spec": "1Step_200k_scale_6.00",
+      "n_sims": 2500,
+      "pass_rate": 0.7792,
+      "pass_rate_95_ci": [
+        0.7629403919090773,
+        0.7954596080909228
+      ],
+      "failure_breakdown": {
+        "PASS": 0.7792,
+        "FAIL_MDL": 0.128,
+        "TIMEOUT": 0.0928
+      },
+      "days_to_pass_median": 24.0,
+      "days_to_pass_p25": 16.0,
+      "days_to_pass_p75": 35.0,
+      "raw_counts": {
+        "PASS": 1948,
+        "FAIL_MDL": 320,
+        "TIMEOUT": 232
+      }
+    },
+    {
+      "scale": 8.0,
+      "spec": "1Step_200k_scale_8.00",
+      "n_sims": 2500,
+      "pass_rate": 0.742,
+      "pass_rate_95_ci": [
+        0.7248486672517848,
+        0.7591513327482152
+      ],
+      "failure_breakdown": {
+        "PASS": 0.742,
+        "FAIL_MDL": 0.2156,
+        "TIMEOUT": 0.0424
+      },
+      "days_to_pass_median": 17.0,
+      "days_to_pass_p25": 11.0,
+      "days_to_pass_p75": 27.0,
+      "raw_counts": {
+        "PASS": 1855,
+        "FAIL_MDL": 539,
+        "TIMEOUT": 106
+      }
+    },
+    {
+      "scale": 10.0,
+      "spec": "1Step_200k_scale_10.00",
+      "n_sims": 2500,
+      "pass_rate": 0.6632,
+      "pass_rate_95_ci": [
+        0.6446734579198815,
+        0.6817265420801185
+      ],
+      "failure_breakdown": {
+        "PASS": 0.6632,
+        "FAIL_MDL": 0.3172,
+        "TIMEOUT": 0.0196
+      },
+      "days_to_pass_median": 13.0,
+      "days_to_pass_p25": 8.0,
+      "days_to_pass_p75": 20.0,
+      "raw_counts": {
+        "PASS": 1658,
+        "FAIL_MDL": 793,
+        "TIMEOUT": 49
+      }
+    },
+    {
+      "scale": 12.0,
+      "spec": "1Step_200k_scale_12.00",
+      "n_sims": 2500,
+      "pass_rate": 0.598,
+      "pass_rate_95_ci": [
+        0.5787801636468985,
+        0.6172198363531014
+      ],
+      "failure_breakdown": {
+        "PASS": 0.598,
+        "FAIL_MDL": 0.3932,
+        "TIMEOUT": 0.0088
+      },
+      "days_to_pass_median": 10.0,
+      "days_to_pass_p25": 7.0,
+      "days_to_pass_p75": 16.0,
+      "raw_counts": {
+        "PASS": 1495,
+        "FAIL_MDL": 983,
+        "TIMEOUT": 22
+      }
+    },
+    {
+      "scale": 15.0,
+      "spec": "1Step_200k_scale_15.00",
+      "n_sims": 2500,
+      "pass_rate": 0.4848,
+      "pass_rate_95_ci": [
+        0.46520905886144315,
+        0.5043909411385569
+      ],
+      "failure_breakdown": {
+        "PASS": 0.4848,
+        "FAIL_MDL": 0.51,
+        "TIMEOUT": 0.0052
+      },
+      "days_to_pass_median": 8.0,
+      "days_to_pass_p25": 5.0,
+      "days_to_pass_p75": 12.0,
+      "raw_counts": {
+        "PASS": 1212,
+        "FAIL_MDL": 1275,
+        "TIMEOUT": 13
+      }
+    }
+  ],
+  "sweep_best": {
+    "scale": 5.0,
+    "pass_rate": 0.7968,
+    "note": "Multiplier on current Ballsack notional that maximises 1-Step pass rate."
+  }
+}

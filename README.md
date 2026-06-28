@@ -21,33 +21,33 @@ equity curve, open positions, closed trades, daily signals and the backtest base
 
 ## The two strategies
 
-- **G2** trades 2 pairs (EURUSD, GBPJPY). A frozen ensemble of manifold-state models.
+- **G2** trades 2 pairs (EURUSD, GBPJPY). A frozen model ensemble.
 - **G10** trades 10 FX pairs (AUDJPY, AUDUSD, EURGBP, EURUSD, GBPJPY, GBPUSD, NZDUSD, USDCAD,
   USDCHF, USDJPY). A strict out-of-sample multi-pair portfolio.
 
 Both are daily-close swing strategies. They only trade when the signal flips sign, so they hold
 positions for a few days at a time rather than scalping.
 
-**Right now only G10 is trading live.** I built a prop-firm Monte Carlo (10,000 simulated
-evaluations on the real strategy returns) to settle whether to run both strategies together or
-just one. Running G10 by itself actually beat running both: it passed more often (96.5% vs 94.9%
-of simulated 2-step evaluations) and blew up less (1.64 vs 2.11 fail-outs per year), for only
-about 9% less expected profit. Two engines fighting over the same pairs (EURUSD, GBPJPY) on one
-account just added conflict cost without reducing risk. So the live account is G10 alone, and G2
-stays on the bench for now.
+**Only G10 trades live.** I built a prop-firm Monte Carlo (10,000 simulated evaluations on the
+real strategy returns) to decide between running both strategies or just one. G10 alone beat
+running both: it passed more often (96.5% vs 94.9% of simulated 2-step evaluations) and blew up
+less (1.64 vs 2.11 fail-outs per year) for only about 9% less expected profit, and it avoids two
+engines fighting over the same pairs. So G10 runs solo; G2 stays on the bench.
 
-## The two $50K accounts you'll see
+## Accounts you'll see
 
-The dashboard has a toggle between two $50,000 accounts:
+After validating on demo, I have **moved onto a real, paid $100K FTMO account.** The dashboard
+toggles between three views:
 
-1. **Old broker (1st dry run, archived).** The very first live run, where G2 and G10 traded
-   together on a generic broker demo for about two weeks. This was purely to prove the whole
-   pipeline works end to end: data pull, model inference, position sizing, order placement,
-   logging, dashboard push. It's finished and frozen.
-2. **FTMO Free Trial (live).** The current run: G10 alone on a $50,000 FTMO Free Trial demo,
-   Phase 1, fully automated. No real money yet. This is the last dry run before I buy a real
-   evaluation, and it mirrors a paid FTMO challenge as closely as I can get (same rules, spreads,
-   fills and swap rates). It fires once per weekday at 08:05 AEST.
+1. **$100K REAL FTMO (live)** — the real-money account: G10 only, Phase 1, fully automated. This
+   is the one that counts now, and the default view.
+2. **$50K FTMO Free Trial** — the demo forward-test that came before it (G10). It did its job
+   (~30 trades, P&L positive enough to commit to a real account), so it is now retired.
+3. **$50K old broker (archived)** — the very first dry run, where G2 and G10 ran together on a
+   generic broker demo for two weeks, purely to prove the execution pipeline end to end.
+
+All are/were daily-close swing, firing once per weekday at 08:05 AEST. No real money was spent
+until the $100K, which is a genuine paid FTMO evaluation.
 
 ## Robustness results
 
@@ -60,17 +60,20 @@ Design: train 2004-2015, hyperparameter search on 2016-2017 only, test 2018-2026
 
 - OOS Sharpe: +4.487 (cold reproduction bit-identical; re-verified from scratch +4.494)
 - White-noise null (random prices, 15 seeds): mean Sharpe -0.55, observed +15.9 sigma above
-- Sign-permutation null (5000 perms): p < 1/5000
-- Macro shift gradient: -1d -0.56, k=0 +4.49, +1d +4.04, +2d +3.61, +3d +2.68 (future shifts degrade, no leak signature)
-- FRED-sourced macro (vs yfinance): +3.90
-- Universe robustness (frozen HPs): alt majors-crosses +1.62, alt USD-vs-EM +2.82
+- Position-permutation null (5000 perms): p < 1/5000
+- Time-shift leakage test: shifting the model inputs forward in time degrades performance
+  monotonically, the opposite of what a future-data leak would do
+- Re-sourcing the input data from an independent provider reproduces the edge (+3.90), so it
+  isn't a single-data-vendor artefact
+- Universe robustness: re-running on alternative FX baskets still earns (+1.6 to +2.8)
 - Drop-3 worst-case (120 combos): +3.28
-- Drop USDCHF (biggest contributor): +4.00; equal-weight instead of inverse-vol: +4.48
+- Drop the single biggest-contributing pair: still +4.00
 - OOS start-date sensitivity (7 starts, 2017-01 to 2020-01): range [+4.43, +4.86], std 0.148
-- Refit cadence Jan-1 to Jul-1: +4.456 vs +4.486
-- Feature shuffle (OOS / train randomised): mean -0.62 / -0.64
+- Refit-cadence offset: +4.456 vs +4.486 (insensitive to the refit boundary)
+- Input-shuffle test: randomising the model inputs collapses Sharpe to ~-0.6 (the inputs are
+  load-bearing, not noise)
 - Top day = 0.79% of net P&L, top 10 days = 8.3%
-- Pre-2018 replay (2010-2015, frozen HPs): Sharpe ~+1.26 (regime-flattering; honest forward 1.5-2.5)
+- Pre-2018 replay (2010-2015): Sharpe ~+1.26 (regime-flattering; honest forward 1.5-2.5)
 
 ### G2 (2-pair manifold-state ensemble)
 
@@ -100,19 +103,31 @@ as a paper so anyone can follow the same process to design, validate and deploy 
 strategies. That's the longer-term goal: not just one funded account, but a documented method
 other people can use.
 
+## Full backtest & robustness result files
+
+The headline numbers above are summarised; the actual result files (charts + JSON metrics) are in
+**[`Backtest_and_Robustness_Results/`](Backtest_and_Robustness_Results/)**, split into `G2/` and
+`G10/` (each with `backtest/`, `robustness/`, and prop-firm Monte-Carlo `propfirm/` subfolders).
+These are RESULTS ONLY: equity curves, drawdowns, per-year and per-pair performance, the full
+robustness battery (DSR, PBO, permutation and white-noise nulls, CPCV, cost stress, regime and
+tail analysis, structural-break tests) and the FTMO Monte-Carlo pass-rate simulations.
+Deliberately NOT included: anything that reveals how the strategy actually works (hyperparameters,
+model/ensemble internals, features, weights, signal construction, code). That stays proprietary.
+
 ## What's in this repo
 
-Only the dashboard. The static site plus public-safe performance data (trades, equity, signals,
-current state, backtest baselines). No strategy logic, no model parameters, no feature code.
+The dashboard plus the public-safe result files. No strategy logic, no model parameters, no
+feature code.
 
 ```
 ftmo-dashboard/
 |-- index.html       page layout
 |-- style.css        trading-desk theme
 |-- app.js           fetches /data, renders charts and tables
-|-- .nojekyll        opt out of Jekyll on GitHub Pages
+|-- Backtest_and_Robustness_Results/   curated results: G2/ and G10/ (backtest, robustness, propfirm)
 `-- data/
-    |-- trial/g10/            live $50k FTMO Free Trial (G10), state + live stream
+    |-- real100k/g10/         live REAL $100k FTMO account (G10), state + live stream
+    |-- trial/g10/            $50k FTMO Free Trial (G10), retired
     |-- 50k/                  archived old-broker dry run (G2 + G10)
     |-- reference/            G2 full 2018-2026 backtest baseline
     `-- backtest_strict_oos/  G10 strict-OOS backtest baseline

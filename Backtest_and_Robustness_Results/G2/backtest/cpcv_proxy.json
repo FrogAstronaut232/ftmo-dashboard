@@ -1,0 +1,20 @@
+{
+  "n_blocks_N": 10,
+  "test_folds_per_split_k": 2,
+  "n_paths": 45,
+  "embargo_days": 5,
+  "sharpe_paths_mean": 2.599739668786272,
+  "sharpe_paths_median": 2.6118573748044933,
+  "sharpe_paths_std": 0.8732148754434832,
+  "sharpe_paths_min": 0.5043379028102287,
+  "sharpe_paths_max": 4.139007202836115,
+  "sharpe_paths_5_50_95": [
+    1.2394542626793035,
+    2.6118573748044933,
+    3.7458563040611037
+  ],
+  "fraction_paths_with_SR_gt_1": 0.9777777777777777,
+  "fraction_paths_with_SR_gt_2": 0.7111111111111111,
+  "fraction_paths_with_SR_negative": 0.0,
+  "note": "True CPCV needs re-fits on each split; this proxy uses the realised-series Sharpe across combinatorial test-folds and is conservative on between-fit variance, accurate on between-period."
+}

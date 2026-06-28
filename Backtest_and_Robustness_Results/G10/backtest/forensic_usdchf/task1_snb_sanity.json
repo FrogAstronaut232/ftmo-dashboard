@@ -1,0 +1,17 @@
+{
+  "close_2015_01_15": 1.0189299583435059,
+  "low_2015_01_15": 0.7327100038528442,
+  "close_2015_01_16": 0.8543999791145325,
+  "log_return_2015_01_15": -0.0005593116705912692,
+  "log_return_2015_01_16": -0.1761088514203905,
+  "nan_counts": {
+    "Close": 0,
+    "High": 0,
+    "Low": 0,
+    "Open": 0,
+    "Volume": 0
+  },
+  "zero_close_rows": 0,
+  "duplicate_index_rows": 0,
+  "verdict": "yfinance daily Close on 2015-01-15 is 1.01893 (essentially unchanged). The crash registers on 2015-01-16 as a -17.4% log_return. There is no NaN/zero/dup contamination, but the bar boundary is one day late vs the wall-clock event."
+}

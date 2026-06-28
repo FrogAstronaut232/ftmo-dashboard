@@ -1,0 +1,79 @@
+{
+  "test": "sign_permutation",
+  "B": 100000,
+  "seeds": [
+    42,
+    7,
+    13,
+    2026
+  ],
+  "N_observations": 2102,
+  "observed_sharpe": 4.487266219017121,
+  "primary_seed": 42,
+  "p_two_sided_primary": 0.0,
+  "p_one_sided_right_primary": 0.0,
+  "results_by_seed": {
+    "seed_42": {
+      "observed_sharpe": 4.487266219017121,
+      "B": 100000,
+      "seed": 42,
+      "p_two_sided": 0.0,
+      "p_one_sided_right": 0.0,
+      "null_mean": 0.0015656548337243579,
+      "null_std": 0.34723825180405266,
+      "null_q01": -0.8003128465710854,
+      "null_q05": -0.5726141793059747,
+      "null_q95": 0.572359047639266,
+      "null_q99": 0.805853643621818,
+      "null_max_abs": 1.5686537705593855,
+      "wall_sec": 2.12
+    },
+    "seed_7": {
+      "observed_sharpe": 4.487266219017121,
+      "B": 100000,
+      "seed": 7,
+      "p_two_sided": 0.0,
+      "p_one_sided_right": 0.0,
+      "null_mean": -0.00010784137417629744,
+      "null_std": 0.3476542940030759,
+      "null_q01": -0.8076087876131979,
+      "null_q05": -0.571788554228421,
+      "null_q95": 0.5722720422451608,
+      "null_q99": 0.8128737738473489,
+      "null_max_abs": 1.5743827651277587,
+      "wall_sec": 1.69
+    },
+    "seed_13": {
+      "observed_sharpe": 4.487266219017121,
+      "B": 100000,
+      "seed": 13,
+      "p_two_sided": 0.0,
+      "p_one_sided_right": 0.0,
+      "null_mean": -0.00027610856858770503,
+      "null_std": 0.3459778548634714,
+      "null_q01": -0.802728277786734,
+      "null_q05": -0.5680193673249112,
+      "null_q95": 0.5650518276892726,
+      "null_q99": 0.8056044521017589,
+      "null_max_abs": 1.6194155060749993,
+      "wall_sec": 1.7
+    },
+    "seed_2026": {
+      "observed_sharpe": 4.487266219017121,
+      "B": 100000,
+      "seed": 2026,
+      "p_two_sided": 0.0,
+      "p_one_sided_right": 0.0,
+      "null_mean": 0.0006927189713302517,
+      "null_std": 0.34649119196953276,
+      "null_q01": -0.8065744643978353,
+      "null_q05": -0.5724383943029854,
+      "null_q95": 0.5683956449460013,
+      "null_q99": 0.8073030821210827,
+      "null_max_abs": 1.5995657212728176,
+      "wall_sec": 1.76
+    }
+  },
+  "verdict_pass_criterion": "p_two_sided < 0.05",
+  "verdict_pass": true
+}

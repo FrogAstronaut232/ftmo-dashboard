@@ -1,0 +1,15 @@
+{
+  "T": 2084,
+  "B_sign_randomisation": 100000,
+  "B_block_shuffle": 50000,
+  "RETURNS_CONVENTION": "LOG returns",
+  "sharpe_observed_daily": 0.16205778181528355,
+  "sharpe_observed_annualised": 2.572587532236035,
+  "cumulative_log_return_observed": 1.25989234206711,
+  "cumulative_simple_return_observed": 2.525041968204977,
+  "p_sign_randomisation_sharpe": 0.0,
+  "p_sign_randomisation_cum_log_return": 0.0,
+  "p_block_shuffle_sharpe": 0.50754,
+  "block_length_PW": 5.0,
+  "interpretation": "Sign-randomisation null (preserves |r| but flips signs uniformly): p=0.000000 for Sharpe, p=0.000000 for cumulative log-return \u2014 observed Sharpe is in the extreme right tail of the no-skill distribution. The block-shuffle null with replacement (Sharpe centre near 0.1624, p=0.5075) is *not* a no-skill null because resampling-with-replacement of an already-skilful series preserves the mean/sd; report only as a sanity check."
+}

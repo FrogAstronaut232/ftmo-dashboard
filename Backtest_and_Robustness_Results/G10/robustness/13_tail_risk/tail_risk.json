@@ -1,0 +1,82 @@
+{
+  "period": {
+    "start": "2018-01-02",
+    "end": "2026-05-12",
+    "T_days": 2102,
+    "n_years": 8.341269841269842
+  },
+  "higher_moments": {
+    "skewness_fisher": 0.898443008913109,
+    "excess_kurtosis_fisher": 3.347039120086988,
+    "paper_skewness": 0.178,
+    "paper_excess_kurtosis": 9.876,
+    "skew_diff_vs_paper": 0.7204430089131091,
+    "excess_kurt_diff_vs_paper": -6.528960879913011
+  },
+  "var_historical": {
+    "var_01pct": -0.004400295924944785,
+    "var_05pct": -0.00228387525046961,
+    "var_99pct": 0.006814742174864745
+  },
+  "cvar_historical": {
+    "cvar_01pct": -0.005208662227144227,
+    "cvar_05pct": -0.0034286137556221808
+  },
+  "single_day_extremes": {
+    "max_loss": -0.0073374160576812,
+    "max_gain": 0.0140102371657922
+  },
+  "multi_day_extremes": {
+    "worst_5d_sum": -0.010652485092145217,
+    "worst_10d_sum": -0.011967748463949499,
+    "worst_20d_sum": -0.015462177479798628,
+    "best_5d_sum": 0.030171409369390095,
+    "best_10d_sum": 0.043082076665086004,
+    "best_20d_sum": 0.06150670830373036
+  },
+  "drawdown": {
+    "max_drawdown": -0.01609784932654723,
+    "n_completed_episodes": 276,
+    "avg_dd_duration_days": 6.195652173913044,
+    "median_dd_duration_days": 4.0,
+    "max_completed_dd_duration_days": 72,
+    "deepest_episode_duration_days": 72,
+    "deepest_episode_depth": -0.01609784932654723,
+    "open_drawdown_at_end_of_sample": {
+      "start": 2093,
+      "trough": 2097,
+      "end": 2101,
+      "duration_days_so_far": 8,
+      "time_to_trough": 4,
+      "depth": -0.008914179529726951,
+      "recovered": false
+    }
+  },
+  "risk_adjusted": {
+    "sortino_annualized": 8.43655825378511,
+    "calmar": 9.860863741598093,
+    "cagr": 0.15873869874185886
+  },
+  "tail_to_tail": {
+    "p99_gain_magnitude": 0.006814742174864745,
+    "p01_loss_magnitude": 0.004400295924944785,
+    "ratio_gain_to_loss": 1.5487008808277494,
+    "interpretation": ">1: right tail (gains) is fatter than left tail (losses); <1: left tail dominates."
+  },
+  "gpd_left_tail_fit": {
+    "threshold_q": 0.05,
+    "threshold_u_loss": 0.0022838752504696093,
+    "threshold_u_return": -0.0022838752504696093,
+    "n_exceedances": 106,
+    "gpd_xi_tail_index": -0.1027718013708757,
+    "gpd_scale": 0.001264110872549599,
+    "gpd_loc": 0.0,
+    "gpd_mean_exceedance": 0.0011463032251805493,
+    "empirical_tail_prob": 0.05042816365366318,
+    "gaussian_tail_prob_at_same_u": 0.08345574143003609,
+    "gaussian_fit_mu": 0.000586974138364601,
+    "gaussian_fit_sigma": 0.002077020251505029,
+    "gaussian_mean_exceedance": 0.0009489637238507603,
+    "interpretation": "xi > 0: heavier-than-exponential left tail (power-law); xi ~ 0: exponential tail; xi < 0: bounded tail"
+  }
+}

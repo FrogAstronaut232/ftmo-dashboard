@@ -1,0 +1,148 @@
+{
+  "PSR_vs_zero": 0.9999999999997413,
+  "PSR_vs_zero_interpretation": "Probability strategy true SR > 0.",
+  "var_trial_iid_lo": 0.0004861474867195034,
+  "var_trial_mertens": 0.0005034767894861727,
+  "var_trial_bootstrap": 0.0005276641102475588,
+  "var_trial_REAL_optuna_proxy": 0.0013033770076649178,
+  "K_real_trials": 200,
+  "real_trial_sharpe_summary_daily": {
+    "mean": 0.10258927048139026,
+    "std": 0.036102313051450285,
+    "min": 0.040515304698220574,
+    "max": 0.184668726984145,
+    "q05": 0.05849918527577864,
+    "q95": 0.1656183607999178
+  },
+  "DSR_N100_var_trial_iid_lo": {
+    "DSR": 0.9999989023999825,
+    "SR0_threshold_daily": 0.05579663686300943,
+    "SR0_threshold_annualised": 0.8857441507998125,
+    "passes_at_0.95": true
+  },
+  "DSR_N800_var_trial_iid_lo": {
+    "DSR": 0.9999780258882373,
+    "SR0_threshold_daily": 0.07036014901359187,
+    "SR0_threshold_annualised": 1.116932738996464,
+    "passes_at_0.95": true
+  },
+  "DSR_N1500_var_trial_iid_lo": {
+    "DSR": 0.9999540844321748,
+    "SR0_threshold_daily": 0.07427563923572411,
+    "SR0_threshold_annualised": 1.1790892193284657,
+    "passes_at_0.95": true
+  },
+  "DSR_N3000_var_trial_iid_lo": {
+    "DSR": 0.9999034029112444,
+    "SR0_threshold_daily": 0.07839329737406915,
+    "SR0_threshold_annualised": 1.2444550158367187,
+    "passes_at_0.95": true
+  },
+  "DSR_N12000_var_trial_iid_lo": {
+    "DSR": 0.9996432549034663,
+    "SR0_threshold_daily": 0.08610070929026618,
+    "SR0_threshold_annualised": 1.3668063869298777,
+    "passes_at_0.95": true
+  },
+  "DSR_N100_var_trial_mertens": {
+    "DSR": 0.9999986382972496,
+    "SR0_threshold_daily": 0.05678239772198639,
+    "SR0_threshold_annualised": 0.9013926193100191,
+    "passes_at_0.95": true
+  },
+  "DSR_N800_var_trial_mertens": {
+    "DSR": 0.999972146295603,
+    "SR0_threshold_daily": 0.07160320387906113,
+    "SR0_threshold_annualised": 1.1366656232367072,
+    "passes_at_0.95": true
+  },
+  "DSR_N1500_var_trial_mertens": {
+    "DSR": 0.999941601198334,
+    "SR0_threshold_daily": 0.0755878691845261,
+    "SR0_threshold_annualised": 1.1999202239732323,
+    "passes_at_0.95": true
+  },
+  "DSR_N3000_var_trial_mertens": {
+    "DSR": 0.9998768344719886,
+    "SR0_threshold_daily": 0.07977827411285052,
+    "SR0_threshold_annualised": 1.2664408399712672,
+    "passes_at_0.95": true
+  },
+  "DSR_N12000_var_trial_mertens": {
+    "DSR": 0.9995443449204449,
+    "SR0_threshold_daily": 0.087621853106817,
+    "SR0_threshold_annualised": 1.3909537964116203,
+    "passes_at_0.95": true
+  },
+  "DSR_N100_var_trial_bootstrap": {
+    "DSR": 0.9999981768742899,
+    "SR0_threshold_daily": 0.058130328642710755,
+    "SR0_threshold_annualised": 0.922790359314405,
+    "passes_at_0.95": true
+  },
+  "DSR_N800_var_trial_bootstrap": {
+    "DSR": 0.9999616619558431,
+    "SR0_threshold_daily": 0.07330295902156272,
+    "SR0_threshold_annualised": 1.1636483996172813,
+    "passes_at_0.95": true
+  },
+  "DSR_N1500_var_trial_bootstrap": {
+    "DSR": 0.9999192882322697,
+    "SR0_threshold_daily": 0.07738221444279335,
+    "SR0_threshold_annualised": 1.228404571890611,
+    "passes_at_0.95": true
+  },
+  "DSR_N3000_var_trial_bootstrap": {
+    "DSR": 0.9998292933419585,
+    "SR0_threshold_daily": 0.08167209344406726,
+    "SR0_threshold_annualised": 1.2965042898421844,
+    "passes_at_0.95": true
+  },
+  "DSR_N12000_var_trial_bootstrap": {
+    "DSR": 0.9993676880540124,
+    "SR0_threshold_daily": 0.08970186751043763,
+    "SR0_threshold_annualised": 1.4239730014240954,
+    "passes_at_0.95": true
+  },
+  "DSR_N100_var_trial_REAL_optuna_proxy": {
+    "DSR": 0.9991835967958282,
+    "SR0_threshold_daily": 0.09136061785927303,
+    "SR0_threshold_annualised": 1.4503048468850561,
+    "passes_at_0.95": true
+  },
+  "DSR_N800_var_trial_REAL_optuna_proxy": {
+    "DSR": 0.9815783334677611,
+    "SR0_threshold_daily": 0.11520670506243065,
+    "SR0_threshold_annualised": 1.828849745774145,
+    "passes_at_0.95": true
+  },
+  "DSR_N1500_var_trial_REAL_optuna_proxy": {
+    "DSR": 0.9642147071856014,
+    "SR0_threshold_daily": 0.12161787293970278,
+    "SR0_threshold_annualised": 1.9306238806746325,
+    "passes_at_0.95": true
+  },
+  "DSR_N3000_var_trial_REAL_optuna_proxy": {
+    "DSR": 0.9333784372360145,
+    "SR0_threshold_daily": 0.12836006768122607,
+    "SR0_threshold_annualised": 2.037652904135661,
+    "passes_at_0.95": false
+  },
+  "DSR_N12000_var_trial_REAL_optuna_proxy": {
+    "DSR": 0.8261700601914759,
+    "SR0_threshold_daily": 0.1409800740892916,
+    "SR0_threshold_annualised": 2.2379892951343585,
+    "passes_at_0.95": false
+  },
+  "DSR_N200_var_trial_REAL_optuna_proxy": {
+    "DSR": 0.9972151518649791,
+    "SR0_threshold_daily": 0.09984180975634946,
+    "SR0_threshold_annualised": 1.584939594371538,
+    "passes_at_0.95": true
+  },
+  "sr_hat_daily": 0.16205778181528355,
+  "sr_hat_annualised": 2.572587532236035,
+  "T": 2084,
+  "skew": 0.17835488589053744,
+  "pearson_kurtosis": 12.902714211608124
+}

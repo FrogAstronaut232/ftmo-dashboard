@@ -1,0 +1,33 @@
+{
+  "results": {
+    "S=8": {
+      "PBO": 0.0,
+      "n_splits": 70,
+      "N_trials": 201,
+      "median_logit": 1.9805018138248842,
+      "mean_logit": 2.074750781921381,
+      "fraction_realised_won_IS": 0.0
+    },
+    "S=16": {
+      "PBO": 0.0012432012432012432,
+      "n_splits": 12870,
+      "N_trials": 201,
+      "median_logit": 2.0518915899116053,
+      "mean_logit": 2.0799080483964403,
+      "fraction_realised_won_IS": 0.00808080808080808
+    }
+  },
+  "trial_count_total": 201,
+  "trial_count_real_HP_variants": 200,
+  "annualised_sharpe_per_trial_summary": {
+    "mean": 1.6332508646019597,
+    "std": 0.5755367725976247,
+    "min": 0.6431605231409907,
+    "max": 2.9315251591855835,
+    "q10": 1.0288224139283066,
+    "q50": 1.4179861330809251,
+    "q90": 2.546389379377011,
+    "realised_strategy_sr_annualised": 2.572587532236035
+  },
+  "notes": "Trial matrix is built from REAL WF runs of distinct hyperparameter variants (build_trial_cache.py).  The realised strategy is appended as the last column and corresponds to the production HP / Optuna-selected configuration.  CSCV enumerates ALL comb(S, S/2) splits exhaustively (12,870 for S=16).  PBO < 0.5 means the IS-selection process beats coin-flip; < 0.2 = informative."
+}

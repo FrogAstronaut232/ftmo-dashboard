@@ -1,0 +1,22 @@
+{
+  "n_days": 2102,
+  "years": 8.355920602327172,
+  "ann_return": 0.14791748286787945,
+  "ann_vol": 0.032971674321162825,
+  "ann_sharpe": 4.486198711872476,
+  "n_drawdowns": 277,
+  "mean_depth_pct": -0.26065647783472407,
+  "median_depth_pct": -0.1895356345685939,
+  "max_depth_pct": -1.609784932654723,
+  "p90_depth_pct": 0.5811830563241349,
+  "mean_total_duration_days": 9.025270758122744,
+  "median_total_duration_days": 6.0,
+  "magdon_ismail_emdd_pct": 2.1120953186956353,
+  "realised_mdd_pct": 1.609784932654723,
+  "realised_over_expected": 0.7621743765091419,
+  "frac_underwater_any": 0.6860133206470028,
+  "frac_underwater_gt0p5": 0.1598477640342531,
+  "frac_underwater_gt1p0": 0.019980970504281638,
+  "frac_underwater_gt1p5": 0.002378686964795433,
+  "verdict": "Realised MDD is broadly consistent with Magdon-Ismail expectation. Plausible."
+}

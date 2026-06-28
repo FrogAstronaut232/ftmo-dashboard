@@ -1,0 +1,207 @@
+{
+  "metadata": {
+    "generated_at_utc": "2026-06-22 15:22:11 UTC",
+    "n_sims": 10000,
+    "horizon_trading_days": 252,
+    "horizon_calendar_days_approx": 352,
+    "data_slice": "OOS 2023-01-02 to 2026-05-12",
+    "data_n_days": 871,
+    "data_sharpe_ann": 4.755465977298777,
+    "data_vol_ann": 0.03243452343923255,
+    "runtime_seconds": 84.6374836
+  },
+  "fitted_vols_pct": {
+    "P1": 24,
+    "P2": 18,
+    "R1": 24,
+    "R2": 18,
+    "R3": 22,
+    "R_milk": 22,
+    "pi_milk": 0.6
+  },
+  "ftmo_2step_swing_rules": {
+    "p1_target_pct": 10.0,
+    "p2_target_pct": 5.0,
+    "max_total_loss_pct": 10.0,
+    "max_daily_loss_pct": 5.0,
+    "payout_split_base": 0.8,
+    "payout_split_post_scale": 0.9,
+    "payout_cycle_trading_days": 10,
+    "payout_cycle_calendar_days_approx": 14,
+    "scaling_window_trading_days": 84,
+    "scaling_profit_threshold_pct": 10.0,
+    "scaling_size_multiplier": 1.25,
+    "scaling_min_payouts": 2
+  },
+  "deployment_config": {
+    "initial_cash_usd": 1175,
+    "eval_cost_per_seat_usd": 1175,
+    "seat_size_usd": 200000,
+    "target_active_seats": 2,
+    "max_evals_per_year": 4,
+    "min_trading_days_left_to_buy": 50,
+    "max_initial_notional_usd": 400000,
+    "max_combined_eval_trading_days": 42
+  },
+  "pass_probability_oos": {
+    "p1_pass_rate": 0.9658,
+    "p2_pass_rate": 0.9992,
+    "combined_pass_rate": 0.96502736,
+    "p1_median_trading_days": 20.0,
+    "p2_median_trading_days": 13.0,
+    "combined_median_trading_days": 33.0,
+    "combined_median_calendar_days_approx": 46.2,
+    "p1_mean_trading_days": 22.651998343342306,
+    "p2_mean_trading_days": 16.548038430744597
+  },
+  "deployment_results_oos": {
+    "net_pnl_per_year_usd": {
+      "mean": 256445.9355469956,
+      "median": 259468.7155452438,
+      "std": 117368.54203548723,
+      "p10": 117345.73368294121,
+      "p25": 194682.79977576112,
+      "p75": 330443.24376358517,
+      "p90": 398796.0605176579,
+      "min": -1175.0,
+      "max": 669902.003697359
+    },
+    "gross_payouts_per_year_usd": {
+      "mean": 259872.1180469956,
+      "median": 263243.1358726718,
+      "std": 117591.59560127431,
+      "p10": 121256.99530453229,
+      "p25": 198530.94448263562,
+      "p75": 333818.5147591192,
+      "p90": 401819.3363260802,
+      "min": 0.0,
+      "max": 672252.003697359
+    },
+    "eval_fees_per_year_usd": {
+      "mean": 3426.1825,
+      "median": 3525.0,
+      "std": 1033.2683840847474,
+      "p10": 2350.0,
+      "p25": 2350.0,
+      "p75": 4700.0,
+      "p90": 4700.0,
+      "min": 1175.0,
+      "max": 4700.0
+    },
+    "probabilities": {
+      "p_net_positive": 0.9228,
+      "p_net_above_5k": 0.9228,
+      "p_net_above_25k": 0.9227,
+      "p_net_above_50k": 0.9219,
+      "p_net_above_100k": 0.9111,
+      "p_net_above_200k": 0.7336
+    }
+  },
+  "payouts": {
+    "mean_count_per_year": 21.6392,
+    "median_count_per_year": 23.0,
+    "mean_amount_per_payout_usd": 12009.321880984306,
+    "cadence_trading_days": 10,
+    "cadence_calendar_days_approx": 14
+  },
+  "monthly_income_usd": {
+    "naive_mean": 21370.4946289163,
+    "naive_median": 21622.392962103648,
+    "per_funded_month_mean": 23014.555866185754,
+    "per_funded_month_median": 23285.833080981476,
+    "funded_months_per_year_approx": 11.142771428571429,
+    "notes": "naive = annual / 12 (includes eval phase). funded_month = annual / (~funded months alive). Income excludes the ~2-month eval phase at year start; once funded the per-month run-rate is roughly the funded_month figure."
+  },
+  "timing_milestones": {
+    "first_eval_purchased": {
+      "name": "first eval bought",
+      "pct_reached": 1.0,
+      "mean_td_if_reached": 0.0,
+      "median_td_if_reached": 0.0,
+      "p25_td_if_reached": 0.0,
+      "p75_td_if_reached": 0.0,
+      "mean_calendar_days_if_reached": 0.0,
+      "median_calendar_days_if_reached": 0.0
+    },
+    "first_eval_funded": {
+      "name": "first eval funded",
+      "pct_reached": 0.968,
+      "mean_td_if_reached": 38.972727272727276,
+      "median_td_if_reached": 35.0,
+      "p25_td_if_reached": 26.0,
+      "p75_td_if_reached": 49.0,
+      "mean_calendar_days_if_reached": 54.56181818181818,
+      "median_calendar_days_if_reached": 49.0
+    },
+    "second_eval_purchased": {
+      "name": "second eval bought",
+      "pct_reached": 0.9229,
+      "mean_td_if_reached": 53.667677971611226,
+      "median_td_if_reached": 49.0,
+      "p25_td_if_reached": 39.0,
+      "p75_td_if_reached": 64.0,
+      "mean_calendar_days_if_reached": 75.13474916025572,
+      "median_calendar_days_if_reached": 68.6
+    },
+    "second_eval_funded": {
+      "name": "second eval funded",
+      "pct_reached": 0.8933,
+      "mean_td_if_reached": 92.41744094928916,
+      "median_td_if_reached": 89.0,
+      "p25_td_if_reached": 72.0,
+      "p75_td_if_reached": 108.0,
+      "mean_calendar_days_if_reached": 129.38441732900483,
+      "median_calendar_days_if_reached": 124.6
+    },
+    "first_rebuy_after_blowup": {
+      "name": "first rebuy after a blow-up",
+      "pct_reached": 0.722,
+      "mean_td_if_reached": 146.12451523545707,
+      "median_td_if_reached": 149.0,
+      "p25_td_if_reached": 126.0,
+      "p75_td_if_reached": 173.0,
+      "mean_calendar_days_if_reached": 204.5743213296399,
+      "median_calendar_days_if_reached": 208.6
+    },
+    "max_notional_400k_reached": {
+      "name": "$400K cap reached",
+      "pct_reached": 0.9229,
+      "mean_td_if_reached": 53.667677971611226,
+      "median_td_if_reached": 49.0,
+      "p25_td_if_reached": 39.0,
+      "p75_td_if_reached": 64.0,
+      "mean_calendar_days_if_reached": 75.13474916025572,
+      "median_calendar_days_if_reached": 68.6
+    }
+  },
+  "eval_purchases": {
+    "mean_evals_bought": 2.9159,
+    "median_evals_bought": 3.0,
+    "distribution_pct": {
+      "1": 0.0771,
+      "2": 0.2009,
+      "3": 0.451,
+      "4": 0.271
+    },
+    "mean_rebuys": 0.993,
+    "p_at_least_one_rebuy": 0.722
+  },
+  "seat_utilization": {
+    "mean_days_per_year_with_2_active": 166.7212,
+    "mean_days_per_year_with_1_active": 67.277,
+    "mean_days_per_year_with_0_active": 18.0018,
+    "average_active_seat_count": 1.590156349206349
+  },
+  "blowups": {
+    "mean_per_year": 1.6358,
+    "median_per_year": 2.0,
+    "max_observed": 4,
+    "distribution_pct": {
+      "0": 0.0488,
+      "1": 0.3843,
+      "2": 0.4584,
+      "3": 0.0993,
+      "4": 0.0092
+    }
+  }
+}

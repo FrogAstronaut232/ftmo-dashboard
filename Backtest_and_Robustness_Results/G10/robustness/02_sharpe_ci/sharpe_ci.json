@@ -1,0 +1,69 @@
+{
+  "n_obs": 2102,
+  "annualized_sharpe": 4.486198711872476,
+  "daily_sharpe": 0.2826039553245924,
+  "skew": 0.898443008913109,
+  "excess_kurt": 3.347039120086988,
+  "politis_white": {
+    "L_star": 1.067031846942021,
+    "M": 1,
+    "M_used": 2,
+    "G_hat": -0.023476450655863294,
+    "D_hat_sb": 1.907196484847341,
+    "rho1": -0.011738225327931647,
+    "rho5": -0.003751016530126201
+  },
+  "L_floor_applied": 5.0,
+  "L_used": 5.0,
+  "methods": {
+    "lo_2002_iid": {
+      "method": "Lo (2002) IID",
+      "sharpe_ann": 4.486198711872476,
+      "se_ann": 0.35309087128927963,
+      "ci_low": 3.7941533208756204,
+      "ci_high": 5.178244102869332,
+      "excludes_zero": true
+    },
+    "mertens_2002": {
+      "method": "Mertens (2002) higher-moment",
+      "sharpe_ann": 4.486198711872476,
+      "se_ann": 0.308325193206461,
+      "skew": 0.898443008913109,
+      "excess_kurt": 3.347039120086988,
+      "ci_low": 3.881892437661459,
+      "ci_high": 5.090504986083494,
+      "excludes_zero": true
+    },
+    "stationary_bootstrap": {
+      "method": "Politis-White stationary bootstrap",
+      "sharpe_ann": 4.486198711872476,
+      "ci_low": 3.87436248277679,
+      "ci_high": 5.102785800387627,
+      "boot_mean": 4.485718742672936,
+      "boot_std": 0.3123456805724327,
+      "boot_median": 4.489228536864632,
+      "B": 10000,
+      "L_used": 5.0,
+      "excludes_zero": true
+    },
+    "newey_west_hac": {
+      "method": "Newey-West HAC (Andrews BW)",
+      "sharpe_ann": 4.487266219017121,
+      "se_ann": 0.3156283041020407,
+      "andrews_m_star": 1.1837841546146777,
+      "lag_used": 1,
+      "ci_low": 3.868646110475665,
+      "ci_high": 5.105886327558577,
+      "excludes_zero": true
+    }
+  },
+  "verdict": {
+    "lo_excludes_zero": true,
+    "mertens_excludes_zero": true,
+    "bootstrap_excludes_zero": true,
+    "newey_west_excludes_zero": true,
+    "all_exclude_zero": true
+  },
+  "seed": 20260513,
+  "B": 10000
+}

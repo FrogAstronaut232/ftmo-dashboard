@@ -1,0 +1,12 @@
+{
+  "10": 2.4793598106009216,
+  "50": 5.181555773115047,
+  "100": 6.403951003080737,
+  "200": 7.648122467099581,
+  "800": 10.183227733256214,
+  "1500": 11.348141735963667,
+  "5000": 13.59915405917896,
+  "12000": 15.249142169409717,
+  "sample_years": 8.28747433264887,
+  "interpretation": "MinBTL is the minimum number of years of independent daily returns to keep E[max SR_N] under SR=0 null at <= 1 (annualised). Strategy sample is 8.29y. Production search: 100 trials/window \u00d7 8 windows = 800 EXACT trials. MinBTL @ N=800 ~ 10.18y."
+}

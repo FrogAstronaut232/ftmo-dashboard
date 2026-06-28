@@ -1,0 +1,211 @@
+{
+  "REGIME_NOTE": "Regime classification uses EXPANDING-window terciles (no look-ahead).",
+  "VIX_terciles_expanding": {
+    "regimes": {
+      "low": {
+        "n_days": 451,
+        "sharpe_annualised": 2.8640643232891767,
+        "mean_daily": 0.0006446416592275245,
+        "cvar_5pct_daily": -0.0061757973746024005,
+        "hit_rate": 0.4523281596452328
+      },
+      "mid": {
+        "n_days": 767,
+        "sharpe_annualised": 2.801305255402824,
+        "mean_daily": 0.0006311866342715041,
+        "cvar_5pct_daily": -0.0069253328037398205,
+        "hit_rate": 0.455019556714472
+      },
+      "high": {
+        "n_days": 614,
+        "sharpe_annualised": 2.8726459550947365,
+        "mean_daily": 0.0007206696981333643,
+        "cvar_5pct_daily": -0.008180235526063005,
+        "hit_rate": 0.4576547231270358
+      }
+    },
+    "n_warmup": 252
+  },
+  "DXYvol_terciles_expanding": {
+    "regimes": {
+      "low": {
+        "n_days": 549,
+        "sharpe_annualised": 3.1821943264430765,
+        "mean_daily": 0.0007927885940941722,
+        "cvar_5pct_daily": -0.00744783487583719,
+        "hit_rate": 0.4972677595628415
+      },
+      "mid": {
+        "n_days": 484,
+        "sharpe_annualised": 2.791905156897288,
+        "mean_daily": 0.0006315358053855469,
+        "cvar_5pct_daily": -0.006696311752120917,
+        "hit_rate": 0.45867768595041325
+      },
+      "high": {
+        "n_days": 780,
+        "sharpe_annualised": 3.063676911196175,
+        "mean_daily": 0.0006496032900050323,
+        "cvar_5pct_daily": -0.006309445353150887,
+        "hit_rate": 0.4256410256410256
+      }
+    },
+    "n_warmup": 271
+  },
+  "shock_windows": {
+    "COVID_2020_FebApr": {
+      "window": [
+        "2020-02-15",
+        "2020-04-30"
+      ],
+      "n_days": 52,
+      "strategy_total_return_simple": 0.07025519906070454,
+      "strategy_total_log_return": 0.06789712383135724,
+      "strategy_sharpe_annualised": 6.358577328860036,
+      "buyhold_total_return_simple": -0.03495280497757525,
+      "max_dd_in_window": -0.002717747026374062
+    },
+    "UK_Gilt_Sep2022": {
+      "window": [
+        "2022-09-15",
+        "2022-10-15"
+      ],
+      "n_days": 22,
+      "strategy_total_return_simple": -0.0282310580525027,
+      "strategy_total_log_return": -0.0286372168259448,
+      "strategy_sharpe_annualised": -4.545028930359559,
+      "buyhold_total_return_simple": -0.010668561129228205,
+      "max_dd_in_window": -0.02587305224813574
+    },
+    "BoJ_FX_Oct_Nov_2022": {
+      "window": [
+        "2022-10-01",
+        "2022-11-30"
+      ],
+      "n_days": 42,
+      "strategy_total_return_simple": 0.004754530449441852,
+      "strategy_total_log_return": 0.004743263368549894,
+      "strategy_sharpe_annualised": 0.6326924430133442,
+      "buyhold_total_return_simple": 0.038931197610317936,
+      "max_dd_in_window": -0.011165847912778859
+    },
+    "Yen_Carry_Aug2024": {
+      "window": [
+        "2024-07-25",
+        "2024-08-15"
+      ],
+      "n_days": 16,
+      "strategy_total_return_simple": 0.03337083400795615,
+      "strategy_total_log_return": 0.032826113139930856,
+      "strategy_sharpe_annualised": 7.078748958387217,
+      "buyhold_total_return_simple": -0.023302539828082947,
+      "max_dd_in_window": -0.003693947883337656
+    },
+    "UST_Trade_Tensions_2025": {
+      "window": [
+        "2025-01-15",
+        "2025-04-30"
+      ],
+      "n_days": 72,
+      "strategy_total_return_simple": 0.051179036118734755,
+      "strategy_total_log_return": 0.049912425739925784,
+      "strategy_sharpe_annualised": 3.436455640602944,
+      "buyhold_total_return_simple": 0.04875003690846391,
+      "max_dd_in_window": -0.017345244590903808
+    }
+  },
+  "per_year": {
+    "2018": {
+      "n": 251,
+      "mean_daily": 0.00016951239288990938,
+      "sr_annualised": 0.7029412884897741,
+      "total_log_return": 0.04254761061536726,
+      "total_simple_return": 0.043465735236817515
+    },
+    "2019": {
+      "n": 251,
+      "mean_daily": 0.0005349253578029349,
+      "sr_annualised": 1.713088597375983,
+      "total_log_return": 0.13426626480853665,
+      "total_simple_return": 0.14369730544998016
+    },
+    "2020": {
+      "n": 253,
+      "mean_daily": 0.0006659243875552646,
+      "sr_annualised": 2.988790808960317,
+      "total_log_return": 0.16847887005148193,
+      "total_simple_return": 0.18350321921856172
+    },
+    "2021": {
+      "n": 252,
+      "mean_daily": 0.0007794708049705819,
+      "sr_annualised": 3.1984605062096643,
+      "total_log_return": 0.19642664285258665,
+      "total_simple_return": 0.2170460385778259
+    },
+    "2022": {
+      "n": 251,
+      "mean_daily": 0.000595045301210263,
+      "sr_annualised": 2.7748924811744673,
+      "total_log_return": 0.14935637060377602,
+      "total_simple_return": 0.16108669265453157
+    },
+    "2023": {
+      "n": 250,
+      "mean_daily": 0.0005513549105975872,
+      "sr_annualised": 2.4821414601694722,
+      "total_log_return": 0.1378387276493968,
+      "total_simple_return": 0.14779042848666513
+    },
+    "2024": {
+      "n": 252,
+      "mean_daily": 0.0006625960120638996,
+      "sr_annualised": 3.306142720857332,
+      "total_log_return": 0.1669741950401027,
+      "total_simple_return": 0.18172377058039602
+    },
+    "2025": {
+      "n": 251,
+      "mean_daily": 0.0008331432928636042,
+      "sr_annualised": 4.1725586312911584,
+      "total_log_return": 0.20911896650876466,
+      "total_simple_return": 0.23259162693073598
+    },
+    "2026": {
+      "n": 73,
+      "mean_daily": 0.0007518451224259926,
+      "sr_annualised": 2.9816441883889535,
+      "total_log_return": 0.05488469393709746,
+      "total_simple_return": 0.05641879616026113
+    }
+  },
+  "drop_one_year_sensitivity": {
+    "2018": {
+      "sr_annualised_after_drop": 2.8386144784522913
+    },
+    "2019": {
+      "sr_annualised_after_drop": 2.760633634957075
+    },
+    "2020": {
+      "sr_annualised_after_drop": 2.5184089249100365
+    },
+    "2021": {
+      "sr_annualised_after_drop": 2.4828216271091725
+    },
+    "2022": {
+      "sr_annualised_after_drop": 2.548511059417858
+    },
+    "2023": {
+      "sr_annualised_after_drop": 2.5841559829298713
+    },
+    "2024": {
+      "sr_annualised_after_drop": 2.491846088378974
+    },
+    "2025": {
+      "sr_annualised_after_drop": 2.3944300966250727
+    },
+    "2026": {
+      "sr_annualised_after_drop": 2.5562126708613646
+    }
+  }
+}

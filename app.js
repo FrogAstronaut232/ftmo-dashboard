@@ -493,7 +493,7 @@ function renderSignalsTable(tableId, signals, emptyMsg) {
   const recent = signals.slice(-25).reverse();
   tbody.innerHTML = recent.map(s => {
     const { text: actText, cls: actCls } = fmtAction(s.action, s.signal);
-    const conv = (parseFloat(s.ensemble_avg) || 0).toFixed(2);
+    const conv = (parseFloat(s.conviction) || 0).toFixed(2);
     return `<tr>
       <td class="dim">${s.as_of_date || '—'}</td>
       <td class="num">${conv}</td>
@@ -513,7 +513,7 @@ function renderSignalsTableAllPairs(tableId, signals, emptyMsg) {
   const recent = signals.slice(-25).reverse();
   tbody.innerHTML = recent.map(s => {
     const { text: actText, cls: actCls } = fmtAction(s.action, s.signal);
-    const conv = (parseFloat(s.ensemble_avg) || 0).toFixed(2);
+    const conv = (parseFloat(s.conviction) || 0).toFixed(2);
     return `<tr>
       <td class="dim">${s.as_of_date || '—'}</td>
       <td>${s.asset || '—'}</td>
@@ -897,7 +897,7 @@ $('refresh-btn').addEventListener('click', manualRefresh);
 let backtestLoaded = false;
 
 function activateTab(name) {
-  const tabs = ['manifoldfx', 'g10', 'summary'];
+  const tabs = ['g2', 'g10', 'summary'];
   tabs.forEach(t => {
     const pane = $(`tab-${t}`);
     const btn  = $(`tab-btn-${t}`);
@@ -916,14 +916,13 @@ function activateTab(name) {
   }
   // Plotly charts can mis-size when drawn while their container is hidden.
   setTimeout(() => {
-    if (name === 'manifoldfx') {
+    if (name === 'g2') {
       const live = $('live-equity-chart'); if (live && live._fullLayout) Plotly.Plots.resize(live);
       const ref  = $('ref-equity-chart');  if (ref  && ref._fullLayout)  Plotly.Plots.resize(ref);
     } else if (name === 'g10') {
       const gl = $('g-equity-chart');      if (gl && gl._fullLayout) Plotly.Plots.resize(gl);
       const eq = $('bt-equity-chart');     if (eq && eq._fullLayout) Plotly.Plots.resize(eq);
       const yr = $('bt-yearbar-chart');    if (yr && yr._fullLayout) Plotly.Plots.resize(yr);
-      const mc = $('bt-macro-shift-chart');if (mc && mc._fullLayout) Plotly.Plots.resize(mc);
     }
   }, 30);
 }
@@ -936,7 +935,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 // ('50k') ran both strategies, so it shows all three sub-tabs.
 function applyAccountChrome(acc) {
   const g10Only = (acc !== '50k');
-  const g2btn  = $('tab-btn-manifoldfx');
+  const g2btn  = $('tab-btn-g2');
   const sumbtn = $('tab-btn-summary');
   // Hide via BOTH the hidden attribute and inline display. .tab-btn sets
   // display:inline-flex in CSS, which overrides the [hidden] attribute — so
@@ -988,20 +987,13 @@ async function loadBacktest() {
     });
   };
 
-  const [summary, portfolio, perPair, perYear, subPeriod, regime, mc,
-         robustness, macro, tradeStats, sensitivity, verdict] = await Promise.all([
+  const [summary, portfolio, perPair, perYear, subPeriod, regime] = await Promise.all([
     fetchBt('summary.json'),
     fetchBt('portfolio.csv'),
     fetchBt('per_pair.csv'),
     fetchBt('per_year.csv'),
     fetchBt('sub_period.csv'),
     fetchBt('regime_conditional.csv'),
-    fetchBt('ftmo_montecarlo.json').catch(() => null),
-    fetchBt('robustness_scorecard.json').catch(() => null),
-    fetchBt('macro_analysis.json').catch(() => null),
-    fetchBt('trade_stats.json').catch(() => null),
-    fetchBt('sensitivity_tests.json').catch(() => null),
-    fetchBt('verdict_summary.json').catch(() => null),
   ]);
 
   // Hero + submetrics
@@ -1151,7 +1143,7 @@ async function loadBacktest() {
   }
 
   // Regime table
-  const regimeLabels = { low_vol: 'Low VIX', mid_vol: 'Mid VIX', high_vol: 'High VIX' };
+  const regimeLabels = { low_vol: 'Low Vol', mid_vol: 'Mid Vol', high_vol: 'High Vol' };
   const regimeBody = document.querySelector('#bt-regime-table tbody');
   if (regimeBody && regime.length) {
     regimeBody.innerHTML = regime.map(r => {
@@ -1187,447 +1179,6 @@ async function loadBacktest() {
     }).join('');
   } else if (subBody) {
     subBody.innerHTML = '<tr><td colspan="4" class="empty">No data.</td></tr>';
-  }
-
-  // The Monte Carlo / validation / forensic-audit panels were removed from
-  // the G10 tab on 2026-05-14 (user wanted a cleaner backtest view). Their
-  // renderers are kept in the file but no longer called from here, so the
-  // DOM lookups don't trigger null-deref errors.
-  // renderMonteCarlo(mc);
-  // renderMacroAnalysis(macro);
-  // renderUniverseRobustness(sensitivity);
-  // renderTradeStats(tradeStats);
-  // renderSensitivity(sensitivity);
-  // renderRobustnessScorecard(robustness);
-}
-
-// -- Macro analysis ----------------------------------------------------
-function renderMacroAnalysis(macro) {
-  if (!macro) return;
-  const rows = (macro.shift_gradient && macro.shift_gradient.rows) || [];
-  if (rows.length) {
-    const x = rows.map(r => r.shift_days);
-    const y = rows.map(r => Number(r.sharpe));
-    const colors = rows.map(r => {
-      if (r.shift_days === 0) return '#5cb87a';
-      if (Number(r.sharpe) < 0) return '#d04a52';
-      return '#3a4452';
-    });
-    const trace = {
-      x, y, type: 'bar',
-      marker: { color: colors, line: { color: '#262d39', width: 1 } },
-      text: y.map(v => v.toFixed(2)),
-      textposition: 'outside',
-      textfont: { color: '#9aa3ad', family: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace', size: 11 },
-      hovertemplate: 'shift %{x}d<br>Sharpe %{y:.2f}<extra></extra>',
-      showlegend: false,
-    };
-    const layout = {
-      paper_bgcolor: '#161b24', plot_bgcolor: '#161b24',
-      font: { color: '#6a727d', family: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace', size: 11 },
-      margin: { t: 26, r: 28, b: 38, l: 60 },
-      xaxis: {
-        gridcolor: '#1f2531', zeroline: true, zerolinecolor: '#3a4452',
-        showline: true, linecolor: '#262d39', linewidth: 1,
-        ticks: 'outside', tickcolor: '#262d39', ticklen: 4,
-        title: { text: 'Macro feature shift (days)', font: { color: '#6a727d', size: 10 } },
-        tickmode: 'array',
-        tickvals: x, ticktext: x.map(v => v === 0 ? '0' : (v > 0 ? `+${v}` : `${v}`)),
-      },
-      yaxis: {
-        gridcolor: '#1f2531', zeroline: true, zerolinecolor: '#3a4452',
-        showline: true, linecolor: '#262d39', linewidth: 1,
-        ticks: 'outside', tickcolor: '#262d39', ticklen: 4,
-        title: { text: 'Sharpe', font: { color: '#6a727d', size: 10 } },
-      },
-      bargap: 0.3,
-      hoverlabel: {
-        bgcolor: '#11151b', bordercolor: '#262d39',
-        font: { color: '#e3e6ea', family: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace', size: 12 },
-      },
-      showlegend: false,
-    };
-    Plotly.newPlot('bt-macro-shift-chart', [trace], layout, { displayModeBar: false, responsive: true });
-  }
-
-  const abl = (macro.per_feature_ablation && macro.per_feature_ablation.rows) || [];
-  const ablBody = document.querySelector('#bt-macro-ablation-table tbody');
-  if (ablBody) {
-    if (abl.length) {
-      const baseline = { feature: 'All three (baseline)', sharpe: 4.49, baseline: true };
-      const allRows = [...abl, baseline];
-      ablBody.innerHTML = allRows.map(r => {
-        const isDxy = /^dxy/i.test(r.feature);
-        const cls = isDxy ? 'pos' : (r.baseline ? 'pos' : 'dim');
-        const note = isDxy ? ' <span class="dim">&larr; dominant</span>' : (r.baseline ? ' <span class="dim">&larr; deployed</span>' : '');
-        return `<tr>
-          <td>${r.feature}${note}</td>
-          <td class="num ${cls}">${Number(r.sharpe).toFixed(2)}</td>
-        </tr>`;
-      }).join('');
-    } else {
-      ablBody.innerHTML = '<tr><td colspan="2" class="empty">No data.</td></tr>';
-    }
-  }
-
-  const src = macro.data_source_independence;
-  const srcBody = document.querySelector('#bt-macro-source-table tbody');
-  if (srcBody) {
-    if (src) {
-      const rows = [
-        { source: 'yfinance (baseline)', sharpe: src.yfinance_baseline_sharpe, note: 'deployed' },
-        { source: 'FRED',                sharpe: src.fred_sharpe, note: `VIX/US10Y r=${src.correlation_vix}, DXY r=${src.correlation_dxy}` },
-        { source: 'Random series',       sharpe: -0.6, note: 'macro collapses to zero' },
-        { source: 'Constant',            sharpe: -0.6, note: 'macro collapses to zero' },
-        { source: 'Shuffled dates',      sharpe: -0.5, note: 'macro collapses to zero' },
-      ];
-      srcBody.innerHTML = rows.map(r => {
-        const cls = Number(r.sharpe) > 0 ? 'pos' : 'neg';
-        return `<tr>
-          <td>${r.source}</td>
-          <td class="num ${cls}">${Number(r.sharpe).toFixed(2)}</td>
-          <td class="dim">${r.note}</td>
-        </tr>`;
-      }).join('');
-    } else {
-      srcBody.innerHTML = '<tr><td colspan="3" class="empty">No data.</td></tr>';
-    }
-  }
-}
-
-// -- Universe robustness -----------------------------------------------
-function renderUniverseRobustness(sens) {
-  const body = document.querySelector('#bt-universe-table tbody');
-  if (!body) return;
-  if (!sens || !sens.alt_universe || !sens.alt_universe.rows) {
-    body.innerHTML = '<tr><td colspan="4" class="empty">No data.</td></tr>';
-    return;
-  }
-  const altRows = sens.alt_universe.rows.slice();
-  const dropUsdchf = (sens.drop_one_pair && sens.drop_one_pair.rows || [])
-    .find(r => r.dropped === 'USDCHF');
-  if (dropUsdchf) {
-    altRows.push({
-      universe: 'Drop-USDCHF (9 pairs)',
-      pairs: null, n_pairs: 9,
-      sharpe: dropUsdchf.remaining_sharpe,
-      note: 'USDCHF not the sole driver',
-    });
-  }
-  if (sens.drop_three_combinatorial) {
-    altRows.push({
-      universe: 'Drop-3 worst case (7 pairs)',
-      pairs: null, n_pairs: 7,
-      sharpe: sens.drop_three_combinatorial.min_sharpe,
-      note: 'Worst of 120 drop-3 combinations',
-    });
-  }
-  body.innerHTML = altRows.map((r, i) => {
-    const isBaseline = i === 0;
-    const sh = Number(r.sharpe);
-    const shCls = sh > 0 ? 'pos' : 'neg';
-    const rowCls = isBaseline ? 'class="dim"' : '';
-    const np = r.n_pairs != null ? r.n_pairs : (r.pairs ? r.pairs.length : '—');
-    return `<tr ${rowCls}>
-      <td>${r.universe}</td>
-      <td class="num dim">${np}</td>
-      <td class="num ${shCls}">${sh.toFixed(2)}</td>
-      <td class="dim">${r.note || ''}</td>
-    </tr>`;
-  }).join('');
-}
-
-// -- Trade stats -------------------------------------------------------
-function renderTradeStats(ts) {
-  if (!ts) return;
-  const pl = ts.portfolio_level || {};
-  const setTxt = (id, v) => { const el = $(id); if (el) el.textContent = v; };
-  setTxt('bt-ts-trades', pl.n_trades_total != null ? pl.n_trades_total.toLocaleString() : '—');
-  setTxt('bt-ts-wr',     pl.win_rate_pct  != null ? `${pl.win_rate_pct.toFixed(1)}%` : '—');
-  setTxt('bt-ts-pf',     pl.profit_factor != null ? pl.profit_factor.toFixed(2) : '—');
-  setTxt('bt-ts-payoff', pl.payoff_ratio  != null ? pl.payoff_ratio.toFixed(2) : '—');
-  setTxt('bt-ts-hold',   pl.avg_holding_days != null ? `${pl.avg_holding_days.toFixed(1)} d` : '—');
-  setTxt('bt-ts-exp',    pl.expectancy_bps_per_trade != null ? `${pl.expectancy_bps_per_trade.toFixed(1)} bps` : '—');
-
-  const rows = ts.per_pair_summary || [];
-  const body = document.querySelector('#bt-trade-pair-table tbody');
-  if (body) {
-    if (rows.length) {
-      body.innerHTML = rows.map(r => {
-        const sh = Number(r.sharpe);
-        const shCls = sh > 1 ? 'pos' : (sh > 0 ? 'dim' : 'neg');
-        return `<tr>
-          <td>${r.pair}</td>
-          <td class="num ${shCls}">${sh.toFixed(2)}</td>
-          <td class="num dim">${Number(r.win_rate_pct).toFixed(1)}</td>
-          <td class="num">${Number(r.pf).toFixed(2)}</td>
-          <td class="num dim">${Number(r.share_of_pnl_pct).toFixed(2)}</td>
-          <td class="num dim">${r.sign_flips}</td>
-        </tr>`;
-      }).join('');
-    } else {
-      body.innerHTML = '<tr><td colspan="6" class="empty">No data.</td></tr>';
-    }
-  }
-}
-
-// -- Sensitivity tests -------------------------------------------------
-function renderSensitivity(sens) {
-  if (!sens) return;
-
-  const d1Rows = (sens.drop_one_pair && sens.drop_one_pair.rows) || [];
-  const d1Body = document.querySelector('#bt-sens-drop1-table tbody');
-  if (d1Body) {
-    if (d1Rows.length) {
-      const sorted = d1Rows.slice().sort((a, b) => Number(b.delta) - Number(a.delta));
-      d1Body.innerHTML = sorted.map(r => {
-        const sh = Number(r.remaining_sharpe);
-        const dl = Number(r.delta);
-        const dlCls = dl > 0 ? 'pos' : (dl < -0.2 ? 'neg' : 'warn');
-        const rowHighlight = (r.dropped === 'EURGBP') ? ' style="background: rgba(198, 146, 86, 0.05);"' : '';
-        const sign = dl > 0 ? '+' : '';
-        return `<tr${rowHighlight}>
-          <td>${r.dropped}</td>
-          <td class="num">${sh.toFixed(2)}</td>
-          <td class="num ${dlCls}">${sign}${dl.toFixed(2)}</td>
-        </tr>`;
-      }).join('');
-    } else {
-      d1Body.innerHTML = '<tr><td colspan="3" class="empty">No data.</td></tr>';
-    }
-  }
-
-  const oosRows = (sens.oos_start_date && sens.oos_start_date.rows) || [];
-  const oosBody = document.querySelector('#bt-sens-oos-table tbody');
-  if (oosBody) {
-    if (oosRows.length) {
-      const baseline = '2018-01-02';
-      const main = oosRows.map(r => {
-        const sh = Number(r.sharpe);
-        const isBase = r.start === baseline;
-        const rowHighlight = isBase ? ' style="background: rgba(92, 184, 122, 0.05);"' : '';
-        const note = isBase ? ' <span class="dim">(baseline)</span>' : '';
-        return `<tr${rowHighlight}>
-          <td>${r.start}${note}</td>
-          <td class="num pos">${sh.toFixed(2)}</td>
-        </tr>`;
-      }).join('');
-      const summary = sens.oos_start_date;
-      const summaryRow = `<tr>
-        <td class="dim">Range &middot; std</td>
-        <td class="num dim">[${summary.range_min.toFixed(2)}, ${summary.range_max.toFixed(2)}] &middot; &sigma;=${summary.std.toFixed(3)}</td>
-      </tr>`;
-      oosBody.innerHTML = main + summaryRow;
-    } else {
-      oosBody.innerHTML = '<tr><td colspan="2" class="empty">No data.</td></tr>';
-    }
-  }
-
-  const d3 = sens.drop_three_combinatorial;
-  const d3Body = document.querySelector('#bt-sens-drop3-table tbody');
-  if (d3Body) {
-    if (d3) {
-      d3Body.innerHTML = `<tr>
-        <td class="dim">${d3.n_combinations}</td>
-        <td class="num pos">${Number(d3.min_sharpe).toFixed(2)}</td>
-        <td class="num pos">${Number(d3.median_sharpe).toFixed(2)}</td>
-        <td class="num pos">${Number(d3.max_sharpe).toFixed(2)}</td>
-      </tr>`;
-    } else {
-      d3Body.innerHTML = '<tr><td colspan="4" class="empty">No data.</td></tr>';
-    }
-  }
-
-  const rc = sens.refit_cadence_offset;
-  const rcBody = document.querySelector('#bt-sens-refit-table tbody');
-  if (rcBody) {
-    if (rc) {
-      rcBody.innerHTML = `
-        <tr><td>Jan-1 (baseline)</td><td class="num pos">${Number(rc.jan_anchored_sharpe).toFixed(3)}</td></tr>
-        <tr><td>Jul-1 (offset)</td><td class="num pos">${Number(rc.jul_anchored_sharpe).toFixed(3)}</td></tr>
-        <tr><td class="dim">&Delta;</td><td class="num dim">${rc.delta > 0 ? '+' : ''}${Number(rc.delta).toFixed(3)}</td></tr>
-      `;
-    } else {
-      rcBody.innerHTML = '<tr><td colspan="2" class="empty">No data.</td></tr>';
-    }
-  }
-}
-
-// -- Robustness scorecard ----------------------------------------------
-function renderRobustnessScorecard(rob) {
-  const body = document.querySelector('#bt-robustness-table tbody');
-  const metaEl = $('bt-scorecard-meta');
-  if (!body) return;
-  if (!rob) {
-    body.innerHTML = '<tr><td colspan="4" class="empty">No data.</td></tr>';
-    return;
-  }
-  const rows = [];
-  (rob.code_audit || []).forEach(r => {
-    rows.push({
-      category: 'Code-level leak hunt',
-      test: r.surface,
-      result: r.verdict,
-      evidence: r.note,
-    });
-  });
-  (rob.statistical_tests || []).forEach(r => {
-    let category = 'Statistical / robustness';
-    const t = (r.test || '').toLowerCase();
-    if (t.includes('universe') || t.includes('drop-') || t.includes('oos start')
-        || t.includes('refit') || t.includes('feature shuffle')) {
-      category = 'Robustness';
-    } else if (t.includes('null') || t.includes('permutation') || t.includes('shuffle')
-               || t.includes('cpcv') || t.includes('pbo') || t.includes('haircut')
-               || t.includes('deflated') || t.includes('hansen') || t.includes('romano')
-               || t.includes('cost stress') || t.includes('min backtest')) {
-      category = 'Statistical null / multiple-testing';
-    } else if (t.includes('macro') || t.includes('fred') || t.includes('yfinance')) {
-      category = 'Data integrity';
-    } else if (t.includes('cold')) {
-      category = 'Code-level leak hunt';
-    } else if (t.includes('regime') || t.includes('rolling') || t.includes('structural')
-               || t.includes('drawdown')) {
-      category = 'Stability';
-    } else if (t.includes('information coefficient') || t.includes('pre-2018') || t.includes('aronson')) {
-      category = 'Honest checks';
-    }
-    rows.push({
-      category, test: r.test, result: r.verdict, evidence: r.result,
-    });
-  });
-
-  if (rob.summary && metaEl) {
-    const s = rob.summary;
-    metaEl.textContent = `${s.total_tests} forensic tests · ${s.passed} pass · ${s.failed_or_caveat} caveat/fail`;
-  }
-
-  let lastCat = null;
-  body.innerHTML = rows.map(r => {
-    const showCat = r.category !== lastCat;
-    lastCat = r.category;
-    const catCell = showCat ? `<td class="scorecard-cat">${r.category}</td>` : '<td class="scorecard-cat-empty"></td>';
-    const v = (r.result || '').toUpperCase();
-    let pillCls = 'scorecard-pill-pass';
-    let pillTxt = v;
-    if (v.includes('FAIL')) {
-      pillCls = 'scorecard-pill-fail';
-    } else if (v.includes('CAVEAT') || v.includes('WARN') || v.includes('MINOR')
-               || v.includes('IMMATERIAL')) {
-      pillCls = 'scorecard-pill-caveat';
-    } else if (v.includes('PASS') || v.includes('SAFE') || v.includes('ROBUST')
-               || v.includes('GENERALISES') || v.includes('CLEAN') || v.includes('STRICT')
-               || v.includes('AUTHENTIC')) {
-      pillCls = 'scorecard-pill-pass';
-    } else {
-      pillCls = 'scorecard-pill-dim';
-    }
-    if (pillTxt.length > 36) pillTxt = pillTxt.slice(0, 34) + '…';
-    return `<tr>
-      ${catCell}
-      <td>${r.test || ''}</td>
-      <td><span class="tag ${pillCls}" title="${(r.result || '').replace(/"/g, '&quot;')}">${pillTxt}</span></td>
-      <td class="dim scorecard-evidence">${r.evidence || ''}</td>
-    </tr>`;
-  }).join('');
-}
-
-// -- Monte Carlo renderer ---------------------------------------------
-function renderMonteCarlo(mc) {
-  const tbody = document.querySelector('#bt-mc-tbody');
-  const meta  = $('bt-mc-meta');
-  const tabsRoot = document.querySelector('.mc-tabs');
-  if (!tbody) return;
-  if (!mc || !mc.scenarios) {
-    tbody.innerHTML = '<tr><td colspan="4" class="empty">No Monte Carlo data.</td></tr>';
-    return;
-  }
-  if (meta) {
-    const n = (mc._meta && mc._meta.n_sims) ? mc._meta.n_sims.toLocaleString() : '10,000';
-    meta.textContent = `${n} sims · block-bootstrap · CPPI overlay`;
-  }
-
-  const VIEWS = {
-    scale5: {
-      title: 'Suggested 5× sizing',
-      rows: [
-        { label: '1-Step $200k · 60d',           key: 'scale5_1step_60d' },
-        { label: '1-Step $200k · 90d',           key: 'scale5_1step_90d' },
-        { label: '2-Step P1 $50k · 60d',         key: 'scale5_2step_p1_60d' },
-        { label: '2-Step chained (P1+P2)',       key: 'scale5_2step_chained' },
-      ],
-    },
-    conservative: {
-      title: 'Conservative 5× (Sharpe-2 forward)',
-      rows: [
-        { label: '1-Step $200k · 60d',           key: 'scale5_conservative_1step_60d' },
-        { label: '1-Step $200k · 90d',           key: 'scale5_conservative_1step_90d' },
-        { label: '2-Step P1 $50k · 60d',         key: 'scale5_conservative_2step_p1_60d' },
-        { label: '2-Step chained (P1+P2)',       key: 'scale5_conservative_2step_chained' },
-      ],
-    },
-    current: {
-      title: 'Current 1× sizing (under-leveraged)',
-      rows: [
-        { label: '1-Step $200k · 60d',           key: 'current_1step_60d' },
-        { label: '1-Step $200k · 252d (1yr)',    key: 'current_1step_252d' },
-        { label: '2-Step P1 $50k · 60d',         key: 'current_2step_p1_60d' },
-      ],
-    },
-  };
-
-  function passClass(p) {
-    if (p == null || isNaN(p)) return 'dim';
-    if (p >= 0.60) return 'pos';
-    if (p >= 0.25) return 'warn';
-    return 'neg';
-  }
-  function pct(v, dp = 1) {
-    if (v == null || isNaN(v)) return '—';
-    return `${(Number(v) * 100).toFixed(dp)}%`;
-  }
-
-  function render(viewName) {
-    const view = VIEWS[viewName] || VIEWS.scale5;
-    const rows = view.rows.map(r => {
-      const s = mc.scenarios[r.key];
-      if (!s) {
-        return `<tr><td>${r.label}</td><td class="num dim">—</td><td class="num dim">—</td><td class="num dim">—</td></tr>`;
-      }
-      const pr = (typeof s.pass_rate === 'number') ? s.pass_rate
-               : (typeof s.overall_pass_rate === 'number') ? s.overall_pass_rate
-               : null;
-      const days = s.median_days_to_pass != null ? `${s.median_days_to_pass}` : '—';
-      const mdl = s.mdl_pct != null ? pct(s.mdl_pct, 1) : '—';
-      const prCls = passClass(pr);
-      const mdlCls = (s.mdl_pct != null && s.mdl_pct >= 0.05) ? 'neg' : 'dim';
-      return `<tr>
-        <td>${r.label}</td>
-        <td class="num ${prCls}">${pct(pr, 1)}</td>
-        <td class="num dim">${days}</td>
-        <td class="num ${mdlCls}">${mdl}</td>
-      </tr>`;
-    });
-    tbody.innerHTML = rows.join('');
-  }
-
-  render('scale5');
-
-  if (tabsRoot) {
-    tabsRoot.querySelectorAll('.mc-tab').forEach(btn => {
-      const fresh = btn.cloneNode(true);
-      btn.parentNode.replaceChild(fresh, btn);
-    });
-    tabsRoot.querySelectorAll('.mc-tab').forEach(btn => {
-      btn.addEventListener('click', () => {
-        tabsRoot.querySelectorAll('.mc-tab').forEach(b => {
-          const active = (b === btn);
-          b.classList.toggle('is-active', active);
-          b.setAttribute('aria-selected', active ? 'true' : 'false');
-        });
-        render(btn.dataset.mctab);
-      });
-    });
   }
 }
 

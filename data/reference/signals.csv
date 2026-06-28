@@ -1,4 +1,4 @@
-as_of_date,asset,ensemble_avg,signal,direction
+as_of_date,asset,conviction,signal,direction
 2018-01-02,EURUSD,0.0,0,FLAT
 2018-01-02,GBPJPY,0.0,0,FLAT
 2018-01-03,EURUSD,0.318,1,LONG

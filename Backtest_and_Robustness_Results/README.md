@@ -7,7 +7,7 @@ result files, not a marketing summary.
 ## Important: results only, strategy is proprietary
 
 Everything here is RESULTS. There is deliberately nothing in this folder that reveals HOW the
-strategies work. No hyperparameters, no model or ensemble internals, no feature definitions, no
+strategies work. No hyperparameters, no model internals, no feature definitions, no
 weights, no signal-construction logic, no code. That stays private. What you get is the evidence
 that the edge is real and was tested hard: equity curves, drawdowns, per-year and per-pair
 performance, the full anti-overfitting battery, and the prop-firm pass-rate simulations.

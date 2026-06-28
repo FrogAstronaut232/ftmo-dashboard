@@ -21,7 +21,7 @@ equity curve, open positions, closed trades, daily signals and the backtest base
 
 ## The two strategies
 
-- **G2** trades 2 pairs (EURUSD, GBPJPY). A frozen model ensemble.
+- **G2** trades 2 pairs (EURUSD, GBPJPY). A frozen quantitative model.
 - **G10** trades 10 FX pairs (AUDJPY, AUDUSD, EURGBP, EURUSD, GBPJPY, GBPUSD, NZDUSD, USDCAD,
   USDCHF, USDJPY). A strict out-of-sample multi-pair portfolio.
 
@@ -75,7 +75,7 @@ Design: train 2004-2015, hyperparameter search on 2016-2017 only, test 2018-2026
 - Top day = 0.79% of net P&L, top 10 days = 8.3%
 - Pre-2018 replay (2010-2015): Sharpe ~+1.26 (regime-flattering; honest forward 1.5-2.5)
 
-### G2 (2-pair manifold-state ensemble)
+### G2 (2-pair model)
 
 OOS 2018-2026, T = 2084 obs (8.29 years).
 
@@ -87,7 +87,7 @@ OOS 2018-2026, T = 2084 obs (8.29 years).
 - Permutation null: p_sign(SR) = 0.000000 (100,000 perms)
 - SPA vs zero: p = 0.0000 (B=10000); Haircut Sharpe (Harvey-Liu) single-test p = 1.4e-13
 - Cost stress: +1.0 pips SR 2.186, +1.5 pips SR 1.992, survives ~5.4 pips/day before SR < 0.5
-- Regime (VIX terciles): low 2.86, mid 2.80, high 2.87
+- Volatility-regime terciles: low 2.86, mid 2.80, high 2.87
 - Shock windows: COVID Feb-Apr 2020 +6.8%, UK gilt Sep 2022 -2.9%, yen carry Aug 2024 +3.3%
 
 ## The bigger plan (and a paper)
@@ -112,7 +112,7 @@ These are RESULTS ONLY: equity curves, drawdowns, per-year and per-pair performa
 robustness battery (DSR, PBO, permutation and white-noise nulls, CPCV, cost stress, regime and
 tail analysis, structural-break tests) and the FTMO Monte-Carlo pass-rate simulations.
 Deliberately NOT included: anything that reveals how the strategy actually works (hyperparameters,
-model/ensemble internals, features, weights, signal construction, code). That stays proprietary.
+model internals, parameters, features, weights, signal construction, code). That stays proprietary.
 
 ## What's in this repo
 

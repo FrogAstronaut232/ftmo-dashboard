@@ -8,13 +8,13 @@
   "last_signals": {
     "EURUSD": {
       "date": "2026-05-22",
-      "ensemble_avg": -0.227,
-      "signal": -1
+      "signal": -1,
+      "conviction": -0.227
     },
     "GBPJPY": {
       "date": "2026-05-22",
-      "ensemble_avg": 0.57,
-      "signal": 1
+      "signal": 1,
+      "conviction": 0.57
     }
   },
   "phase": "p1",

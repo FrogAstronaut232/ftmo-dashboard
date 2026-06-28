@@ -1,5 +1,5 @@
 {
-  "strategy_name": "ManifoldFX10",
+  "strategy_name": "G10 10-pair FX",
   "assets": [
     "AUDJPY",
     "AUDUSD",
@@ -21,14 +21,6 @@
     "p2": 0.18,
     "funded": 0.22,
     "demo": 0.1
-  },
-  "frozen_hps": {
-    "W": 9,
-    "lam_shrink": 0.2665440364437338,
-    "n1": 5,
-    "n2": 5,
-    "lam_risk": 0.5293661964364217,
-    "tau": 0.6849549260809971
   },
   "last_updated_utc": "2026-06-28T05:10:40.322392+00:00"
 }

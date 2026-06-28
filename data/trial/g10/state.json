@@ -54,53 +54,53 @@
   "last_signals": {
     "AUDJPY": {
       "date": "2026-06-26",
-      "ensemble_avg": -0.4,
-      "signal": -1
+      "signal": -1,
+      "conviction": -0.4
     },
     "AUDUSD": {
       "date": "2026-06-26",
-      "ensemble_avg": -0.048,
-      "signal": 0
+      "signal": 0,
+      "conviction": -0.048
     },
     "EURGBP": {
       "date": "2026-06-26",
-      "ensemble_avg": 0.0,
-      "signal": 0
+      "signal": 0,
+      "conviction": 0.0
     },
     "EURUSD": {
       "date": "2026-06-26",
-      "ensemble_avg": -0.066,
-      "signal": 0
+      "signal": 0,
+      "conviction": -0.066
     },
     "GBPJPY": {
       "date": "2026-06-26",
-      "ensemble_avg": -0.379,
-      "signal": -1
+      "signal": -1,
+      "conviction": -0.379
     },
     "GBPUSD": {
       "date": "2026-06-26",
-      "ensemble_avg": 0.0,
-      "signal": 0
+      "signal": 0,
+      "conviction": 0.0
     },
     "NZDUSD": {
       "date": "2026-06-26",
-      "ensemble_avg": -0.6,
-      "signal": -1
+      "signal": -1,
+      "conviction": -0.6
     },
     "USDCAD": {
       "date": "2026-06-26",
-      "ensemble_avg": 0.4,
-      "signal": 1
+      "signal": 1,
+      "conviction": 0.4
     },
     "USDCHF": {
       "date": "2026-06-26",
-      "ensemble_avg": 0.0,
-      "signal": 0
+      "signal": 0,
+      "conviction": 0.0
     },
     "USDJPY": {
       "date": "2026-06-26",
-      "ensemble_avg": -0.2,
-      "signal": 0
+      "signal": 0,
+      "conviction": -0.2
     }
   },
   "phase": "p1",

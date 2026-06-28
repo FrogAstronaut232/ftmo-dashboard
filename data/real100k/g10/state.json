@@ -1,13 +1,116 @@
 {
-  "last_heartbeat_utc": "2026-06-28T14:34:48.339214+00:00",
+  "as_of_utc": "2026-06-28T22:05:14.097510+00:00",
   "balance": 100000.0,
   "equity": 100000.0,
-  "free_margin": 100000.0,
-  "today_pnl": 0.0,
-  "open_positions": [],
   "drawdown_pct": 0.0,
-  "peak_equity": 100000.0,
+  "today_pnl": 0.0,
+  "open_positions": [
+    {
+      "asset": "AUDJPY",
+      "side": "SHORT",
+      "lots": 1.05,
+      "entry_date": "2026-06-26",
+      "entry_price": 111.62699890136719,
+      "current_price": 111.62699890136719
+    },
+    {
+      "asset": "EURGBP",
+      "side": "SHORT",
+      "lots": 3.65,
+      "entry_date": "2026-06-26",
+      "entry_price": 0.861329972743988,
+      "current_price": 0.861329972743988
+    },
+    {
+      "asset": "GBPJPY",
+      "side": "SHORT",
+      "lots": 0.93,
+      "entry_date": "2026-06-26",
+      "entry_price": 213.3699951171875,
+      "current_price": 213.3699951171875
+    },
+    {
+      "asset": "GBPUSD",
+      "side": "SHORT",
+      "lots": 1.0,
+      "entry_date": "2026-06-26",
+      "entry_price": 1.318791389465332,
+      "current_price": 1.318791389465332
+    },
+    {
+      "asset": "NZDUSD",
+      "side": "SHORT",
+      "lots": 0.99,
+      "entry_date": "2026-06-26",
+      "entry_price": 0.5643309354782104,
+      "current_price": 0.5643309354782104
+    },
+    {
+      "asset": "USDCAD",
+      "side": "LONG",
+      "lots": 2.5100000000000002,
+      "entry_date": "2026-06-26",
+      "entry_price": 1.4200600385665894,
+      "current_price": 1.4200600385665894
+    }
+  ],
+  "last_signals": {
+    "AUDJPY": {
+      "date": "2026-06-26",
+      "conviction": -0.4,
+      "signal": -1
+    },
+    "AUDUSD": {
+      "date": "2026-06-26",
+      "conviction": -0.048,
+      "signal": 0
+    },
+    "EURGBP": {
+      "date": "2026-06-26",
+      "conviction": -0.6,
+      "signal": -1
+    },
+    "EURUSD": {
+      "date": "2026-06-26",
+      "conviction": -0.266,
+      "signal": 0
+    },
+    "GBPJPY": {
+      "date": "2026-06-26",
+      "conviction": -0.379,
+      "signal": -1
+    },
+    "GBPUSD": {
+      "date": "2026-06-26",
+      "conviction": -0.4,
+      "signal": -1
+    },
+    "NZDUSD": {
+      "date": "2026-06-26",
+      "conviction": -0.6,
+      "signal": -1
+    },
+    "USDCAD": {
+      "date": "2026-06-26",
+      "conviction": 0.4,
+      "signal": 1
+    },
+    "USDCHF": {
+      "date": "2026-06-26",
+      "conviction": 0.0,
+      "signal": 0
+    },
+    "USDJPY": {
+      "date": "2026-06-26",
+      "conviction": -0.2,
+      "signal": 0
+    }
+  },
+  "phase": "p1",
   "dry_run": false,
+  "account_initial_usd": 100000.0,
+  "max_daily_loss_pct": 0.04,
+  "max_total_loss_pct": 0.08,
   "metrics": {
     "total_trades": 0,
     "win_rate": 0.0,
@@ -17,5 +120,19 @@
     "max_drawdown_pct": 0.0,
     "total_pnl_usd": 0.0,
     "annualised_sharpe": 0.0
-  }
+  },
+  "reference_metrics": {
+    "total_trades": 0,
+    "win_rate": 0.0,
+    "profit_factor": 0.0,
+    "avg_win_usd": 0.0,
+    "avg_loss_usd": 0.0,
+    "max_drawdown_pct": 0.0,
+    "total_pnl_usd": 0.0,
+    "annualised_sharpe": 0.0
+  },
+  "live_first_date": "2026-06-29",
+  "live_last_date": "2026-06-29",
+  "reference_first_date": null,
+  "reference_last_date": null
 }
